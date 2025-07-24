@@ -1,78 +1,82 @@
 {
   "date": "2025-07-24",
   "discipline": "Pharmacy",
-  "category": "adverse_event",
-  "topic_rationale": "This topic is an important example of drug-drug interaction leading to a potentially dangerous condition. It is educational because it shows how medications can interact and emphasizes the importance of a thorough medication review.",
+  "category": "diagnosis",
+  "topic_rationale": "Serotonin Syndrome is a potentially life-threatening condition caused by an excess of serotonin in the brain. It's an important diagnosis for pharmacists to recognize due to the increasing use of serotonergic drugs.",
   "answer": "Serotonin Syndrome",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Hyperreflexia"
+      "clue": "Recent SSRI start"
     },
     {
       "difficulty": "easy",
-      "clue": "Recent SSRI"
+      "clue": "Hyperreflexia, clonus"
     },
     {
       "difficulty": "medium",
-      "clue": "Clonus"
+      "clue": "Agitation, restlessness"
     },
     {
       "difficulty": "medium",
-      "clue": "Sweating"
+      "clue": "Autonomic dysregulation"
     },
     {
       "difficulty": "medium",
-      "clue": "Tremor"
+      "clue": "Neuromuscular hyperactivity"
     },
     {
       "difficulty": "hard",
-      "clue": "Added Tramadol"
+      "clue": "Serotonin-enhancing drugs"
     },
     {
       "difficulty": "hard",
-      "clue": "Dilated pupils"
+      "clue": "Hyperthermia, diaphoresis"
     },
     {
       "difficulty": "hard",
-      "clue": "Tachycardia"
+      "clue": "No neuroleptic history"
     },
     {
       "difficulty": "hard",
-      "clue": "High temp"
+      "clue": "Symptoms resolve post-drug"
     }
   ],
   "concepts": [
     "Serotonin Syndrome",
     "Neuroleptic Malignant Syndrome",
-    "Malignant Hyperthermia",
     "Anticholinergic Toxicity",
-    "Sympathomimetic Toxicity",
-    "Hypertensive Crisis",
-    "Sepsis",
-    "Amphetamine Overdose",
-    "Alcohol Withdrawal",
     "Benzodiazepine Withdrawal",
-    "Opioid Withdrawal",
-    "Acute Coronary Syndrome",
-    "Panic Attack",
+    "SSRI Discontinuation Syndrome",
+    "Malignant Hyperthermia",
+    "Sympathomimetic Toxicity",
+    "Hypothyroidism",
     "Hyperthyroidism",
-    "Heat Stroke",
-    "Meningitis",
-    "Stroke",
-    "Encephalitis",
-    "Pheochromocytoma",
-    "Cocaine Intoxication"
+    "Generalized Anxiety Disorder",
+    "Panic Disorder",
+    "Bipolar Disorder",
+    "Schizophrenia",
+    "Alcohol Withdrawal",
+    "Opioid Withdrawal",
+    "GHB Withdrawal",
+    "Barbiturate Withdrawal",
+    "Menopausal Hot Flashes",
+    "Hyperhidrosis",
+    "Fibromyalgia",
+    "Chronic Fatigue Syndrome",
+    "Major Depressive Disorder",
+    "Post-Traumatic Stress Disorder",
+    "Obsessive-Compulsive Disorder"
   ],
   "explanations": {
-    "tile_0": "Hyperreflexia is a common sign of serotonin syndrome, caused by excess serotonin in the CNS.",
-    "tile_1": "Serotonin syndrome is often caused by the use of drugs that increase the level of serotonin, such as SSRIs.",
-    "tile_2": "Clonus (rapid involuntary muscle contraction and relaxation) is a characteristic feature of serotonin syndrome.",
-    "tile_3": "Excessive sweating can occur in serotonin syndrome due to overactivation of the autonomic nervous system.",
-    "tile_4": "Tremors can be a common sign of serotonin syndrome, reflecting CNS excitation.",
-    "tile_5": "Adding tramadol (which has serotonergic activity) to an SSRI regimen can increase the risk of serotonin syndrome.",
-    "tile_6": "Dilated pupils (mydriasis) can occur in serotonin syndrome due to increased sympathetic activity.",
-    "tile_7": "Tachycardia is a common sign of serotonin syndrome, reflecting autonomic nervous system overactivity.",
-    "tile_8": "High body temperature (hyperthermia) can occur in severe cases of serotonin syndrome, due to increased muscle activity."
+    "tile_0": "Serotonin Syndrome is commonly associated with the recent introduction or increase in dose of a serotonergic medication, such as an SSRI.",
+    "tile_1": "Hyperreflexia and clonus are classic neuromuscular features of Serotonin Syndrome.",
+    "tile_2": "Restlessness and agitation are common mental state changes in Serotonin Syndrome.",
+    "tile_3": "Autonomic dysregulation occurs in Serotonin Syndrome, represented by symptoms such as tachycardia, labile blood pressure, and hyperthermia.",
+    "tile_4": "Neuromuscular hyperactivity, including tremor, muscle rigidity, and spontaneous clonus, is a key feature of Serotonin Syndrome.",
+    "tile_5": "Serotonin Syndrome can be precipitated by a variety of drugs that increase serotonin concentrations in the brain.",
+    "tile_6": "Hyperthermia and diaphoresis are manifestations of the autonomic instability seen in Serotonin Syndrome.",
+    "tile_7": "The absence of a recent history of neuroleptic use helps differentiate Serotonin Syndrome from Neuroleptic Malignant Syndrome, a key differential diagnosis.",
+    "tile_8": "The resolution of symptoms after the discontinuation of the causative drug is a key diagnostic feature of Serotonin Syndrome."
   }
 }
