@@ -280,10 +280,65 @@ class DifferentialGame {
             tile.classList.add('game-ended');
         });
         
-        // Show explanations after a brief delay
+        // Add visual flourish
+        this.addGameEndFlourish(won);
+        
+        // Show explanations after animations
         setTimeout(() => {
             this.showExplanations();
-        }, 2000);
+        }, won ? 3000 : 2000);
+    }
+
+    addGameEndFlourish(won) {
+        const container = document.querySelector('.container');
+        const title = document.querySelector('h1');
+        const gameMessage = document.getElementById('gameMessage');
+        
+        if (won) {
+            // Celebration animations
+            container.classList.add('game-celebration');
+            title.classList.add('title-celebration');
+            gameMessage.classList.add('message-success-big');
+            
+            // Add confetti
+            this.createConfetti();
+            
+            // Remove celebration classes after animation
+            setTimeout(() => {
+                container.classList.remove('game-celebration');
+            }, 1000);
+        } else {
+            // Sadness animations
+            container.classList.add('game-sadness');
+            title.classList.add('title-sadness');
+            gameMessage.classList.add('message-error-big');
+            
+            // Remove sadness classes after animation
+            setTimeout(() => {
+                container.classList.remove('game-sadness');
+            }, 1500);
+        }
+    }
+
+    createConfetti() {
+        const confettiContainer = document.createElement('div');
+        confettiContainer.className = 'confetti-container';
+        document.body.appendChild(confettiContainer);
+        
+        // Create 50 confetti pieces
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti-piece';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.animationDelay = Math.random() * 2 + 's';
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            confettiContainer.appendChild(confetti);
+        }
+        
+        // Remove confetti after 5 seconds
+        setTimeout(() => {
+            document.body.removeChild(confettiContainer);
+        }, 5000);
     }
 
     showExplanations() {
@@ -308,7 +363,12 @@ class DifferentialGame {
                 `This ${tile.difficulty} clue "${tile.clue}" helps confirm the diagnosis.`;
             
             explanationItem.innerHTML = `
-                <div class="explanation-clue">"${tile.clue}"</div>
+                <div class="explanation-header">
+                    <div class="explanation-tile-preview difficulty-${tile.difficulty}">
+                        <div class="tile-content">${tile.clue}</div>
+                    </div>
+                    <div class="explanation-label">${tile.difficulty.charAt(0).toUpperCase() + tile.difficulty.slice(1)} Clue</div>
+                </div>
                 <div class="explanation-text">${explanation}</div>
             `;
             
