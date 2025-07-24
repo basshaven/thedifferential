@@ -1,78 +1,78 @@
 {
   "date": "2025-07-24",
-  "discipline": "Cardiology",
-  "category": "diagnosis",
-  "topic_rationale": "Chosen topic is 'Brugada Syndrome'. It is a rare but potentially fatal genetic heart condition that can cause ventricular fibrillation and sudden cardiac death, making it an important diagnosis to consider in young patients with syncope or family history of sudden death. It is characterized by a distinct ECG pattern and unexplained syncope, making it a good learning opportunity.",
-  "answer": "Brugada Syndrome",
+  "discipline": "Pharmacy",
+  "category": "adverse_event",
+  "topic_rationale": "This topic is an important example of drug-drug interaction leading to a potentially dangerous condition. It is educational because it shows how medications can interact and emphasizes the importance of a thorough medication review.",
+  "answer": "Serotonin Syndrome",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "coved ST elevation"
+      "clue": "Hyperreflexia"
     },
     {
       "difficulty": "easy",
-      "clue": "V1-V3 leads ECG"
+      "clue": "Recent SSRI"
     },
     {
       "difficulty": "medium",
-      "clue": "unexplained syncope"
+      "clue": "Clonus"
     },
     {
       "difficulty": "medium",
-      "clue": "late night agonal respiration"
+      "clue": "Sweating"
     },
     {
       "difficulty": "medium",
-      "clue": "family history sudden death"
+      "clue": "Tremor"
     },
     {
       "difficulty": "hard",
-      "clue": "normal QT interval"
+      "clue": "Added Tramadol"
     },
     {
       "difficulty": "hard",
-      "clue": "no structural heart disease"
+      "clue": "Dilated pupils"
     },
     {
       "difficulty": "hard",
-      "clue": "negative stress test"
+      "clue": "Tachycardia"
     },
     {
       "difficulty": "hard",
-      "clue": "sodium channelopathy"
+      "clue": "High temp"
     }
   ],
   "concepts": [
-    "Brugada Syndrome",
-    "Long QT Syndrome",
-    "Wolff-Parkinson-White Syndrome",
-    "Myocardial Infarction",
-    "Angina Pectoris",
-    "Pericarditis",
-    "Atrial Fibrillation",
-    "Sick Sinus Syndrome",
-    "Ventricular Tachycardia",
-    "Ventricular Fibrillation",
-    "Supraventricular Tachycardia",
-    "Aortic Stenosis",
-    "Mitral Valve Prolapse",
-    "Hypertrophic Cardiomyopathy",
-    "Dilated Cardiomyopathy",
-    "Arrhythmogenic Right Ventricular Dysplasia",
-    "Heart Failure",
-    "Pulmonary Embolism",
-    "Aortic Dissection",
-    "Cardiac Tamponade"
+    "Serotonin Syndrome",
+    "Neuroleptic Malignant Syndrome",
+    "Malignant Hyperthermia",
+    "Anticholinergic Toxicity",
+    "Sympathomimetic Toxicity",
+    "Hypertensive Crisis",
+    "Sepsis",
+    "Amphetamine Overdose",
+    "Alcohol Withdrawal",
+    "Benzodiazepine Withdrawal",
+    "Opioid Withdrawal",
+    "Acute Coronary Syndrome",
+    "Panic Attack",
+    "Hyperthyroidism",
+    "Heat Stroke",
+    "Meningitis",
+    "Stroke",
+    "Encephalitis",
+    "Pheochromocytoma",
+    "Cocaine Intoxication"
   ],
   "explanations": {
-    "tile_0": "Coved-type ST elevation in leads V1-V3 on ECG is characteristic of Brugada Syndrome.",
-    "tile_1": "Brugada Syndrome is identified by specific ECG changes in the right precordial leads (V1-V3).",
-    "tile_2": "Unexplained syncope in Brugada Syndrome may be due to ventricular arrhythmias.",
-    "tile_3": "Patients with Brugada Syndrome may experience agonal respiration during sleep due to nocturnal ventricular arrhythmias.",
-    "tile_4": "Brugada Syndrome is a genetic disorder that can cause sudden cardiac death, so a family history of sudden death is a clue.",
-    "tile_5": "Unlike Long QT Syndrome, Brugada Syndrome presents with a normal QT interval.",
-    "tile_6": "Brugada Syndrome occurs without structural heart disease, differentiating it from conditions like hypertrophic cardiomyopathy.",
-    "tile_7": "Stress tests are typically negative in Brugada Syndrome as it is not caused by myocardial ischemia.",
-    "tile_8": "Brugada Syndrome is a type of sodium channelopathy, affecting the ion channels in heart cells and leading to arrhythmias."
+    "tile_0": "Hyperreflexia is a common sign of serotonin syndrome, caused by excess serotonin in the CNS.",
+    "tile_1": "Serotonin syndrome is often caused by the use of drugs that increase the level of serotonin, such as SSRIs.",
+    "tile_2": "Clonus (rapid involuntary muscle contraction and relaxation) is a characteristic feature of serotonin syndrome.",
+    "tile_3": "Excessive sweating can occur in serotonin syndrome due to overactivation of the autonomic nervous system.",
+    "tile_4": "Tremors can be a common sign of serotonin syndrome, reflecting CNS excitation.",
+    "tile_5": "Adding tramadol (which has serotonergic activity) to an SSRI regimen can increase the risk of serotonin syndrome.",
+    "tile_6": "Dilated pupils (mydriasis) can occur in serotonin syndrome due to increased sympathetic activity.",
+    "tile_7": "Tachycardia is a common sign of serotonin syndrome, reflecting autonomic nervous system overactivity.",
+    "tile_8": "High body temperature (hyperthermia) can occur in severe cases of serotonin syndrome, due to increased muscle activity."
   }
 }
