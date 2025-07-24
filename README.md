@@ -1,101 +1,168 @@
-# The Differential - Daily Medical Puzzle Game
+# 🧬 The Differential - Daily Medical Puzzle Game
 
-A minimalist, NYT-style daily medical puzzle game where players diagnose conditions by revealing clues on a strategic tile board.
+A minimalist, NYT-style daily medical puzzle game where players diagnose conditions by strategically revealing clues on a tile board with celebration animations and educational explanations.
 
-## How to Play
+🎮 **Live Game**: https://basshaven.github.io/thedifferential
 
-- Click tiles to reveal clues about a medical condition
-- Tile costs: Hard -1, Medium -2, Easy -3 (flip harder tiles first!)
-- Enter your diagnosis in the text box (3 attempts max)
-- Correct guess bonuses: 1st attempt +25, 2nd +10, 3rd +0
-- Wrong guesses: -5 points each
-- Score range: 0-100 points
+## 🎯 Current Game Features
 
-## Setup for Daily AI Updates
+### **Core Gameplay**
+- **3x3 tile grid** organized by difficulty columns (Easy | Medium | Hard)
+- **Strategic scoring**: Easy tiles -3 points, Medium -2, Hard -1 (rewards flipping harder tiles first)
+- **Base score**: 25 points, range 0-100
+- **3 attempts** with guess bonuses: 1st +25, 2nd +10, 3rd +0
+- **Wrong guess penalty**: -5 points each
 
-### 1. GitHub Repository Setup
+### **Visual Experience** 
+- **🎊 Celebration animations** for correct answers (confetti, title pulsing, container bounce)
+- **😞 Failure animations** for wrong answers (shaking, red styling)
+- **📱 Mobile-optimized** with full-height explanation tiles
+- **🎨 Dark theme** with high-contrast yellow/green colors and Crimson Text font
 
-1. Create a new GitHub repository
-2. Upload all files from this folder
-3. Go to repository Settings → Pages
-4. Set Source to "Deploy from a branch"
-5. Select "main" branch and "/ (root)" folder
-6. Your site will be available at: `https://yourusername.github.io/repositoryname`
+### **Educational Features**
+- **📚 Post-game explanations** appear after completion showing how each clue relates to the diagnosis
+- **🎯 Tile previews** in explanations match the game board appearance
+- **📊 Score logging** tracks every action and point change throughout the game
+- **🔍 Post-game exploration** - continue clicking tiles after game ends to see remaining clues
 
-### 2. Daily AI Script Integration
+## 📋 **DAILY UPDATE INSTRUCTIONS**
 
-Your AI script should:
-1. Generate new puzzle data in the correct format
-2. Update `today.json` with new content
-3. Optionally update the fallback data in `script.js` for redundancy
-4. Commit and push changes to GitHub
+### **🚀 Quick Daily Update (Recommended)**
 
-#### Example AI Script Workflow:
-```python
-import json
-import requests
-from datetime import datetime
+1. **Generate new puzzle:**
+   ```bash
+   cd "Differential 2"
+   python generate_puzzle.py
+   ```
 
-# Generate new puzzle data
-new_puzzle = {
-    "date": datetime.now().strftime("%Y-%m-%d"),
-    "answer": "Generated Diagnosis",
-    "tiles": [...],  # 9 tiles following the layout
-    "concepts": [...]  # List of possible diagnoses
-}
+2. **Review the generated puzzle** (shows discipline, answer, tiles, and explanations)
 
-# Update today.json via GitHub API
-# (Use GitHub personal access token for authentication)
+3. **Approve or regenerate** until you're satisfied
+
+4. **Push to live site:**
+   ```bash
+   git add today.json
+   git commit -m "Daily puzzle: [Diagnosis Name]"
+   git push origin main
+   ```
+
+5. **Wait 2-3 minutes** for GitHub Pages to update
+
+6. **Verify live:** https://basshaven.github.io/thedifferential
+
+### **⚙️ One-Time Setup for Daily Updates**
+
+If this is your first time:
+
+1. **Install Python requirements:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Add your OpenAI API key:**
+   ```bash
+   echo "sk-your-actual-openai-key" > openai_key.txt
+   ```
+
+3. **Test generation:**
+   ```bash
+   python generate_puzzle.py
+   ```
+
+### **🎛️ Advanced Generation Options**
+
+```bash
+# Skip review and auto-save
+python generate_puzzle.py --no-review
+
+# Multiple attempts if generation fails
+python generate_puzzle.py --max-attempts 5
+
+# Save to custom filename
+python generate_puzzle.py --output custom_puzzle.json
 ```
 
-### 3. File Structure
+### **📁 Generated Content Location**
+- **Live puzzle**: `today.json` (automatically loaded by game)
+- **Backups**: `generated_puzzles/` folder (automatic backups of all puzzles)
+- **Fallback**: Embedded in `script.js` (works offline)
 
-- `index.html` - Main game interface
-- `styles.css` - Styling and layout
-- `script.js` - Game logic with fallback data
-- `today.json` - Daily puzzle data (updated by AI)
-- `README.md` - This file
+## 🏗️ **System Architecture**
 
-### 4. Tile Layout
+### **Game Files**
+- `index.html` - Main game interface with 3x3 grid
+- `styles.css` - Dark theme styling with animations  
+- `script.js` - Game logic, scoring, animations, and explanations
+- `today.json` - Current day's puzzle data
 
-The game uses a 3-column jagged layout:
-- Column 1: Positions 0,3 (2 easy tiles)
-- Column 2: Positions 1,4,6 (3 medium tiles)  
-- Column 3: Positions 2,5,7,8 (4 hard tiles)
+### **Puzzle Generation System**
+- `generate_puzzle.py` - Main generation script with CLI interface
+- `config.py` - Configuration settings (API keys, validation rules)
+- `agents/` - Modular agent system for AI puzzle generation
+- `AI_PUZZLE_PROMPT.md` - Comprehensive prompt for puzzle creation
+- `SETUP.md` - Detailed setup instructions
 
-### 5. Data Format
-
+### **Data Format**
 ```json
 {
-  "date": "YYYY-MM-DD",
-  "answer": "Exact Diagnosis Name",
+  "date": "2025-07-24",
+  "discipline": "Endocrinology", 
+  "answer": "Sheehan's Syndrome",
   "tiles": [
-    {"difficulty": "easy", "clue": "Short clue text"},
-    {"difficulty": "medium", "clue": "Medium difficulty clue"},
-    {"difficulty": "hard", "clue": "Hard clue text"},
-    ...
+    {"difficulty": "easy", "clue": "Postpartum woman"},
+    {"difficulty": "easy", "clue": "Severe hemorrhage"},
+    {"difficulty": "medium", "clue": "Failed lactation"},
+    {"difficulty": "medium", "clue": "Fatigue & weight gain"},
+    {"difficulty": "medium", "clue": "Loss of pubic hair"},
+    {"difficulty": "hard", "clue": "Low plasma ACTH"},
+    {"difficulty": "hard", "clue": "Low serum TSH"},
+    {"difficulty": "hard", "clue": "MRI: Empty sella"},
+    {"difficulty": "hard", "clue": "Hyponatremia"}
   ],
-  "concepts": ["Diagnosis 1", "Diagnosis 2", ...]
+  "concepts": ["Sheehan's Syndrome", "Postpartum depression", ...],
+  "explanations": {
+    "tile_0": "Sheehan's syndrome typically affects women who have had severe obstetric hemorrhage...",
+    ...
+  }
 }
 ```
 
-## Features
+## 🔒 **Security & Privacy**
 
-- ✅ Clean, minimalist design with black background
-- ✅ High contrast yellow/green color scheme
-- ✅ Semi-serif typography (Crimson Text)
-- ✅ Responsive mobile-friendly layout
-- ✅ Score logging with action history
-- ✅ Post-game tile exploration
-- ✅ Cache-busting for fresh daily data
-- ✅ Fallback data system for reliability
+- **🔐 Private repository** - Source code not publicly visible
+- **🔑 API keys stored locally** - Never committed to git (protected by .gitignore)
+- **🛡️ Custom license** - Prevents commercial use without permission
+- **📍 Local generation** - All puzzle creation happens on your computer
 
-## Development
+## 🎨 **Game Design Philosophy**
 
-To run locally during development:
-```bash
-python -m http.server 8000
-# Then open http://localhost:8000
-```
+- **Minimalist aesthetic** inspired by NYT games
+- **Educational focus** with post-game learning
+- **Strategic gameplay** rewarding efficient tile selection
+- **Medical accuracy** with evidence-based puzzles
+- **Mobile-first** responsive design
+- **Celebration of success** with engaging animations
 
-For production deployment, GitHub Pages handles everything automatically.
+## 🚀 **Future Expansion Ready**
+
+The modular agent system is designed for easy expansion:
+- **Topic Selection Agent** - Strategic discipline/topic picking
+- **Research Agent** - Latest medical guideline integration
+- **Validation Agent** - Quality scoring and medical accuracy checking
+- **Multi-AI orchestration** - Chain different AI services together
+
+## 📞 **Support & Troubleshooting**
+
+### **Common Issues:**
+- **404 Error**: Check GitHub Pages settings (Settings → Pages → main branch, root folder)
+- **Generation Fails**: Verify `openai_key.txt` exists and contains valid API key
+- **Local Testing**: Use `python -m http.server 8000` then visit `http://localhost:8000`
+
+### **File Locations:**
+- **Setup guide**: `SETUP.md`
+- **Generation examples**: `example_usage.py`
+- **Configuration**: `config.py`
+
+---
+
+*The Differential combines the engagement of puzzle games with the depth of medical education, creating daily learning opportunities for healthcare professionals and students.*
