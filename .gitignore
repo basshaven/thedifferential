@@ -1,0 +1,33 @@
+# API Keys (NEVER commit these!)
+openai_key.txt
+*.key
+*_key.txt
+api_keys/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# Generated content backups
+generated_puzzles/
+backups/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
