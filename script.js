@@ -367,9 +367,11 @@ class DifferentialGame {
                     <div class="explanation-tile-preview difficulty-${tile.difficulty}">
                         <div class="tile-content">${tile.clue}</div>
                     </div>
-                    <div class="explanation-label">${tile.difficulty.charAt(0).toUpperCase() + tile.difficulty.slice(1)} Clue</div>
+                    <div class="explanation-content">
+                        <div class="explanation-label">${tile.difficulty.charAt(0).toUpperCase() + tile.difficulty.slice(1)} Clue</div>
+                        <div class="explanation-text">${explanation}</div>
+                    </div>
                 </div>
-                <div class="explanation-text">${explanation}</div>
             `;
             
             explanationsGrid.appendChild(explanationItem);
