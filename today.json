@@ -1,69 +1,76 @@
 {
   "date": "2025-07-24",
-  "discipline": "Endocrinology",
+  "discipline": "Neurology",
   "category": "diagnosis",
-  "topic_rationale": "Sheehan's syndrome is a rare but significant disorder that occurs as a result of ischemic pituitary necrosis due to severe postpartum hemorrhage. It can be a challenging diagnosis because the symptoms may be non-specific and delayed for several years after the triggering event.",
-  "answer": "Sheehan's Syndrome",
+  "topic_rationale": "Guillain-Barr\u00e9 syndrome is a rare but serious autoimmune disorder that affects the peripheral nerves and causes rapid-onset muscle weakness. It's a good educational topic because of its unique clinical presentation and diagnostic challenges.",
+  "answer": "Guillain-Barr\u00e9 Syndrome",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "30yo female"
+      "clue": "35yo male, healthy"
     },
     {
       "difficulty": "easy",
-      "clue": "Postpartum hemorrhage"
+      "clue": "Rapid leg weakness"
     },
     {
       "difficulty": "medium",
-      "clue": "Fatigue, weight gain"
+      "clue": "Reflexes absent"
     },
     {
       "difficulty": "medium",
-      "clue": "Menstrual irregularity"
+      "clue": "Ascending paralysis"
     },
     {
       "difficulty": "medium",
-      "clue": "Low blood pressure"
+      "clue": "Respiratory distress"
     },
     {
       "difficulty": "hard",
-      "clue": "Delayed lactation"
+      "clue": "Recent GI infection"
     },
     {
       "difficulty": "hard",
-      "clue": "Hypoglycemia"
+      "clue": "CSF protein high"
     },
     {
       "difficulty": "hard",
-      "clue": "Low serum cortisol"
+      "clue": "Normal cell count CSF"
     },
     {
       "difficulty": "hard",
-      "clue": "Pituitary MRI shrinkage"
+      "clue": "Nerve conduction slow"
     }
   ],
   "concepts": [
-    "Sheehan's Syndrome",
-    "Postpartum depression",
-    "Hypothyroidism",
-    "Pituitary adenoma",
-    "Addison's disease",
-    "Cushing's disease",
-    "Panhypopituitarism",
-    "Polycystic ovary syndrome",
-    "Hypopituitarism",
-    "Pituitary apoplexy",
-    "Empty sella syndrome"
+    "Guillain-Barr\u00e9 Syndrome",
+    "Myasthenia Gravis",
+    "Botulism",
+    "Polio",
+    "Stroke",
+    "Spinal cord lesion",
+    "Amyotrophic Lateral Sclerosis",
+    "Transverse Myelitis",
+    "Peripheral Neuropathy",
+    "Acute Inflammatory Demyelinating Polyneuropathy",
+    "Chronic Inflammatory Demyelinating Polyneuropathy",
+    "Hypokalemic Periodic Paralysis",
+    "Lambert-Eaton Syndrome",
+    "Multiple Sclerosis",
+    "Acute Intermittent Porphyria",
+    "Tick Paralysis",
+    "Hypophosphatemia",
+    "West Nile Virus"
   ],
   "explanations": {
-    "tile_0": "Sheehan's syndrome is more common in females, especially those of childbearing age.",
-    "tile_1": "The condition occurs after a severe postpartum hemorrhage, which leads to necrosis of the pituitary gland.",
-    "tile_2": "Symptoms such as fatigue and weight gain are commonly seen due to hypothyroidism caused by pituitary dysfunction.",
-    "tile_3": "Menstrual irregularity is another symptom caused by decreased secretion of pituitary hormones.",
-    "tile_4": "Low blood pressure is a symptom of adrenal insufficiency, a condition that can accompany Sheehan's syndrome.",
-    "tile_5": "Delayed lactation postpartum is seen due to lack of prolactin secretion from the pituitary gland.",
-    "tile_6": "Hypoglycemia can result from adrenal insufficiency.",
-    "tile_7": "Low levels of serum cortisol are indicative of adrenal insufficiency due to pituitary dysfunction.",
-    "tile_8": "MRI imaging often shows shrinkage of the pituitary gland, supporting the diagnosis of Sheehan's syndrome."
+    "tile_0": "Guillain-Barr\u00e9 Syndrome can affect anyone, regardless of age or overall health status.",
+    "tile_1": "The classic presentation of Guillain-Barr\u00e9 Syndrome is rapid-onset muscle weakness starting in the legs.",
+    "tile_2": "A hallmark of Guillain-Barr\u00e9 Syndrome is absent or decreased deep tendon reflexes.",
+    "tile_3": "Guillain-Barr\u00e9 Syndrome typically presents with an ascending pattern of paralysis.",
+    "tile_4": "Respiratory distress can occur in severe cases due to paralysis affecting the diaphragm and chest muscles.",
+    "tile_5": "Many cases of Guillain-Barr\u00e9 Syndrome are preceded by an infection, commonly Campylobacter jejuni, a bacterium that can cause gastrointestinal illness.",
+    "tile_6": "A distinguishing feature of Guillain-Barr\u00e9 Syndrome is high protein levels in the cerebrospinal fluid (CSF).",
+    "tile_7": "Despite the high protein level, the cell count in the CSF remains normal - a phenomenon known as albuminocytologic dissociation.",
+    "tile_8": "Nerve conduction studies in Guillain-Barr\u00e9 Syndrome often show slowed velocities, indicating demyelination of the peripheral nerves."
   }
 }
