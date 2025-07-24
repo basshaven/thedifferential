@@ -80,8 +80,15 @@ python generate_puzzle.py --no-review
 # Multiple attempts if generation fails
 python generate_puzzle.py --max-attempts 5
 
+# Force a specific medical discipline
+python generate_puzzle.py --discipline "Hematology"
+python generate_puzzle.py --discipline "Pharmacy"
+
 # Save to custom filename
 python generate_puzzle.py --output custom_puzzle.json
+
+# Combine options
+python generate_puzzle.py --discipline "Cardiology" --max-attempts 5
 ```
 
 ### **📁 Generated Content Location**
@@ -89,13 +96,21 @@ python generate_puzzle.py --output custom_puzzle.json
 - **Backups**: `generated_puzzles/` folder (automatic backups of all puzzles)
 - **Fallback**: Embedded in `script.js` (works offline)
 
-### **🎲 Puzzle Categories**
+### **🎲 Puzzle Categories & Disciplines**
 The AI generates different types of medical puzzles:
 - **Medical Diagnosis (70%)**: Identify specific conditions (e.g., "Sheehan's Syndrome")
 - **Laboratory Test (20%)**: Identify the most appropriate diagnostic test (e.g., "Anti-CCP Antibody")  
 - **Drug Adverse Event (10%)**: Identify medication-related complications (e.g., "Vancomycin nephrotoxicity")
 
-*You can modify these categories and weights in `config.py`*
+**Medical Disciplines** are weighted by frequency (editable in `config.py`):
+- Internal Medicine (15%), Cardiology (12%), Emergency Medicine (10%)
+- Infectious Disease (8%), Pulmonology (8%), Gastroenterology (7%)
+- Nephrology (6%), Neurology (6%), Endocrinology (5%)
+- Hematology (5%), Rheumatology (4%), Oncology (4%)
+- Critical Care (3%), Psychiatry (2%), **Pharmacy (2%)**
+- Dermatology (1%), Ophthalmology (1%), Otolaryngology (1%)
+
+*Pharmacy discipline has 3x higher likelihood of generating adverse drug events*
 
 ## 🏗️ **System Architecture**
 

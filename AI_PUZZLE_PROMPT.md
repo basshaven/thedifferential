@@ -29,6 +29,7 @@ Select ONE medical discipline from this comprehensive list:
 - **Psychiatry**: Mental health, cognitive disorders
 - **Emergency Medicine**: Acute presentations, trauma
 - **Critical Care**: ICU conditions, shock states
+- **Pharmacy**: Drug therapy, adverse events, pharmacokinetics, drug interactions
 - **Dermatology**: Skin conditions with systemic implications
 - **Ophthalmology**: Eye conditions with systemic connections
 - **Otolaryngology**: ENT conditions with systemic features
@@ -71,6 +72,11 @@ Then within your chosen discipline and category, select a specific topic that is
 - Instead of "drug reaction" → "ACE inhibitor-induced angioedema"
 - Instead of "antibiotic side effect" → "Fluoroquinolone-associated tendinopathy"
 - Instead of "chemotherapy toxicity" → "Bleomycin pulmonary fibrosis"
+
+**Pharmacy-Specific Examples:**
+- **Diagnosis**: "Drug-induced hepatotoxicity", "Serotonin syndrome"
+- **Lab Test**: "Serum drug level", "Pharmacogenomic testing"  
+- **Adverse Event**: "Statins myopathy", "Warfarin bleeding", "NSAID nephrotoxicity"
 
 **Chosen Specific Topic**: [State your choice and briefly explain why it's educational]
 

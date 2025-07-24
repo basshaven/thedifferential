@@ -5,6 +5,7 @@ Generates complete medical puzzles using GPT models.
 
 import json
 import asyncio
+import random
 from typing import Dict, Any
 from openai import OpenAI
 from .base_agent import BaseAgent
@@ -20,12 +21,16 @@ class OpenAIPuzzleAgent(BaseAgent):
         self.temperature = config.OPENAI_TEMPERATURE
         self.max_tokens = config.OPENAI_MAX_TOKENS
         
-    async def generate(self, **kwargs) -> Dict[str, Any]:
+    async def generate(self, forced_discipline: str = None, **kwargs) -> Dict[str, Any]:
         """Generate a complete medical puzzle."""
         self.logger.info("Starting puzzle generation...")
         
-        # Load the comprehensive prompt
-        prompt = self._load_prompt()
+        # Select discipline (forced or weighted random)
+        selected_discipline = self._select_discipline(forced_discipline)
+        self.logger.info(f"Selected discipline: {selected_discipline}")
+        
+        # Load the comprehensive prompt with discipline
+        prompt = self._load_prompt(selected_discipline)
         
         try:
             # Make API call
@@ -64,7 +69,22 @@ class OpenAIPuzzleAgent(BaseAgent):
             self.logger.error(f"Failed to generate puzzle: {e}")
             raise
     
-    def _load_prompt(self) -> str:
+    def _select_discipline(self, forced_discipline: str = None) -> str:
+        """Select a medical discipline, either forced or weighted random."""
+        if forced_discipline:
+            # Validate forced discipline exists in weights
+            if forced_discipline in config.DISCIPLINE_WEIGHTS:
+                return forced_discipline
+            else:
+                self.logger.warning(f"Unknown forced discipline '{forced_discipline}', using weighted selection")
+        
+        # Weighted random selection
+        disciplines = list(config.DISCIPLINE_WEIGHTS.keys())
+        weights = list(config.DISCIPLINE_WEIGHTS.values())
+        
+        return random.choices(disciplines, weights=weights)[0]
+    
+    def _load_prompt(self, selected_discipline: str) -> str:
         """Load the comprehensive puzzle generation prompt."""
         try:
             with open('AI_PUZZLE_PROMPT.md', 'r') as f:
@@ -77,22 +97,24 @@ class OpenAIPuzzleAgent(BaseAgent):
             else:
                 core_prompt = prompt_content
             
-            # Add current date
+            # Add discipline instruction and current date
+            discipline_instruction = f"\\n\\n**REQUIRED: You must choose '{selected_discipline}' as your medical discipline.**"
             date_instruction = f"\\n\\nGenerate a puzzle for date: {config.DEFAULT_DATE}"
             
-            return core_prompt + date_instruction
+            return core_prompt + discipline_instruction + date_instruction
             
         except FileNotFoundError:
             # Fallback prompt if file not found
-            return self._get_fallback_prompt()
+            return self._get_fallback_prompt(selected_discipline)
     
-    def _get_fallback_prompt(self) -> str:
+    def _get_fallback_prompt(self, selected_discipline: str) -> str:
         """Fallback prompt if the main prompt file isn't found."""
         return f"""
         Generate a medical diagnostic puzzle for "The Differential" game.
         
         Requirements:
-        - Choose a medical discipline and specific condition
+        - Use '{selected_discipline}' as your medical discipline
+        - Choose a specific condition within this discipline
         - Create exactly 9 clues: 2 easy, 3 medium, 4 hard
         - Each clue must be ≤20 characters
         - Include 20-25 differential diagnoses

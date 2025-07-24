@@ -127,6 +127,12 @@ python generate_puzzle.py --max-attempts 3
 # Type 'r' to regenerate until you find one you like
 ```
 
+### **Force Specific Discipline**
+```bash
+python generate_puzzle.py --discipline "Hematology"
+python generate_puzzle.py --discipline "Pharmacy"
+```
+
 ### **Custom Filename**
 ```bash
 python generate_puzzle.py --output my_puzzle.json

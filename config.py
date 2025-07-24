@@ -75,6 +75,40 @@ PUZZLE_CATEGORIES = {
     }
 }
 
+# Configurable Medical Discipline Weights  
+# You can modify these weights to change how often each discipline appears
+# Higher weights = more likely to be selected
+DISCIPLINE_WEIGHTS = {
+    "Internal Medicine": 0.15,    # General medicine, hospitalist medicine
+    "Cardiology": 0.12,           # Heart conditions, arrhythmias, heart failure
+    "Emergency Medicine": 0.10,   # Acute presentations, trauma
+    "Infectious Disease": 0.08,   # Infections, sepsis, tropical diseases
+    "Pulmonology": 0.08,          # Respiratory diseases, critical care
+    "Gastroenterology": 0.07,     # GI diseases, liver conditions  
+    "Nephrology": 0.06,           # Kidney diseases, electrolyte disorders
+    "Neurology": 0.06,            # Brain, spinal cord, peripheral nerve conditions
+    "Endocrinology": 0.05,        # Diabetes, thyroid, hormonal disorders
+    "Hematology": 0.05,           # Blood disorders, coagulation issues
+    "Rheumatology": 0.04,         # Autoimmune, connective tissue disorders
+    "Oncology": 0.04,             # Cancers, hematologic malignancies
+    "Critical Care": 0.03,        # ICU conditions, shock states
+    "Psychiatry": 0.02,           # Mental health, cognitive disorders
+    "Pharmacy": 0.02,             # Drug therapy, adverse events, pharmacokinetics
+    "Dermatology": 0.01,          # Skin conditions with systemic implications
+    "Ophthalmology": 0.01,        # Eye conditions with systemic connections
+    "Otolaryngology": 0.01        # ENT conditions with systemic features
+}
+
+# Discipline-specific category preferences
+# When a discipline is selected, these weights modify the category selection
+DISCIPLINE_CATEGORY_MODIFIERS = {
+    "Pharmacy": {
+        "adverse_event": 3.0,  # 3x more likely to generate adverse events
+        "diagnosis": 0.5,      # 0.5x less likely to generate diagnoses
+        "lab_test": 1.0        # Normal likelihood for lab tests
+    }
+}
+
 # Output Settings
 PRETTY_PRINT_JSON = True
 CREATE_BACKUPS = True
