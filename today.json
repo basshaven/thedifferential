@@ -1,76 +1,78 @@
 {
   "date": "2025-07-24",
-  "discipline": "Neurology",
+  "discipline": "Cardiology",
   "category": "diagnosis",
-  "topic_rationale": "Guillain-Barr\u00e9 syndrome is a rare but serious autoimmune disorder that affects the peripheral nerves and causes rapid-onset muscle weakness. It's a good educational topic because of its unique clinical presentation and diagnostic challenges.",
-  "answer": "Guillain-Barr\u00e9 Syndrome",
+  "topic_rationale": "Chosen topic is 'Brugada Syndrome'. It is a rare but potentially fatal genetic heart condition that can cause ventricular fibrillation and sudden cardiac death, making it an important diagnosis to consider in young patients with syncope or family history of sudden death. It is characterized by a distinct ECG pattern and unexplained syncope, making it a good learning opportunity.",
+  "answer": "Brugada Syndrome",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "35yo male, healthy"
+      "clue": "coved ST elevation"
     },
     {
       "difficulty": "easy",
-      "clue": "Rapid leg weakness"
+      "clue": "V1-V3 leads ECG"
     },
     {
       "difficulty": "medium",
-      "clue": "Reflexes absent"
+      "clue": "unexplained syncope"
     },
     {
       "difficulty": "medium",
-      "clue": "Ascending paralysis"
+      "clue": "late night agonal respiration"
     },
     {
       "difficulty": "medium",
-      "clue": "Respiratory distress"
+      "clue": "family history sudden death"
     },
     {
       "difficulty": "hard",
-      "clue": "Recent GI infection"
+      "clue": "normal QT interval"
     },
     {
       "difficulty": "hard",
-      "clue": "CSF protein high"
+      "clue": "no structural heart disease"
     },
     {
       "difficulty": "hard",
-      "clue": "Normal cell count CSF"
+      "clue": "negative stress test"
     },
     {
       "difficulty": "hard",
-      "clue": "Nerve conduction slow"
+      "clue": "sodium channelopathy"
     }
   ],
   "concepts": [
-    "Guillain-Barr\u00e9 Syndrome",
-    "Myasthenia Gravis",
-    "Botulism",
-    "Polio",
-    "Stroke",
-    "Spinal cord lesion",
-    "Amyotrophic Lateral Sclerosis",
-    "Transverse Myelitis",
-    "Peripheral Neuropathy",
-    "Acute Inflammatory Demyelinating Polyneuropathy",
-    "Chronic Inflammatory Demyelinating Polyneuropathy",
-    "Hypokalemic Periodic Paralysis",
-    "Lambert-Eaton Syndrome",
-    "Multiple Sclerosis",
-    "Acute Intermittent Porphyria",
-    "Tick Paralysis",
-    "Hypophosphatemia",
-    "West Nile Virus"
+    "Brugada Syndrome",
+    "Long QT Syndrome",
+    "Wolff-Parkinson-White Syndrome",
+    "Myocardial Infarction",
+    "Angina Pectoris",
+    "Pericarditis",
+    "Atrial Fibrillation",
+    "Sick Sinus Syndrome",
+    "Ventricular Tachycardia",
+    "Ventricular Fibrillation",
+    "Supraventricular Tachycardia",
+    "Aortic Stenosis",
+    "Mitral Valve Prolapse",
+    "Hypertrophic Cardiomyopathy",
+    "Dilated Cardiomyopathy",
+    "Arrhythmogenic Right Ventricular Dysplasia",
+    "Heart Failure",
+    "Pulmonary Embolism",
+    "Aortic Dissection",
+    "Cardiac Tamponade"
   ],
   "explanations": {
-    "tile_0": "Guillain-Barr\u00e9 Syndrome can affect anyone, regardless of age or overall health status.",
-    "tile_1": "The classic presentation of Guillain-Barr\u00e9 Syndrome is rapid-onset muscle weakness starting in the legs.",
-    "tile_2": "A hallmark of Guillain-Barr\u00e9 Syndrome is absent or decreased deep tendon reflexes.",
-    "tile_3": "Guillain-Barr\u00e9 Syndrome typically presents with an ascending pattern of paralysis.",
-    "tile_4": "Respiratory distress can occur in severe cases due to paralysis affecting the diaphragm and chest muscles.",
-    "tile_5": "Many cases of Guillain-Barr\u00e9 Syndrome are preceded by an infection, commonly Campylobacter jejuni, a bacterium that can cause gastrointestinal illness.",
-    "tile_6": "A distinguishing feature of Guillain-Barr\u00e9 Syndrome is high protein levels in the cerebrospinal fluid (CSF).",
-    "tile_7": "Despite the high protein level, the cell count in the CSF remains normal - a phenomenon known as albuminocytologic dissociation.",
-    "tile_8": "Nerve conduction studies in Guillain-Barr\u00e9 Syndrome often show slowed velocities, indicating demyelination of the peripheral nerves."
+    "tile_0": "Coved-type ST elevation in leads V1-V3 on ECG is characteristic of Brugada Syndrome.",
+    "tile_1": "Brugada Syndrome is identified by specific ECG changes in the right precordial leads (V1-V3).",
+    "tile_2": "Unexplained syncope in Brugada Syndrome may be due to ventricular arrhythmias.",
+    "tile_3": "Patients with Brugada Syndrome may experience agonal respiration during sleep due to nocturnal ventricular arrhythmias.",
+    "tile_4": "Brugada Syndrome is a genetic disorder that can cause sudden cardiac death, so a family history of sudden death is a clue.",
+    "tile_5": "Unlike Long QT Syndrome, Brugada Syndrome presents with a normal QT interval.",
+    "tile_6": "Brugada Syndrome occurs without structural heart disease, differentiating it from conditions like hypertrophic cardiomyopathy.",
+    "tile_7": "Stress tests are typically negative in Brugada Syndrome as it is not caused by myocardial ischemia.",
+    "tile_8": "Brugada Syndrome is a type of sodium channelopathy, affecting the ion channels in heart cells and leading to arrhythmias."
   }
 }
