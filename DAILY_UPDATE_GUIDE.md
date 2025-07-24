@@ -15,7 +15,7 @@ cd "Differential 2"
 
 ### **Step 3: Generate New Puzzle**
 ```bash
-python generate_puzzle.py
+python3 generate_puzzle.py
 ```
 
 **What happens:**
@@ -45,18 +45,14 @@ python generate_puzzle.py
 - **Type `r`** if you want to regenerate a different puzzle
 
 ### **Step 5: Upload to Live Site**
+The script will show you the exact commands to copy and paste:
 ```bash
 git add today.json
-git commit -m "Daily puzzle: [Copy the answer from Step 3]"
+git commit -m "Daily puzzle: Cardiology - 2025-07-24"
 git push origin main
 ```
 
-**Example:**
-```bash
-git add today.json
-git commit -m "Daily puzzle: Takotsubo Cardiomyopathy"
-git push origin main
-```
+**No need to type the answer!** The commit message is automatically generated from the discipline and date, so you can still play the game yourself without spoilers.
 
 ### **Step 6: Wait and Verify**
 - **Wait**: 2-3 minutes for GitHub to update
@@ -72,9 +68,9 @@ cd "Differential 2"
 # Generate puzzle (follow prompts)
 python generate_puzzle.py
 
-# Upload to live site (replace "Diagnosis Name" with actual answer)
+# Upload to live site (the script shows you the exact command)
 git add today.json
-git commit -m "Daily puzzle: Diagnosis Name"
+git commit -m "Daily puzzle: [discipline] - [date]"
 git push origin main
 
 # Verify live site in 2-3 minutes:

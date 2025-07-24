@@ -39,10 +39,10 @@ A minimalist, NYT-style daily medical puzzle game where players diagnose conditi
 
 3. **Approve or regenerate** until you're satisfied
 
-4. **Push to live site:**
+4. **Push to live site:** (script provides exact commands - no spoilers!)
    ```bash
    git add today.json
-   git commit -m "Daily puzzle: [Diagnosis Name]"
+   git commit -m "Daily puzzle: [discipline] - [date]"
    git push origin main
    ```
 
@@ -86,6 +86,14 @@ python generate_puzzle.py --output custom_puzzle.json
 - **Live puzzle**: `today.json` (automatically loaded by game)
 - **Backups**: `generated_puzzles/` folder (automatic backups of all puzzles)
 - **Fallback**: Embedded in `script.js` (works offline)
+
+### **🎲 Puzzle Categories**
+The AI generates different types of medical puzzles:
+- **Medical Diagnosis (70%)**: Identify specific conditions (e.g., "Sheehan's Syndrome")
+- **Laboratory Test (20%)**: Identify the most appropriate diagnostic test (e.g., "Anti-CCP Antibody")  
+- **Drug Adverse Event (10%)**: Identify medication-related complications (e.g., "Vancomycin nephrotoxicity")
+
+*You can modify these categories and weights in `config.py`*
 
 ## 🏗️ **System Architecture**
 

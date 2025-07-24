@@ -52,6 +52,29 @@ MIN_CONCEPTS = 20
 MAX_CONCEPTS = 25
 MAX_CLUE_LENGTH = 20
 
+# Configurable Puzzle Categories
+# You can modify these to change what types of puzzles are generated
+PUZZLE_CATEGORIES = {
+    "diagnosis": {
+        "name": "Medical Diagnosis",
+        "description": "Diagnose a specific medical condition",
+        "weight": 0.7,  # 70% of puzzles will be diagnoses
+        "examples": ["Sheehan's Syndrome", "Aortic Dissection", "Takotsubo Cardiomyopathy"]
+    },
+    "lab_test": {
+        "name": "Laboratory Test",
+        "description": "Identify the most appropriate diagnostic test",
+        "weight": 0.2,  # 20% of puzzles will be lab tests
+        "examples": ["Anti-CCP Antibody", "Troponin I", "HbA1c"]
+    },
+    "adverse_event": {
+        "name": "Drug Adverse Event",
+        "description": "Identify a drug-related adverse reaction",
+        "weight": 0.1,  # 10% of puzzles will be adverse events
+        "examples": ["Vancomycin-induced nephrotoxicity", "Heparin-induced thrombocytopenia"]
+    }
+}
+
 # Output Settings
 PRETTY_PRINT_JSON = True
 CREATE_BACKUPS = True

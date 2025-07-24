@@ -157,6 +157,32 @@ class PuzzleGenerator:
         except Exception as e:
             self.logger.error(f"Failed to save puzzle: {e}")
             return False
+    
+    def generate_commit_message(self, puzzle: Dict[str, Any]) -> str:
+        """Generate a commit message based on puzzle content."""
+        answer = puzzle.get('answer', 'Unknown')
+        discipline = puzzle.get('discipline', 'Medical')
+        date = puzzle.get('date', datetime.now().strftime("%Y-%m-%d"))
+        
+        # Create a short commit message without revealing the answer
+        return f"Daily puzzle: {discipline} - {date}"
+    
+    def show_git_commands(self, puzzle: Dict[str, Any]):
+        """Display the git commands needed to deploy the puzzle."""
+        commit_msg = self.generate_commit_message(puzzle)
+        
+        print("\n" + "="*60)
+        print("🚀 READY TO DEPLOY")
+        print("="*60)
+        print("\nCopy and run these commands to publish your puzzle:")
+        print("\n" + "-"*40)
+        print("git add today.json")
+        print(f'git commit -m "{commit_msg}"')
+        print("git push origin main")
+        print("-"*40)
+        print("\nThen visit: https://basshaven.github.io/thedifferential")
+        print("(Wait 2-3 minutes for GitHub Pages to update)")
+        print("="*60)
 
 async def main():
     """Main application entry point."""
@@ -225,6 +251,7 @@ async def main():
                     # Approved
                     if generator.save_puzzle(puzzle, args.output):
                         print("\\n🎉 Puzzle approved and saved!")
+                        generator.show_git_commands(puzzle)
                         return
                     else:
                         print("\\n❌ Failed to save puzzle")
