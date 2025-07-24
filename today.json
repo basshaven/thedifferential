@@ -1,80 +1,78 @@
 {
   "date": "2025-07-24",
-  "discipline": "Nephrology",
-  "topic_rationale": "Classic cause of nephrotic syndrome in children/young adults, excellent teaching case for proteinuria workup",
-  "answer": "Minimal Change Disease",
+  "discipline": "Endocrinology",
+  "topic_rationale": "Sheehan's syndrome is a not so common but highly educational condition, which occurs as a result of ischemic pituitary necrosis due to severe blood loss during childbirth",
+  "answer": "Sheehan's Syndrome",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "8yo boy swelling"
+      "clue": "Postpartum woman"
     },
     {
-      "difficulty": "easy", 
-      "clue": "Facial puffiness"
-    },
-    {
-      "difficulty": "medium",
-      "clue": "Protein 4+ dipstick"
+      "difficulty": "easy",
+      "clue": "Severe obstetric hemorrhage"
     },
     {
       "difficulty": "medium",
-      "clue": "Albumin 1.8 g/dL"
+      "clue": "Failed lactation"
     },
     {
       "difficulty": "medium",
-      "clue": "Cholesterol 320"
+      "clue": "Fatigue & weight gain"
+    },
+    {
+      "difficulty": "medium",
+      "clue": "Loss of pubic hair"
     },
     {
       "difficulty": "hard",
-      "clue": "Normal glomeruli LM"
+      "clue": "Low plasma ACTH"
     },
     {
       "difficulty": "hard",
-      "clue": "Podocyte fusion EM"
+      "clue": "Low serum TSH"
     },
     {
       "difficulty": "hard",
-      "clue": "Steroid responsive"
+      "clue": "MRI: Empty sella turcica"
     },
     {
       "difficulty": "hard",
-      "clue": "No immune deposits"
+      "clue": "Hyponatremia"
     }
   ],
   "concepts": [
-    "Minimal Change Disease",
-    "Focal Segmental Glomerulosclerosis",
-    "Membranous Nephropathy",
-    "Membranoproliferative GN",
-    "IgA Nephropathy",
-    "Lupus Nephritis",
-    "Diabetic Nephropathy",
-    "Amyloidosis",
-    "Post-infectious GN",
-    "Acute Tubular Necrosis",
-    "Chronic Kidney Disease",
-    "Nephritic Syndrome",
-    "Acute Interstitial Nephritis",
-    "Polycystic Kidney Disease",
-    "Alport Syndrome",
-    "Thin Basement Membrane",
-    "IgM Nephropathy",
-    "C3 Glomerulopathy",
-    "Anti-GBM Disease",
-    "Thrombotic Microangiopathy",
-    "Light Chain Deposition",
-    "Fibrillary GN",
-    "Immunotactoid GN"
+    "Sheehan's Syndrome",
+    "Postpartum depression",
+    "Pituitary adenoma",
+    "Hypopituitarism",
+    "Panhypopituitarism",
+    "Postpartum thyroiditis",
+    "Postpartum cardiomyopathy",
+    "Pituitary apoplexy",
+    "Hypothyroidism",
+    "Adrenal insufficiency",
+    "Cushing's disease",
+    "Hypoparathyroidism",
+    "Chronic fatigue syndrome",
+    "Polycystic ovary syndrome",
+    "Addison's disease",
+    "Graves' disease",
+    "Hyperprolactinemia",
+    "Empty sella syndrome",
+    "Prolactinoma",
+    "Hypogonadism",
+    "Postpartum psychosis"
   ],
   "explanations": {
-    "tile_0": "Young age (8 years old) is classic for minimal change disease, which is the most common cause of nephrotic syndrome in children.",
-    "tile_1": "Facial swelling, especially periorbital edema, is often the first sign parents notice in pediatric nephrotic syndrome.",
-    "tile_2": "Massive proteinuria (4+ on dipstick) is the hallmark of nephrotic syndrome, defined as >3.5g protein per day.",
-    "tile_3": "Severe hypoalbuminemia (<2.5 g/dL) occurs due to urinary protein losses and contributes to edema formation.",
-    "tile_4": "Hypercholesterolemia is part of the classic nephrotic syndrome tetrad, caused by increased hepatic lipoprotein synthesis.",
-    "tile_5": "Light microscopy shows normal-appearing glomeruli in minimal change disease, distinguishing it from other causes.",
-    "tile_6": "Electron microscopy reveals podocyte foot process effacement (fusion), the pathognomonic finding in minimal change disease.",
-    "tile_7": "Excellent response to corticosteroids (>90% in children) is characteristic and helps confirm the diagnosis.",
-    "tile_8": "Absence of immune deposits on immunofluorescence distinguishes minimal change disease from immune-mediated glomerulonephritis."
+    "tile_0": "Sheehan's syndrome typically affects women who have had a severe obstetric hemorrhage.",
+    "tile_1": "Severe blood loss during childbirth can lead to ischemia and necrosis of the pituitary gland.",
+    "tile_2": "Sheehan's syndrome can cause failure of lactation postpartum due to pituitary necrosis affecting prolactin production.",
+    "tile_3": "The condition can cause fatigue and weight gain due to deficiencies in pituitary hormones, especially thyroid-stimulating hormone (TSH) and adrenocorticotropic hormone (ACTH).",
+    "tile_4": "Loss of pubic and axillary hair can occur due to decreased secretion of sex hormones.",
+    "tile_5": "Low plasma ACTH level indicates adrenal insufficiency, which is a common feature in Sheehan's syndrome.",
+    "tile_6": "Low serum TSH levels indicate pituitary (secondary) hypothyroidism which is a common feature in Sheehan's syndrome.",
+    "tile_7": "MRI showing empty sella turcica is a typical finding in Sheehan's syndrome due to postpartum pituitary gland necrosis.",
+    "tile_8": "Hyponatremia can occur due to the lack of pituitary production of ACTH leading to adrenal insufficiency and decreased cortisol."
   }
 }
