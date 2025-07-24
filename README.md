@@ -8,7 +8,9 @@ A minimalist, NYT-style daily medical puzzle game where players diagnose conditi
 
 ### **Core Gameplay**
 - **3x3 tile grid** organized by difficulty columns (Easy | Medium | Hard)
-- **Strategic scoring**: Easy tiles -3 points, Medium -2, Hard -1 (rewards flipping harder tiles first)
+- **Strategic scoring**: Easy tiles -3 points, Medium -2, Hard -1 
+- **Key Strategy**: Easy tiles cost MORE but contain the most pathognomonic/characteristic clues
+- **Optimal Play**: Flip easy tiles first to get maximum diagnostic value per point
 - **Base score**: 25 points, range 0-100
 - **3 attempts** with guess bonuses: 1st +25, 2nd +10, 3rd +0
 - **Wrong guess penalty**: -5 points each
@@ -146,7 +148,8 @@ The AI generates different types of medical puzzles:
 
 - **Minimalist aesthetic** inspired by NYT games
 - **Educational focus** with post-game learning
-- **Strategic gameplay** rewarding efficient tile selection
+- **Strategic gameplay** where easy tiles provide maximum diagnostic value for higher cost
+- **Pathognomonic approach** - easy tiles contain the most characteristic features
 - **Medical accuracy** with evidence-based puzzles
 - **Mobile-first** responsive design
 - **Celebration of success** with engaging animations

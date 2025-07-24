@@ -21,6 +21,7 @@ python3 generate_puzzle.py
 **What happens:**
 - Script loads OpenAI and generates a medical puzzle
 - Shows you: discipline, diagnosis, tile clues, explanations
+- **Easy tiles contain the most characteristic/pathognomonic features**
 - Displays like this:
 ```
 🎯 GENERATED PUZZLE

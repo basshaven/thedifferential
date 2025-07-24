@@ -5,7 +5,9 @@ You are tasked with creating a daily medical diagnostic puzzle for "The Differen
 
 ## Game Mechanics Understanding
 - **Tile Layout**: 3 columns by difficulty - Column 1: 2 easy tiles, Column 2: 3 medium tiles, Column 3: 4 hard tiles
-- **Scoring**: Base 25 points. Each tile flip costs: Easy -3, Medium -2, Hard -1 (strategy rewards flipping harder tiles first)
+- **Strategic Scoring**: Base 25 points. Each tile flip costs: Easy -3, Medium -2, Hard -1 
+- **Key Strategy**: Easy tiles cost the MOST points but should provide the MOST valuable/pathognomonic information
+- **Player Logic**: Flip easy tiles first to get the most diagnostic value per point spent
 - **Guessing**: 3 attempts maximum. Bonuses: 1st correct +25, 2nd correct +10, 3rd correct +0. Wrong guesses -5 each
 - **Target Score Range**: 0-100 points (encourages efficient play)
 
@@ -73,25 +75,35 @@ Then within your chosen discipline and category, select a specific topic that is
 **Chosen Specific Topic**: [State your choice and briefly explain why it's educational]
 
 ### Step 3: Generate Tile Clues
-Create exactly 9 clues following this distribution:
+Create exactly 9 clues following this **strategic difficulty hierarchy** (easy tiles should be most valuable since they cost the most points):
 
-#### Easy Tiles (2 tiles - Column 1):
-- **Purpose**: Basic demographics, common symptoms, obvious presentations
+#### Easy Tiles (2 tiles - Column 1) - MOST PATHOGNOMONIC:
+- **Purpose**: Classic, characteristic features that strongly suggest the answer
 - **Character limit**: ~20 characters max
-- **Examples**: "65yo male smoker", "Chest pain 2hrs", "High fever chills"
-- **Strategy**: Information most players would expect/recognize
+- **Strategy**: Most valuable information - players pay -3 points, should get the most specific clues
+- **Examples for Diagnosis**: 
+  - Guillain-Barré: "Ascending paralysis", "Areflexia bilateral"
+  - Takotsubo: "Apical ballooning", "Emotional stressor"
+  - Kawasaki: "Strawberry tongue", "Coronary aneurysms"
+- **Examples for Lab Tests**: 
+  - Anti-CCP: "RA diagnosis", "Erosive changes"
+  - Troponin: "Chest pain acute", "STEMI ECG"
+- **Examples for Adverse Events**:
+  - Vancomycin nephrotoxicity: "Serum creat rise", "Recent vanco"
 
-#### Medium Tiles (3 tiles - Column 2):
-- **Purpose**: Lab values, vital signs, intermediate findings
+#### Medium Tiles (3 tiles - Column 2) - SUPPORTIVE FEATURES:
+- **Purpose**: Important associated findings, but not pathognomonic alone
 - **Character limit**: ~20 characters max  
-- **Examples**: "WBC 15k bands", "BP 80/40 mmHg", "Creatinine 2.5↑"
-- **Strategy**: Requires some medical knowledge to interpret
+- **Strategy**: Good supporting evidence - worth the -2 point cost
+- **Examples**: "Miller-Fisher variant", "CSF protein high", "Recent infection"
 
-#### Hard Tiles (4 tiles - Column 3):
-- **Purpose**: Specific tests, pathognomonic findings, advanced diagnostics
+#### Hard Tiles (4 tiles - Column 3) - TECHNICAL/SUBTLE:
+- **Purpose**: Technical details, lab values, subtle findings requiring expertise
 - **Character limit**: ~20 characters max
-- **Examples**: "Anti-GBM +", "Schizocytes on smear", "C-ANCA positive"
-- **Strategy**: Definitive/confirmatory information for experts
+- **Strategy**: Confirmatory details for experts - cheapest at -1 point
+- **Examples**: "Anti-GQ1b positive", "Nerve conduction slow", "EMG: denervation"
+
+**CRITICAL PRINCIPLE**: Easy tiles should be so characteristic that an expert could guess the answer from just 1-2 easy tiles. Avoid generic demographics ("35yo male") in easy tiles.
 
 ### Step 4: Create Alternative Options List
 Generate 20-25 plausible alternatives based on your puzzle category:
@@ -159,18 +171,32 @@ For each tile, provide a 1-2 sentence explanation of how it relates to the diagn
 
 ## Quality Criteria
 - **Clues must be factually accurate** and evidence-based
-- **Difficulty progression should be logical** (easy→medium→hard)
-- **No abbreviations without context** (spell out what's needed)
-- **Avoid overly obscure terms** in easy/medium tiles
-- **Hard tiles can be very specific** but must be definitive
+- **Easy tiles must be pathognomonic** - characteristic features that strongly suggest the answer
+- **Avoid generic demographics in easy tiles** (age/gender alone tells you nothing specific)
+- **Difficulty should reflect diagnostic value**, not medical complexity
+- **No abbreviations without context** (spell out what's needed)  
+- **Hard tiles can be technical** but should be definitive when present
 - **Ensure diagnostic coherence** - all clues should point to the answer
-- **Cultural sensitivity** - avoid biased demographic assumptions
+- **Strategic value alignment** - most expensive tiles (easy) should provide most diagnostic value
+
+### Examples of GOOD vs BAD Easy Tiles:
+**For Guillain-Barré Syndrome:**
+- ✅ GOOD: "Ascending paralysis", "Areflexia bilateral" 
+- ❌ BAD: "35yo male", "Hospitalized"
+
+**For Anti-CCP Antibody Test:**
+- ✅ GOOD: "RA diagnosis", "Joint erosions"
+- ❌ BAD: "Blood test", "Lab ordered"
+
+**For Vancomycin Nephrotoxicity:**
+- ✅ GOOD: "Creatinine doubled", "Recent vancomycin"
+- ❌ BAD: "ICU patient", "On antibiotics"
 
 ## Educational Goals
 - **Promote clinical reasoning** through strategic tile selection
 - **Teach diagnostic patterns** across medical specialties  
 - **Highlight key differentiating features** of conditions
-- **Encourage cost-effective diagnostic thinking** (harder tiles = better value)
+- **Encourage strategic thinking** (easy tiles cost more but provide most diagnostic value)
 - **Provide learning moments** through post-game explanations
 
 ## Example Template Usage
@@ -179,9 +205,11 @@ Discipline: Hematology
 Topic: Thrombotic Thrombocytopenic Purpura (TTP)
 Rationale: Classic pentad presentation with high mortality if missed, excellent teaching case for hematologic emergencies
 
-Easy tiles: Demographics + obvious symptoms
-Medium tiles: Basic labs + vital signs  
-Hard tiles: Specific findings + confirmatory tests
+Easy tiles: "Thrombocytopenia", "Microangiopathic anemia" (pathognomonic features)
+Medium tiles: "Neurologic symptoms", "Renal dysfunction", "Fever" (classic pentad components)
+Hard tiles: "Schistocytes on smear", "LDH >1000", "ADAMTS13 deficiency" (technical confirmatory)
 ```
+
+**Remember**: Easy tiles should be so characteristic that a hematologist could suspect TTP from just those two clues alone!
 
 Now generate a complete puzzle following this systematic approach!
