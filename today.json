@@ -1,0 +1,64 @@
+{
+  "date": "2025-07-25",
+  "answer": "Urosepsis",
+  "tiles": [
+    {
+      "difficulty": "easy",
+      "clue": "Elderly fever chills"
+    },
+    {
+      "difficulty": "easy",
+      "clue": "Flank pain dysuria"
+    },
+    {
+      "difficulty": "medium",
+      "clue": "MAP under 65 mmHg"
+    },
+    {
+      "difficulty": "medium",
+      "clue": "Lactate 3.5 mmol/L"
+    },
+    {
+      "difficulty": "medium",
+      "clue": "WBC 18k with bands"
+    },
+    {
+      "difficulty": "hard",
+      "clue": "Nitrite+ urine"
+    },
+    {
+      "difficulty": "hard",
+      "clue": "Gram-neg bacilli"
+    },
+    {
+      "difficulty": "hard",
+      "clue": "PCT 8 ug/L"
+    },
+    {
+      "difficulty": "hard",
+      "clue": "Creatinine 2.5↑"
+    }
+  ],
+  "concepts": [
+    "Urosepsis",
+    "Septic Shock",
+    "Pneumonia Sepsis",
+    "Biliary Sepsis",
+    "Intra-abdominal Sepsis",
+    "Endocarditis",
+    "Meningococcemia",
+    "Necrotizing Fasciitis",
+    "Toxic Shock Syndrome",
+    "Catheter-related BSI",
+    "Clostridioides difficile",
+    "Influenza A",
+    "Aspiration Pneumonitis",
+    "Diabetic Ketoacidosis",
+    "Pulmonary Embolism",
+    "Acute Pancreatitis",
+    "Upper GI Bleed",
+    "Acute Coronary Syndrome",
+    "Rhabdomyolysis",
+    "Acute Kidney Injury"
+  ]
+}

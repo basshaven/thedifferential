@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Crimson Text', Georgia, serif;
+    background-color: #000;
+    color: #fff;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #ffeb3b;
+    padding-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+    color: #ffeb3b;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: space-between;
+    max-width: 300px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #4caf50;
+}
+
+.game-board {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tile {
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    border-radius: 8px;
+    border: 2px solid transparent;
+}
+
+.tile:hover:not(.flipped) {
+    transform: scale(1.05);
+    border-color: #ffeb3b;
+}
+
+.tile.flipped {
+    cursor: default;
+    border-color: #4caf50;
+}
+
+.tile.difficulty-hard {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.tile.difficulty-medium {
+    background-color: #ffeb3b;
+    color: #000;
+    opacity: 0.8;
+}
+
+.tile.difficulty-easy {
+    background-color: #fff59d;
+    color: #000;
+    opacity: 0.6;
+}
+
+.tile.flipped .tile-content {
+    color: #000;
+    font-weight: 600;
+}
+
+.tile.game-ended {
+    opacity: 0.4;
+}
+
+.score-log {
+    background-color: #1a1a1a;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.score-log h3 {
+    color: #ffeb3b;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.log-entries {
+    font-size: 0.9rem;
+}
+
+.log-entry {
+    padding: 3px 0;
+    color: #ccc;
+    border-bottom: 1px solid #333;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.log-entry.score-gain {
+    color: #4caf50;
+}
+
+.log-entry.score-loss {
+    color: #f44336;
+}
+
+.guess-section {
+    max-width: 400px;
+    margin: 0 auto 30px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #4caf50;
+}
+
+#guessInput {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ffeb3b;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    background-color: #333;
+    color: #fff;
+    font-family: 'Crimson Text', Georgia, serif;
+}
+
+#guessInput:focus {
+    outline: none;
+    border-color: #4caf50;
+    background-color: #444;
+}
+
+#submitGuess {
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-weight: 600;
+}
+
+#submitGuess:hover {
+    background-color: #66bb6a;
+}
+
+#submitGuess:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+    color: #999;
+}
+
+.game-message {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    min-height: 30px;
+}
+
+.game-message.success {
+    color: #4caf50;
+}
+
+.game-message.error {
+    color: #f44336;
+}
+
+.instructions {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.instructions h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    color: #ffeb3b;
+}
+
+.instructions ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.instructions li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    color: #ccc;
+}
+
+.instructions li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .game-board {
+        max-width: 350px;
+        gap: 10px;
+    }
+    
+    .tile {
+        width: 100px;
+        height: 100px;
+        font-size: 0.8rem;
+    }
+}
