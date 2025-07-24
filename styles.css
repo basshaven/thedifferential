@@ -151,6 +151,59 @@ h1 {
     color: #f44336;
 }
 
+.explanations-section {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    margin: 20px 0;
+}
+
+.explanations-section h3 {
+    color: #ffeb3b;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.explanations-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.explanation-item {
+    background-color: #2a2a2a;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid transparent;
+}
+
+.explanation-item.difficulty-easy {
+    border-left-color: #fff59d;
+}
+
+.explanation-item.difficulty-medium {
+    border-left-color: #ffeb3b;
+}
+
+.explanation-item.difficulty-hard {
+    border-left-color: #ffc107;
+}
+
+.explanation-clue {
+    font-weight: 600;
+    color: #ffeb3b;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+.explanation-text {
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
 .guess-section {
     max-width: 400px;
     margin: 0 auto 30px;

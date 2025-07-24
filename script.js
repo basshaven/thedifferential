@@ -39,68 +39,82 @@ class DifferentialGame {
 
     getFallbackData() {
         return {
-            "date": "2025-07-25",
-            "answer": "Urosepsis",
+            "date": "2025-07-24",
+            "answer": "Minimal Change Disease",
             "tiles": [
                 {
                     "difficulty": "easy",
-                    "clue": "Elderly fever chills"
+                    "clue": "8yo boy swelling"
                 },
                 {
-                    "difficulty": "medium", 
-                    "clue": "MAP under 65 mmHg"
-                },
-                {
-                    "difficulty": "hard",
-                    "clue": "Nitrite+ urine"
-                },
-                {
-                    "difficulty": "easy",
-                    "clue": "Flank pain dysuria"
+                    "difficulty": "easy", 
+                    "clue": "Facial puffiness"
                 },
                 {
                     "difficulty": "medium",
-                    "clue": "Lactate 3.5 mmol/L"
-                },
-                {
-                    "difficulty": "hard", 
-                    "clue": "Gram-neg bacilli"
+                    "clue": "Protein 4+ dipstick"
                 },
                 {
                     "difficulty": "medium",
-                    "clue": "WBC 18k with bands"
+                    "clue": "Albumin 1.8 g/dL"
+                },
+                {
+                    "difficulty": "medium",
+                    "clue": "Cholesterol 320"
                 },
                 {
                     "difficulty": "hard",
-                    "clue": "PCT 8 ug/L"
+                    "clue": "Normal glomeruli LM"
                 },
                 {
                     "difficulty": "hard",
-                    "clue": "Creatinine 2.5↑"
+                    "clue": "Podocyte fusion EM"
+                },
+                {
+                    "difficulty": "hard",
+                    "clue": "Steroid responsive"
+                },
+                {
+                    "difficulty": "hard",
+                    "clue": "No immune deposits"
                 }
             ],
             "concepts": [
-                "Urosepsis",
-                "Septic Shock",
-                "Pneumonia Sepsis",
-                "Biliary Sepsis",
-                "Intra-abdominal Sepsis",
-                "Endocarditis",
-                "Meningococcemia",
-                "Necrotizing Fasciitis",
-                "Toxic Shock Syndrome",
-                "Catheter-related BSI",
-                "Clostridioides difficile",
-                "Influenza A",
-                "Aspiration Pneumonitis",
-                "Diabetic Ketoacidosis",
-                "Pulmonary Embolism",
-                "Acute Pancreatitis",
-                "Upper GI Bleed",
-                "Acute Coronary Syndrome",
-                "Rhabdomyolysis",
-                "Acute Kidney Injury"
-            ]
+                "Minimal Change Disease",
+                "Focal Segmental Glomerulosclerosis",
+                "Membranous Nephropathy",
+                "Membranoproliferative GN",
+                "IgA Nephropathy",
+                "Lupus Nephritis",
+                "Diabetic Nephropathy",
+                "Amyloidosis",
+                "Post-infectious GN",
+                "Acute Tubular Necrosis",
+                "Chronic Kidney Disease",
+                "Nephritic Syndrome",
+                "Acute Interstitial Nephritis",
+                "Polycystic Kidney Disease",
+                "Alport Syndrome",
+                "Thin Basement Membrane",
+                "IgM Nephropathy",
+                "C3 Glomerulopathy",
+                "Anti-GBM Disease",
+                "Thrombotic Microangiopathy",
+                "Light Chain Deposition",
+                "Fibrillary GN",
+                "Immunotactoid GN"
+            ],
+            "explanations": {
+                "tile_0": "Young age (8 years old) is classic for minimal change disease, which is the most common cause of nephrotic syndrome in children.",
+                "tile_1": "Facial swelling, especially periorbital edema, is often the first sign parents notice in pediatric nephrotic syndrome.",
+                "tile_2": "Massive proteinuria (4+ on dipstick) is the hallmark of nephrotic syndrome, defined as >3.5g protein per day.",
+                "tile_3": "Severe hypoalbuminemia (<2.5 g/dL) occurs due to urinary protein losses and contributes to edema formation.",
+                "tile_4": "Hypercholesterolemia is part of the classic nephrotic syndrome tetrad, caused by increased hepatic lipoprotein synthesis.",
+                "tile_5": "Light microscopy shows normal-appearing glomeruli in minimal change disease, distinguishing it from other causes.",
+                "tile_6": "Electron microscopy reveals podocyte foot process effacement (fusion), the pathognomonic finding in minimal change disease.",
+                "tile_7": "Excellent response to corticosteroids (>90% in children) is characteristic and helps confirm the diagnosis.",
+                "tile_8": "Absence of immune deposits on immunofluorescence distinguishes minimal change disease from immune-mediated glomerulonephritis."
+            }
         };
     }
 
@@ -114,25 +128,23 @@ class DifferentialGame {
             return;
         }
 
-        // Create jagged layout: 2-3-4 tiles per column
-        const columns = [
-            [0, 3],           // Column 1: 2 easy tiles
-            [1, 4, 6],        // Column 2: 3 medium tiles  
-            [2, 5, 7, 8]      // Column 3: 4 hard tiles
-        ];
-
-        columns.forEach(columnTiles => {
+        // Create columns by difficulty: easy, medium, hard
+        const difficulties = ['easy', 'medium', 'hard'];
+        
+        difficulties.forEach(difficulty => {
             const column = document.createElement('div');
             column.className = 'game-column';
             
-            columnTiles.forEach(tileIndex => {
-                const tile = this.gameData.tiles[tileIndex];
-                const tileElement = document.createElement('div');
-                tileElement.className = `tile difficulty-${tile.difficulty}`;
-                tileElement.dataset.index = tileIndex;
-                tileElement.innerHTML = `<div class="tile-content"></div>`;
-                tileElement.addEventListener('click', () => this.flipTile(tileIndex));
-                column.appendChild(tileElement);
+            // Find all tiles of this difficulty
+            this.gameData.tiles.forEach((tile, index) => {
+                if (tile.difficulty === difficulty) {
+                    const tileElement = document.createElement('div');
+                    tileElement.className = `tile difficulty-${tile.difficulty}`;
+                    tileElement.dataset.index = index;
+                    tileElement.innerHTML = `<div class="tile-content"></div>`;
+                    tileElement.addEventListener('click', () => this.flipTile(index));
+                    column.appendChild(tileElement);
+                }
             });
             
             gameBoard.appendChild(column);
@@ -266,6 +278,41 @@ class DifferentialGame {
         const tiles = document.querySelectorAll('.tile');
         tiles.forEach(tile => {
             tile.classList.add('game-ended');
+        });
+        
+        // Show explanations after a brief delay
+        setTimeout(() => {
+            this.showExplanations();
+        }, 2000);
+    }
+
+    showExplanations() {
+        const explanationsSection = document.createElement('div');
+        explanationsSection.className = 'explanations-section';
+        explanationsSection.innerHTML = `
+            <h3>How Each Clue Relates to ${this.gameData.answer}</h3>
+            <div class="explanations-grid" id="explanationsGrid"></div>
+        `;
+        
+        const gameMessage = document.getElementById('gameMessage');
+        gameMessage.parentNode.insertBefore(explanationsSection, gameMessage.nextSibling);
+        
+        const explanationsGrid = document.getElementById('explanationsGrid');
+        
+        this.gameData.tiles.forEach((tile, index) => {
+            const explanationItem = document.createElement('div');
+            explanationItem.className = `explanation-item difficulty-${tile.difficulty}`;
+            
+            const explanation = this.gameData.explanations ? 
+                this.gameData.explanations[`tile_${index}`] : 
+                `This ${tile.difficulty} clue "${tile.clue}" helps confirm the diagnosis.`;
+            
+            explanationItem.innerHTML = `
+                <div class="explanation-clue">"${tile.clue}"</div>
+                <div class="explanation-text">${explanation}</div>
+            `;
+            
+            explanationsGrid.appendChild(explanationItem);
         });
     }
 

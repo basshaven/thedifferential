@@ -1,64 +1,80 @@
 {
-  "date": "2025-07-25",
-  "answer": "Urosepsis",
+  "date": "2025-07-24",
+  "discipline": "Nephrology",
+  "topic_rationale": "Classic cause of nephrotic syndrome in children/young adults, excellent teaching case for proteinuria workup",
+  "answer": "Minimal Change Disease",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Elderly fever chills"
+      "clue": "8yo boy swelling"
     },
     {
-      "difficulty": "easy",
-      "clue": "Flank pain dysuria"
-    },
-    {
-      "difficulty": "medium",
-      "clue": "MAP under 65 mmHg"
+      "difficulty": "easy", 
+      "clue": "Facial puffiness"
     },
     {
       "difficulty": "medium",
-      "clue": "Lactate 3.5 mmol/L"
+      "clue": "Protein 4+ dipstick"
     },
     {
       "difficulty": "medium",
-      "clue": "WBC 18k with bands"
+      "clue": "Albumin 1.8 g/dL"
+    },
+    {
+      "difficulty": "medium",
+      "clue": "Cholesterol 320"
     },
     {
       "difficulty": "hard",
-      "clue": "Nitrite+ urine"
+      "clue": "Normal glomeruli LM"
     },
     {
       "difficulty": "hard",
-      "clue": "Gram-neg bacilli"
+      "clue": "Podocyte fusion EM"
     },
     {
       "difficulty": "hard",
-      "clue": "PCT 8 ug/L"
+      "clue": "Steroid responsive"
     },
     {
       "difficulty": "hard",
-      "clue": "Creatinine 2.5↑"
+      "clue": "No immune deposits"
     }
   ],
   "concepts": [
-    "Urosepsis",
-    "Septic Shock",
-    "Pneumonia Sepsis",
-    "Biliary Sepsis",
-    "Intra-abdominal Sepsis",
-    "Endocarditis",
-    "Meningococcemia",
-    "Necrotizing Fasciitis",
-    "Toxic Shock Syndrome",
-    "Catheter-related BSI",
-    "Clostridioides difficile",
-    "Influenza A",
-    "Aspiration Pneumonitis",
-    "Diabetic Ketoacidosis",
-    "Pulmonary Embolism",
-    "Acute Pancreatitis",
-    "Upper GI Bleed",
-    "Acute Coronary Syndrome",
-    "Rhabdomyolysis",
-    "Acute Kidney Injury"
-  ]
+    "Minimal Change Disease",
+    "Focal Segmental Glomerulosclerosis",
+    "Membranous Nephropathy",
+    "Membranoproliferative GN",
+    "IgA Nephropathy",
+    "Lupus Nephritis",
+    "Diabetic Nephropathy",
+    "Amyloidosis",
+    "Post-infectious GN",
+    "Acute Tubular Necrosis",
+    "Chronic Kidney Disease",
+    "Nephritic Syndrome",
+    "Acute Interstitial Nephritis",
+    "Polycystic Kidney Disease",
+    "Alport Syndrome",
+    "Thin Basement Membrane",
+    "IgM Nephropathy",
+    "C3 Glomerulopathy",
+    "Anti-GBM Disease",
+    "Thrombotic Microangiopathy",
+    "Light Chain Deposition",
+    "Fibrillary GN",
+    "Immunotactoid GN"
+  ],
+  "explanations": {
+    "tile_0": "Young age (8 years old) is classic for minimal change disease, which is the most common cause of nephrotic syndrome in children.",
+    "tile_1": "Facial swelling, especially periorbital edema, is often the first sign parents notice in pediatric nephrotic syndrome.",
+    "tile_2": "Massive proteinuria (4+ on dipstick) is the hallmark of nephrotic syndrome, defined as >3.5g protein per day.",
+    "tile_3": "Severe hypoalbuminemia (<2.5 g/dL) occurs due to urinary protein losses and contributes to edema formation.",
+    "tile_4": "Hypercholesterolemia is part of the classic nephrotic syndrome tetrad, caused by increased hepatic lipoprotein synthesis.",
+    "tile_5": "Light microscopy shows normal-appearing glomeruli in minimal change disease, distinguishing it from other causes.",
+    "tile_6": "Electron microscopy reveals podocyte foot process effacement (fusion), the pathognomonic finding in minimal change disease.",
+    "tile_7": "Excellent response to corticosteroids (>90% in children) is characteristic and helps confirm the diagnosis.",
+    "tile_8": "Absence of immune deposits on immunofluorescence distinguishes minimal change disease from immune-mediated glomerulonephritis."
+  }
 }
