@@ -1,71 +1,69 @@
 {
   "date": "2025-07-24",
-  "discipline": "Cardiology",
-  "topic_rationale": "Aortic dissection is a serious condition that can be challenging to diagnose due to its variable presentations. It provides an excellent learning opportunity for understanding cardiovascular emergencies and the importance of early recognition.",
-  "answer": "Aortic Dissection",
+  "discipline": "Endocrinology",
+  "category": "diagnosis",
+  "topic_rationale": "Sheehan's syndrome is a rare but significant disorder that occurs as a result of ischemic pituitary necrosis due to severe postpartum hemorrhage. It can be a challenging diagnosis because the symptoms may be non-specific and delayed for several years after the triggering event.",
+  "answer": "Sheehan's Syndrome",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "58yo male"
+      "clue": "30yo female"
     },
     {
       "difficulty": "easy",
-      "clue": "Severe chest pain"
+      "clue": "Postpartum hemorrhage"
     },
     {
       "difficulty": "medium",
-      "clue": "BP 180/110 mmHg"
+      "clue": "Fatigue, weight gain"
     },
     {
       "difficulty": "medium",
-      "clue": "Pulse deficit"
+      "clue": "Menstrual irregularity"
     },
     {
       "difficulty": "medium",
-      "clue": "Diastolic murmur"
+      "clue": "Low blood pressure"
     },
     {
       "difficulty": "hard",
-      "clue": "Widened mediastinum"
+      "clue": "Delayed lactation"
     },
     {
       "difficulty": "hard",
-      "clue": "D-dimer elevated"
+      "clue": "Hypoglycemia"
     },
     {
       "difficulty": "hard",
-      "clue": "CT: intimal flap"
+      "clue": "Low serum cortisol"
     },
     {
       "difficulty": "hard",
-      "clue": "Unequal limb BP"
+      "clue": "Pituitary MRI shrinkage"
     }
   ],
   "concepts": [
-    "Aortic Dissection",
-    "Myocardial Infarction",
-    "Pulmonary Embolism",
-    "Costochondritis",
-    "Pericarditis",
-    "Endocarditis",
-    "Thoracic Aortic Aneurysm",
-    "Angina Pectoris",
-    "Hypertensive Crisis",
-    "Esophageal Rupture",
-    "Esophageal Spasm",
-    "Pneumothorax",
-    "Panic Attack",
-    "Acute Coronary Syndrome"
+    "Sheehan's Syndrome",
+    "Postpartum depression",
+    "Hypothyroidism",
+    "Pituitary adenoma",
+    "Addison's disease",
+    "Cushing's disease",
+    "Panhypopituitarism",
+    "Polycystic ovary syndrome",
+    "Hypopituitarism",
+    "Pituitary apoplexy",
+    "Empty sella syndrome"
   ],
   "explanations": {
-    "tile_0": "Aortic dissection is more common in males and in the 6th decade of life.",
-    "tile_1": "Sudden, severe chest pain is a classic symptom of aortic dissection, often described as 'tearing' or 'ripping'.",
-    "tile_2": "Hypertension can be a risk factor for aortic dissection and may also be a result of the condition.",
-    "tile_3": "A pulse deficit (different pulse strength in the arms) can occur due to impaired blood flow to one arm.",
-    "tile_4": "A diastolic murmur may be heard due to aortic regurgitation secondary to the dissection.",
-    "tile_5": "A widened mediastinum on X-ray is a classic radiological finding in aortic dissection.",
-    "tile_6": "D-dimer can be elevated in aortic dissection, although it is not specific and can be raised in other conditions such as pulmonary embolism.",
-    "tile_7": "The presence of an intimal flap on CT is pathognomonic for aortic dissection.",
-    "tile_8": "Unequal blood pressure in the limbs can occur in aortic dissection due to impaired blood flow."
+    "tile_0": "Sheehan's syndrome is more common in females, especially those of childbearing age.",
+    "tile_1": "The condition occurs after a severe postpartum hemorrhage, which leads to necrosis of the pituitary gland.",
+    "tile_2": "Symptoms such as fatigue and weight gain are commonly seen due to hypothyroidism caused by pituitary dysfunction.",
+    "tile_3": "Menstrual irregularity is another symptom caused by decreased secretion of pituitary hormones.",
+    "tile_4": "Low blood pressure is a symptom of adrenal insufficiency, a condition that can accompany Sheehan's syndrome.",
+    "tile_5": "Delayed lactation postpartum is seen due to lack of prolactin secretion from the pituitary gland.",
+    "tile_6": "Hypoglycemia can result from adrenal insufficiency.",
+    "tile_7": "Low levels of serum cortisol are indicative of adrenal insufficiency due to pituitary dysfunction.",
+    "tile_8": "MRI imaging often shows shrinkage of the pituitary gland, supporting the diagnosis of Sheehan's syndrome."
   }
 }
