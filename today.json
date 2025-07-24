@@ -1,78 +1,71 @@
 {
   "date": "2025-07-24",
-  "discipline": "Endocrinology",
-  "topic_rationale": "Sheehan's syndrome is a not so common but highly educational condition, which occurs as a result of ischemic pituitary necrosis due to severe blood loss during childbirth",
-  "answer": "Sheehan's Syndrome",
+  "discipline": "Cardiology",
+  "topic_rationale": "Aortic dissection is a serious condition that can be challenging to diagnose due to its variable presentations. It provides an excellent learning opportunity for understanding cardiovascular emergencies and the importance of early recognition.",
+  "answer": "Aortic Dissection",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Postpartum woman"
+      "clue": "58yo male"
     },
     {
       "difficulty": "easy",
-      "clue": "Severe obstetric hemorrhage"
+      "clue": "Severe chest pain"
     },
     {
       "difficulty": "medium",
-      "clue": "Failed lactation"
+      "clue": "BP 180/110 mmHg"
     },
     {
       "difficulty": "medium",
-      "clue": "Fatigue & weight gain"
+      "clue": "Pulse deficit"
     },
     {
       "difficulty": "medium",
-      "clue": "Loss of pubic hair"
+      "clue": "Diastolic murmur"
     },
     {
       "difficulty": "hard",
-      "clue": "Low plasma ACTH"
+      "clue": "Widened mediastinum"
     },
     {
       "difficulty": "hard",
-      "clue": "Low serum TSH"
+      "clue": "D-dimer elevated"
     },
     {
       "difficulty": "hard",
-      "clue": "MRI: Empty sella turcica"
+      "clue": "CT: intimal flap"
     },
     {
       "difficulty": "hard",
-      "clue": "Hyponatremia"
+      "clue": "Unequal limb BP"
     }
   ],
   "concepts": [
-    "Sheehan's Syndrome",
-    "Postpartum depression",
-    "Pituitary adenoma",
-    "Hypopituitarism",
-    "Panhypopituitarism",
-    "Postpartum thyroiditis",
-    "Postpartum cardiomyopathy",
-    "Pituitary apoplexy",
-    "Hypothyroidism",
-    "Adrenal insufficiency",
-    "Cushing's disease",
-    "Hypoparathyroidism",
-    "Chronic fatigue syndrome",
-    "Polycystic ovary syndrome",
-    "Addison's disease",
-    "Graves' disease",
-    "Hyperprolactinemia",
-    "Empty sella syndrome",
-    "Prolactinoma",
-    "Hypogonadism",
-    "Postpartum psychosis"
+    "Aortic Dissection",
+    "Myocardial Infarction",
+    "Pulmonary Embolism",
+    "Costochondritis",
+    "Pericarditis",
+    "Endocarditis",
+    "Thoracic Aortic Aneurysm",
+    "Angina Pectoris",
+    "Hypertensive Crisis",
+    "Esophageal Rupture",
+    "Esophageal Spasm",
+    "Pneumothorax",
+    "Panic Attack",
+    "Acute Coronary Syndrome"
   ],
   "explanations": {
-    "tile_0": "Sheehan's syndrome typically affects women who have had a severe obstetric hemorrhage.",
-    "tile_1": "Severe blood loss during childbirth can lead to ischemia and necrosis of the pituitary gland.",
-    "tile_2": "Sheehan's syndrome can cause failure of lactation postpartum due to pituitary necrosis affecting prolactin production.",
-    "tile_3": "The condition can cause fatigue and weight gain due to deficiencies in pituitary hormones, especially thyroid-stimulating hormone (TSH) and adrenocorticotropic hormone (ACTH).",
-    "tile_4": "Loss of pubic and axillary hair can occur due to decreased secretion of sex hormones.",
-    "tile_5": "Low plasma ACTH level indicates adrenal insufficiency, which is a common feature in Sheehan's syndrome.",
-    "tile_6": "Low serum TSH levels indicate pituitary (secondary) hypothyroidism which is a common feature in Sheehan's syndrome.",
-    "tile_7": "MRI showing empty sella turcica is a typical finding in Sheehan's syndrome due to postpartum pituitary gland necrosis.",
-    "tile_8": "Hyponatremia can occur due to the lack of pituitary production of ACTH leading to adrenal insufficiency and decreased cortisol."
+    "tile_0": "Aortic dissection is more common in males and in the 6th decade of life.",
+    "tile_1": "Sudden, severe chest pain is a classic symptom of aortic dissection, often described as 'tearing' or 'ripping'.",
+    "tile_2": "Hypertension can be a risk factor for aortic dissection and may also be a result of the condition.",
+    "tile_3": "A pulse deficit (different pulse strength in the arms) can occur due to impaired blood flow to one arm.",
+    "tile_4": "A diastolic murmur may be heard due to aortic regurgitation secondary to the dissection.",
+    "tile_5": "A widened mediastinum on X-ray is a classic radiological finding in aortic dissection.",
+    "tile_6": "D-dimer can be elevated in aortic dissection, although it is not specific and can be raised in other conditions such as pulmonary embolism.",
+    "tile_7": "The presence of an intimal flap on CT is pathognomonic for aortic dissection.",
+    "tile_8": "Unequal blood pressure in the limbs can occur in aortic dissection due to impaired blood flow."
   }
 }
