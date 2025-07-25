@@ -1,78 +1,78 @@
 {
   "date": "2025-07-24",
-  "discipline": "Hematology",
+  "discipline": "Infectious Disease",
   "category": "diagnosis",
-  "topic_rationale": "Chosen topic is 'Paroxysmal Nocturnal Hemoglobinuria (PNH)'. This is a rare and life-threatening disease, which is often overlooked or misdiagnosed. It provides an excellent teaching case for understanding complement-mediated diseases and the importance of flow cytometry in diagnosing hematological disorders.",
-  "answer": "Paroxysmal Nocturnal Hemoglobinuria",
+  "topic_rationale": "Choosing 'Legionella pneumonia' as it is a common cause of severe community-acquired pneumonia (CAP) that can be overlooked due to its unique transmission and diagnostic modalities. It is an educational opportunity to highlight key features of this disease.",
+  "answer": "Legionella Pneumonia",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Hemolytic anemia"
+      "clue": "Hotel stay recent"
     },
     {
       "difficulty": "easy",
-      "clue": "Dark urine on waking"
+      "clue": "Hyponatremia"
     },
     {
       "difficulty": "medium",
-      "clue": "Pancytopenia"
+      "clue": "Cough productive"
     },
     {
       "difficulty": "medium",
-      "clue": "Thrombosis unusual sites"
+      "clue": "High fever"
     },
     {
       "difficulty": "medium",
-      "clue": "Smooth muscle dystonia"
+      "clue": "Abnormal LFTs"
     },
     {
       "difficulty": "hard",
-      "clue": "CD55/CD59 deficient RBCs"
+      "clue": "No response to \u03b2-lactam"
     },
     {
       "difficulty": "hard",
-      "clue": "Raised LDH"
+      "clue": "Diarrhea present"
     },
     {
       "difficulty": "hard",
-      "clue": "Flow cytometry positive"
+      "clue": "CXR: patchy infiltrates"
     },
     {
       "difficulty": "hard",
-      "clue": "Ham's test positive"
+      "clue": "Urine antigen positive"
     }
   ],
   "concepts": [
-    "Paroxysmal Nocturnal Hemoglobinuria",
-    "Autoimmune hemolytic anemia",
-    "Hereditary spherocytosis",
-    "Sickle cell disease",
-    "Thalassemia",
-    "Leukemia",
-    "Myelodysplastic syndrome",
-    "Aplastic anemia",
-    "Iron deficiency anemia",
-    "Vitamin B12 deficiency",
-    "Folic acid deficiency",
-    "G6PD deficiency",
-    "Polycythemia vera",
-    "Myelofibrosis",
-    "Hemolytic uremic syndrome",
-    "Thrombotic thrombocytopenic purpura",
-    "Disseminated intravascular coagulation",
-    "Hemophilia",
-    "Von Willebrand disease",
-    "Deep vein thrombosis"
+    "Legionella Pneumonia",
+    "Pneumococcal Pneumonia",
+    "Mycoplasma Pneumonia",
+    "Viral Pneumonia",
+    "Tuberculosis",
+    "Staphylococcal Pneumonia",
+    "Aspiration Pneumonia",
+    "Pneumonia in Immunocompromised Host",
+    "Influenza",
+    "Pulmonary Embolism",
+    "Acute Bronchitis",
+    "COPD Exacerbation",
+    "Asthma Exacerbation",
+    "Interstitial Lung Disease",
+    "Heart Failure",
+    "Lung Cancer",
+    "Hantavirus Pulmonary Syndrome",
+    "Q Fever",
+    "Histoplasmosis",
+    "SARS"
   ],
   "explanations": {
-    "tile_0": "In PNH, there is intravascular hemolysis, leading to a hemolytic anemia. This is a characteristic feature of the disease.",
-    "tile_1": "Patients with PNH often report dark-colored urine upon waking, due to overnight hemolysis.",
-    "tile_2": "PNH can cause a decrease in all types of blood cells (pancytopenia) due to bone marrow failure.",
-    "tile_3": "PNH is associated with thrombosis in unusual sites, such as hepatic, abdominal, cerebral veins.",
-    "tile_4": "Smooth muscle dystonias, such as esophageal spasm and erectile dysfunction, are associated with PNH.",
-    "tile_5": "Deficiency of CD55/CD59 on red blood cells leads to increased complement-mediated lysis, characteristic of PNH.",
-    "tile_6": "Raised LDH is a marker of increased cell turnover, seen in conditions like PNH with ongoing hemolysis.",
-    "tile_7": "Flow cytometry is a key diagnostic test for PNH, showing a population of cells lacking GPI-linked proteins.",
-    "tile_8": "Ham's test (acidified serum lysis test) is a screening test for PNH, but has largely been replaced by flow cytometry."
+    "tile_0": "Legionella is often associated with outbreaks in buildings with complex water systems like hotels.",
+    "tile_1": "Hyponatremia is a common electrolyte disturbance in Legionella due to SIADH.",
+    "tile_2": "Productive cough is a common symptom of Legionella pneumonia.",
+    "tile_3": "High fever is a typical feature of Legionella.",
+    "tile_4": "Abnormal liver function tests can be seen in Legionella infection.",
+    "tile_5": "Legionella is resistant to \u03b2-lactam antibiotics due to the absence of peptidoglycan in its cell wall.",
+    "tile_6": "Gastrointestinal symptoms like diarrhea are common in Legionella infection.",
+    "tile_7": "Chest X-ray in Legionella pneumonia often shows patchy infiltrates.",
+    "tile_8": "Urine antigen test is a quick and specific diagnostic test for Legionella."
   }
 }
