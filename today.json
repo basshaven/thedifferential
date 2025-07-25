@@ -2,19 +2,18 @@
   "date": "2025-07-25",
   "discipline": "Hematology",
   "category": "diagnosis",
-  "topic_rationale": "Polycythemia Vera is a myeloproliferative neoplasm that can lead to severe complications if left untreated. It is characterized by an increase in the number of red cells in the blood. It's a condition that's not common, not too rare, and diagnostically challenging, making it a good learning opportunity.",
+  "topic_rationale": "Polycythemia vera is a classic myeloproliferative disorder that has a unique set of diagnostic criteria. Understanding these features can help with early detection, management, and prevention of complications.",
   "answer": "Polycythemia Vera",
   "acceptable_answers": [
     "Polycythemia Vera",
+    "Polycythemia",
     "PV",
-    "Polycythemia Rubra Vera",
-    "Primary Polycythemia",
-    "Vaquez's disease"
+    "Primary Polycythemia"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Elevated Hb/Hct"
+      "clue": "Elevated HCT"
     },
     {
       "difficulty": "easy",
@@ -22,11 +21,11 @@
     },
     {
       "difficulty": "medium",
-      "clue": "Plethora"
+      "clue": "Pruritus after bath"
     },
     {
       "difficulty": "medium",
-      "clue": "Pruritus after bath"
+      "clue": "Erythromelalgia"
     },
     {
       "difficulty": "medium",
@@ -34,52 +33,52 @@
     },
     {
       "difficulty": "hard",
-      "clue": "Thrombosis"
+      "clue": "Low EPO levels"
     },
     {
       "difficulty": "hard",
-      "clue": "EPO low"
+      "clue": "Thrombosis history"
     },
     {
       "difficulty": "hard",
-      "clue": "Leukocytosis"
+      "clue": "Hypercellular marrow"
     },
     {
       "difficulty": "hard",
-      "clue": "Thrombocytosis"
+      "clue": "Increased neutrophils"
     }
   ],
   "concepts": [
     "Polycythemia Vera",
     "Essential Thrombocythemia",
-    "Chronic Myeloid Leukemia",
     "Secondary Polycythemia",
+    "Chronic Myeloid Leukemia",
     "Myelofibrosis",
-    "Chronic Myelomonocytic Leukemia",
-    "Hypoxia",
-    "Renal cell carcinoma",
+    "Iron Deficiency Anemia",
+    "Pernicious Anemia",
+    "Thrombotic Thrombocytopenic Purpura",
+    "Hemolytic Anemia",
+    "Sickle Cell Disease",
     "Leukemia",
+    "Multiple Myeloma",
+    "Lymphoma",
+    "Myelodysplastic Syndrome",
+    "Aplastic Anemia",
     "Hemochromatosis",
-    "Hodgkin Lymphoma",
-    "Non-Hodgkin Lymphoma",
-    "Myelodysplastic Syndromes",
-    "Hepatocellular Carcinoma",
-    "Thyroid Disease",
-    "Myeloproliferative Neoplasm",
-    "Pheochromocytoma",
-    "Pulmonary Fibrosis",
-    "Chronic Obstructive Pulmonary Disease",
-    "Congenital Heart Disease"
+    "Megaloblastic Anemia",
+    "Hypothyroidism",
+    "Liver Disease",
+    "Chronic Kidney Disease"
   ],
   "explanations": {
-    "tile_0": "Polycythemia Vera is characterized by an increase in the number of red cells in the blood, leading to elevated hemoglobin and hematocrit.",
-    "tile_1": "The majority of patients with Polycythemia Vera have a mutation in the JAK2 gene.",
-    "tile_2": "Plethora, or ruddy complexion, is a common physical finding in Polycythemia Vera due to increased red blood cells.",
-    "tile_3": "Pruritus, especially after a hot bath, is a common symptom in Polycythemia Vera due to increased basophils.",
-    "tile_4": "Splenomegaly is often seen in Polycythemia Vera, due to extramedullary hematopoiesis.",
-    "tile_5": "Thrombosis is a major complication of Polycythemia Vera due to increased blood viscosity and platelet activation.",
-    "tile_6": "In Polycythemia Vera, erythropoietin (EPO) levels are typically low or normal due to feedback inhibition from increased red blood cell mass.",
-    "tile_7": "Leukocytosis is often seen in Polycythemia Vera, due to proliferation of all three myeloid cell lines.",
-    "tile_8": "Thrombocytosis is often seen in Polycythemia Vera, due to proliferation of all three myeloid cell lines."
+    "tile_0": "Elevated hematocrit is a defining characteristic of Polycythemia Vera.",
+    "tile_1": "JAK2 mutation is present in 95% of Polycythemia Vera cases, confirming the diagnosis.",
+    "tile_2": "Pruritus, especially after a warm bath, is a common symptom of Polycythemia Vera due to increased histamine release by basophils.",
+    "tile_3": "Erythromelalgia, or burning pain and redness of the extremities, is a common symptom in Polycythemia Vera due to increased blood viscosity and platelet activation.",
+    "tile_4": "Splenomegaly occurs in Polycythemia Vera due to extramedullary hematopoiesis.",
+    "tile_5": "Low erythropoietin (EPO) levels help distinguish primary from secondary polycythemia. In Polycythemia Vera, EPO levels are low or normal despite high red cell mass.",
+    "tile_6": "Thrombosis history is common in Polycythemia Vera due to increased blood viscosity and platelet activation.",
+    "tile_7": "Hypercellular bone marrow with panmyelosis is seen in Polycythemia Vera.",
+    "tile_8": "Increased neutrophils and other granulocytes are seen in Polycythemia Vera due to uncontrolled proliferation of all three myeloid cell lines."
   }
 }
