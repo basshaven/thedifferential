@@ -2,85 +2,84 @@
   "date": "2025-07-25",
   "discipline": "Neurology",
   "category": "diagnosis",
-  "topic_rationale": "Amyotrophic Lateral Sclerosis (ALS) is a progressive neurodegenerative disease that affects nerve cells in the brain and spinal cord. It's a challenging diagnosis that requires a synthesis of multiple clues and a significant learning opportunity.",
+  "topic_rationale": "Amyotrophic Lateral Sclerosis (ALS) is a progressive neurodegenerative disease that affects nerve cells in the brain and spinal cord. It's not a common condition, but it's well-known and presents diagnostically challenging features that require synthesis of multiple clues.",
   "answer": "Amyotrophic Lateral Sclerosis",
   "acceptable_answers": [
     "Amyotrophic Lateral Sclerosis",
     "ALS",
-    "Lou Gehrig's Disease",
-    "Motor Neuron Disease",
-    "MND",
-    "Charcot's Disease"
+    "Lou Gehrig's disease",
+    "Motor neuron disease",
+    "Charcot's disease"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Upper & Lower MN signs"
+      "clue": "Bulbar palsy"
     },
     {
       "difficulty": "easy",
-      "clue": "Progressive weakness"
+      "clue": "Muscle weakness"
     },
     {
       "difficulty": "medium",
-      "clue": "Bulbar symptoms"
+      "clue": "Fasciculations"
     },
     {
       "difficulty": "medium",
-      "clue": "Normal sensory exam"
+      "clue": "Progressive symptoms"
     },
     {
       "difficulty": "medium",
-      "clue": "No bowel/bladder issues"
+      "clue": "Upper + Lower MN signs"
     },
     {
       "difficulty": "hard",
-      "clue": "EMG: widespread denervation"
+      "clue": "No sensory loss"
     },
     {
       "difficulty": "hard",
-      "clue": "No cognitive impairment"
+      "clue": "Normal cognitive function"
     },
     {
       "difficulty": "hard",
-      "clue": "Normal MRI brain/spine"
+      "clue": "EMG: denervation"
     },
     {
       "difficulty": "hard",
-      "clue": "Exclusion of other diseases"
+      "clue": "Exclusion of mimics"
     }
   ],
   "concepts": [
     "Amyotrophic Lateral Sclerosis",
     "Multiple Sclerosis",
-    "Spinal Muscular Atrophy",
-    "Peripheral Neuropathy",
     "Guillain-Barre Syndrome",
-    "Charcot-Marie-Tooth Disease",
     "Myasthenia Gravis",
-    "Parkinson's Disease",
-    "Huntington's Disease",
-    "Alzheimer's Disease",
-    "Stroke",
-    "Bell's Palsy",
-    "Lambert-Eaton Syndrome",
+    "Muscular Dystrophy",
+    "Spinal Muscular Atrophy",
     "Polio",
-    "Progressive Supranuclear Palsy",
     "Primary Lateral Sclerosis",
     "Progressive Muscular Atrophy",
-    "Frontotemporal Dementia",
-    "Chronic Inflammatory Demyelinating Polyneuropathy",
-    "Cervical Spondylosis"
+    "Multifocal Motor Neuropathy",
+    "Alzheimer's disease",
+    "Parkinson's disease",
+    "Huntington's disease",
+    "Stroke",
+    "Cervical spondylotic myelopathy",
+    "Peripheral neuropathy",
+    "Motor neuronopathy",
+    "Lambert-Eaton syndrome",
+    "Charcot-Marie-Tooth disease",
+    "Progressive bulbar palsy"
   ],
   "explanations": {
-    "tile_0": "Amyotrophic Lateral Sclerosis (ALS) is characterized by the presence of both upper and lower motor neuron signs.",
-    "tile_1": "Progressive weakness is a key feature of ALS, typically starting in one limb and spreading to other parts of the body.",
-    "tile_2": "Bulbar symptoms such as dysarthria and dysphagia occur as the disease progresses.",
-    "tile_3": "In ALS, sensory examination is usually normal as sensory neurons are typically not affected.",
-    "tile_4": "ALS does not directly affect bowel or bladder function.",
-    "tile_5": "Electromyography (EMG) typically shows evidence of widespread denervation which is a diagnostic clue for ALS.",
-    "tile_6": "While cognitive impairment can occur in some patients with ALS, it is not a universal feature and its absence does not rule out the disease.",
-    "tile_7": "In ALS, MRI of the brain and spine is usually normal, helping to exclude other diagnoses.",
-    "tile_8": "ALS is a diagnosis of exclusion; other diseases must be ruled out before confirming the diagnosis."
+    "tile_0": "Bulbar palsy refers to impairment of function of the cranial nerves IX, X, XI, XII, which occurs in ALS leading to dysphagia, dysarthria, and facial weakness.",
+    "tile_1": "Muscle weakness, often starting in one area, is a key symptom of ALS as motor neurons degenerate and die.",
+    "tile_2": "Fasciculations, or muscle twitching, is a common symptom in ALS due to motor neuron hyperexcitability.",
+    "tile_3": "ALS is characterized by progressive worsening of symptoms, which helps to distinguish it from other conditions.",
+    "tile_4": "The presence of both upper and lower motor neuron signs is consistent with ALS, as it affects both types of motor neurons.",
+    "tile_5": "No sensory loss is a key feature helping to distinguish ALS from other similar conditions, as sensory neurons are not affected in ALS.",
+    "tile_6": "While cognitive function is normal in most ALS patients, some may develop cognitive and behavioral changes. However, the primary feature of ALS is motor neuron degeneration.",
+    "tile_7": "Electromyography showing signs of denervation is used in the diagnosis of ALS to confirm the presence of motor neuron damage.",
+    "tile_8": "Exclusion of other diseases that mimic ALS is critical in the diagnostic process, as there is no definitive test for ALS."
   }
 }
