@@ -1,88 +1,83 @@
 {
   "date": "2025-07-25",
-  "discipline": "Internal Medicine",
+  "discipline": "Emergency Medicine",
   "category": "diagnosis",
-  "topic_rationale": "Chose 'Addison's disease' due to its often subtle and nonspecific initial symptoms, making it an interesting and educational diagnostic challenge.",
-  "answer": "Addison's disease",
+  "topic_rationale": "Tension pneumothorax is a life-threatening condition that can present in the emergency department. It is essential for emergency medicine practitioners to quickly recognize and treat this condition to prevent fatal outcomes.",
+  "answer": "Tension Pneumothorax",
   "acceptable_answers": [
-    "Addison's disease",
-    "Addison disease",
-    "Primary adrenal insufficiency",
-    "Chronic adrenal insufficiency"
+    "Tension Pneumothorax",
+    "Tension Pneumo",
+    "Pneumothorax, tension"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Hyperpigmentation"
+      "clue": "Tracheal deviation"
     },
     {
       "difficulty": "easy",
-      "clue": "Low cortisol"
+      "clue": "Hypotension"
     },
     {
       "difficulty": "medium",
-      "clue": "Salt craving"
+      "clue": "Decreased breath sounds"
     },
     {
       "difficulty": "medium",
-      "clue": "Orthostatic hypotension"
+      "clue": "Pleural line on US"
     },
     {
       "difficulty": "medium",
-      "clue": "High ACTH"
+      "clue": "JVD"
     },
     {
       "difficulty": "hard",
-      "clue": "Hypoglycemia"
+      "clue": "Hyperresonance"
     },
     {
       "difficulty": "hard",
-      "clue": "Hyperkalemia"
+      "clue": "Tachycardia"
     },
     {
       "difficulty": "hard",
-      "clue": "Low aldosterone"
+      "clue": "Chest pain"
     },
     {
       "difficulty": "hard",
-      "clue": "Hyponatremia"
+      "clue": "Dyspnea"
     }
   ],
   "concepts": [
-    "Addison's disease",
-    "Secondary adrenal insufficiency",
-    "Cushing's syndrome",
-    "Pheochromocytoma",
-    "Hyperthyroidism",
-    "Hypothyroidism",
-    "Diabetes insipidus",
-    "Dehydration",
-    "Hypopituitarism",
-    "Diabetes mellitus",
-    "Hyperparathyroidism",
-    "Hypoparathyroidism",
-    "Acromegaly",
-    "Gigantism",
-    "Conn's syndrome",
-    "Polycystic ovary syndrome",
-    "Metabolic syndrome",
-    "Hypogonadism",
-    "Hypergonadism",
-    "Graves' disease",
-    "Hashimoto's thyroiditis",
-    "Adrenal cancer",
-    "Adrenal adenoma",
-    "Adrenal hyperplasia"
+    "Tension Pneumothorax",
+    "Spontaneous Pneumothorax",
+    "Pleural Effusion",
+    "Hemothorax",
+    "Pericardial Tamponade",
+    "Pulmonary Embolism",
+    "Asthma Exacerbation",
+    "Pneumonia",
+    "COPD Exacerbation",
+    "Myocardial Infarction",
+    "Pericarditis",
+    "Costochondritis",
+    "Rib Fracture",
+    "Esophageal Rupture",
+    "Lung Cancer",
+    "Aortic Dissection",
+    "Pulmonary Hypertension",
+    "Bronchiectasis",
+    "Congestive Heart Failure",
+    "Lung Abscess"
   ],
   "explanations": {
-    "tile_0": "Hyperpigmentation in Addison's disease is caused by increased melanocyte-stimulating hormone, a byproduct of ACTH production.",
-    "tile_1": "Low cortisol is a key feature of Addison's disease, due to adrenal gland damage.",
-    "tile_2": "Salt craving occurs due to aldosterone deficiency leading to sodium loss.",
-    "tile_3": "Orthostatic hypotension is seen due to volume depletion from aldosterone deficiency.",
-    "tile_4": "High ACTH is due to loss of negative feedback from cortisol in the pituitary.",
-    "tile_5": "Hypoglycemia can occur in Addison's disease due to lack of cortisol's gluconeogenic activity.",
-    "tile_6": "Hyperkalemia results from aldosterone deficiency causing decreased renal potassium excretion.",
-    "tile_7": "Low aldosterone occurs due to adrenal gland damage, leading to sodium loss and hyperkalemia.",
-    "tile_8": "Hyponatremia can occur due to both aldosterone deficiency causing sodium loss, and ADH secretion in response to hypotension."
+    "tile_0": "Tracheal deviation to the contralateral side is a classic sign of tension pneumothorax.",
+    "tile_1": "Hypotension occurs due to decreased venous return caused by increased intrathoracic pressure.",
+    "tile_2": "Decreased breath sounds are found on the affected side due to collapsed lung.",
+    "tile_3": "Ultrasound can reveal a pleural line or 'barcode sign' indicating pneumothorax.",
+    "tile_4": "Jugular venous distension (JVD) can occur due to impaired venous return to the heart.",
+    "tile_5": "Hyperresonance on percussion is found on the affected side due to air-filled pleural space.",
+    "tile_6": "Tachycardia can occur as a compensatory response to hypoxia and hypotension.",
+    "tile_7": "Chest pain, often sudden and severe, is a common symptom of pneumothorax.",
+    "tile_8": "Dyspnea or difficulty breathing is a common symptom due to decreased lung capacity on the affected side."
   }
 }
