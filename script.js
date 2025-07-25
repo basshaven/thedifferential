@@ -392,8 +392,7 @@ class DifferentialGame {
     }
 
     endGame(won) {
-        console.log('🎮 ENDGAME CALLED! Won:', won);
-        alert(`DEBUG: Game ended! Won: ${won}`); // Very obvious debug alert
+        console.log('Game ended. Won:', won);
         this.gameEnded = true;
         document.getElementById('guessInput').disabled = true;
         document.getElementById('submitGuess').disabled = true;
@@ -409,18 +408,13 @@ class DifferentialGame {
         // Show explanations after animations
         setTimeout(() => {
             if (won) {
-                console.log('🏆 WON BRANCH - Calculating performance assessment...');
-                alert('DEBUG: About to show AUEC for WON game');
+                console.log('Calculating performance assessment...');
                 const assessment = this.calculatePerformanceAssessment();
-                console.log('Assessment calculated:', assessment);
                 this.showPerformanceAssessment(assessment);
-                console.log('Assessment displayed');
             } else {
-                console.log('💀 LOST BRANCH - Showing AUEC analysis...');
-                alert('DEBUG: About to show AUEC for LOST game');
+                console.log('Showing AUEC analysis for lost game...');
                 try {
                     const auecData = this.calculateAUEC();
-                    console.log('AUEC calculated for lost game:', auecData);
                     this.showAUECOnly(auecData);
                 } catch (error) {
                     console.error('AUEC calculation failed for lost game:', error);
@@ -1129,10 +1123,9 @@ class DifferentialGame {
                     </div>
                 </div>
                 
-                <div class="auec-plot" id="auecPlot" style="border: 2px solid #4caf50; min-height: 200px; background: rgba(76, 175, 80, 0.1);">
-                    <p style="color: #4caf50; text-align: center; padding: 20px; margin: 0;">
-                        🎯 AUEC Graph Container Loaded Successfully<br>
-                        <small>Graph rendering in progress...</small>
+                <div class="auec-plot" id="auecPlot">
+                    <p style="color: #ccc; text-align: center; padding: 20px; margin: 0;">
+                        Loading efficiency curve...
                     </p>
                 </div>
                 
@@ -1157,9 +1150,7 @@ class DifferentialGame {
         // Render the AUEC plot after DOM insertion
         setTimeout(() => {
             try {
-                console.log('Rendering AUEC plot...');
-                this.renderSimpleAUECPlot(auecData); // Use simple renderer for now
-                console.log('AUEC plot rendered successfully');
+                this.renderFullAUECPlot(auecData);
             } catch (error) {
                 console.error('AUEC plot rendering failed:', error);
                 // Show fallback message
@@ -1172,7 +1163,6 @@ class DifferentialGame {
     }
 
     showAUECOnly(auecData) {
-        console.log('showAUECOnly called with:', auecData);
         
         // Ensure we have valid interpretation data
         if (!auecData.interpretation) {
@@ -1209,10 +1199,9 @@ class DifferentialGame {
                     </div>
                 </div>
                 
-                <div class="auec-plot" id="auecPlot" style="border: 2px solid #4caf50; min-height: 200px; background: rgba(76, 175, 80, 0.1);">
-                    <p style="color: #4caf50; text-align: center; padding: 20px; margin: 0;">
-                        🎯 AUEC Graph Container Loaded Successfully<br>
-                        <small>Graph rendering in progress...</small>
+                <div class="auec-plot" id="auecPlot">
+                    <p style="color: #ccc; text-align: center; padding: 20px; margin: 0;">
+                        Loading efficiency curve...
                     </p>
                 </div>
                 
@@ -1235,18 +1224,14 @@ class DifferentialGame {
             return;
         }
         
-        console.log('Inserting AUEC HTML into DOM...');
         const auecDiv = document.createElement('div');
         auecDiv.innerHTML = auecHTML;
         gameMessage.parentNode.insertBefore(auecDiv, gameMessage.nextSibling);
-        console.log('AUEC HTML inserted successfully');
         
         // Render the AUEC plot after DOM insertion
         setTimeout(() => {
             try {
-                console.log('Rendering AUEC plot (lost game)...');
-                this.renderSimpleAUECPlot(auecData);
-                console.log('AUEC plot rendered successfully (lost game)');
+                this.renderFullAUECPlot(auecData);
             } catch (error) {
                 console.error('AUEC plot rendering failed (lost game):', error);
                 const plotContainer = document.getElementById('auecPlot');
@@ -1257,53 +1242,7 @@ class DifferentialGame {
         }, 500); // Increased delay
     }
 
-    renderSimpleAUECPlot(auecData) {
-        console.log('renderSimpleAUECPlot called');
-        const plotContainer = document.getElementById('auecPlot');
-        if (!plotContainer) {
-            console.error('auecPlot container not found in renderSimpleAUECPlot');
-            return;
-        }
-        
-        const curve = auecData.curve;
-        if (!curve || curve.length === 0) {
-            console.warn('No curve data, showing message');
-            plotContainer.innerHTML = '<p style="color: #ccc; text-align: center; padding: 40px; margin: 0;">No efficiency data available for this game.</p>';
-            return;
-        }
-        
-        console.log('Creating simple graph with curve points:', curve.length);
-        
-        // Create a simple HTML-based visualization
-        let html = '<div style="padding: 20px; color: #fff;">';
-        html += '<h4 style="text-align: center; color: #4caf50; margin: 0 0 20px 0;">Your Efficiency Path</h4>';
-        
-        html += '<div style="background: #111; border: 2px solid #4caf50; border-radius: 8px; padding: 15px; margin: 10px 0;">';
-        html += '<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 12px; color: #ccc;">';
-        html += '<div><strong>Step</strong></div><div><strong>Cost</strong></div><div><strong>Info</strong></div>';
-        
-        curve.forEach((point, index) => {
-            let actionLabel = point.action || 'Action';
-            if (point.action === 'start') actionLabel = '🎯 Start';
-            else if (point.action.includes('easy')) actionLabel = '🟡 Easy';
-            else if (point.action.includes('medium')) actionLabel = '🟠 Medium';
-            else if (point.action.includes('hard')) actionLabel = '🔴 Hard';
-            else if (point.action === 'wrong_guess') actionLabel = '❌ Wrong';
-            else if (point.action === 'correct_guess') actionLabel = '✅ Correct';
-            
-            html += `<div>${actionLabel}</div><div>${point.x}</div><div>${point.y}</div>`;
-        });
-        
-        html += '</div></div>';
-        html += '<p style="text-align: center; color: #ccc; font-size: 11px; margin: 10px 0 0 0;">Full interactive graph coming soon...</p>';
-        html += '</div>';
-        
-        plotContainer.innerHTML = html;
-        console.log('Simple graph rendered successfully');
-    }
-
-    renderAUECPlot(auecData) {
-        console.log('renderAUECPlot called with:', auecData);
+    renderFullAUECPlot(auecData) {
         const plotContainer = document.getElementById('auecPlot');
         if (!plotContainer) {
             console.error('auecPlot container not found');
@@ -1312,14 +1251,12 @@ class DifferentialGame {
         
         const curve = auecData.curve;
         if (!curve || curve.length === 0) {
-            console.warn('Empty curve data, creating fallback');
-            plotContainer.innerHTML = '<p style="color: #ccc; text-align: center; padding: 20px;">No efficiency data available for this game.</p>';
+            plotContainer.innerHTML = '<p style="color: #ccc; text-align: center; padding: 40px; margin: 0;">No efficiency data available for this game.</p>';
             return;
         }
         
-        console.log('Curve data:', curve);
         
-        // Set up SVG dimensions with more space for legend below
+        // Set up SVG dimensions
         const margin = { top: 30, right: 30, bottom: 120, left: 70 };
         const width = 500 - margin.left - margin.right;
         const height = 350 - margin.top - margin.bottom;
@@ -1327,8 +1264,6 @@ class DifferentialGame {
         // Find data bounds with padding
         const maxX = Math.max(...curve.map(p => p.x), 1) + 1;
         const maxY = Math.max(...curve.map(p => p.y), 1) + 1;
-        
-        console.log('Plot bounds:', { maxX, maxY, width, height });
         
         // Create scales
         const xScale = (x) => (x / maxX) * width;
@@ -1388,8 +1323,8 @@ class DifferentialGame {
         `;
         
         plotContainer.innerHTML = svg;
-        console.log('SVG rendered successfully');
     }
+
 
     generateTicks(min, max, count) {
         const step = (max - min) / (count - 1);
