@@ -1,83 +1,84 @@
 {
   "date": "2025-07-25",
-  "discipline": "Emergency Medicine",
+  "discipline": "Pulmonology",
   "category": "diagnosis",
-  "topic_rationale": "Tension pneumothorax is a life-threatening condition that can present in the emergency department. It is essential for emergency medicine practitioners to quickly recognize and treat this condition to prevent fatal outcomes.",
-  "answer": "Tension Pneumothorax",
+  "topic_rationale": "Interstitial lung disease (ILD) can be a challenging diagnosis due to diverse etiologies and overlapping clinical presentations. This puzzle aims to highlight the key features that distinguish idiopathic pulmonary fibrosis (IPF) from other types of ILD.",
+  "answer": "Idiopathic Pulmonary Fibrosis",
   "acceptable_answers": [
-    "Tension Pneumothorax",
-    "Tension Pneumo",
-    "Pneumothorax, tension"
+    "Idiopathic Pulmonary Fibrosis",
+    "IPF",
+    "Pulmonary Fibrosis",
+    "Fibrosing interstitial lung disease"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Tracheal deviation"
+      "clue": "Velcro crackles"
     },
     {
       "difficulty": "easy",
-      "clue": "Hypotension"
+      "clue": "Clubbing"
     },
     {
       "difficulty": "medium",
-      "clue": "Decreased breath sounds"
+      "clue": "Dry cough"
     },
     {
       "difficulty": "medium",
-      "clue": "Pleural line on US"
+      "clue": "Dyspnea on exertion"
     },
     {
       "difficulty": "medium",
-      "clue": "JVD"
+      "clue": "No known etiology"
     },
     {
       "difficulty": "hard",
-      "clue": "Hyperresonance"
+      "clue": "UIP pattern on CT"
     },
     {
       "difficulty": "hard",
-      "clue": "Tachycardia"
+      "clue": "Subpleural fibrosis"
     },
     {
       "difficulty": "hard",
-      "clue": "Chest pain"
+      "clue": "Honeycombing on CT"
     },
     {
       "difficulty": "hard",
-      "clue": "Dyspnea"
+      "clue": "Exclusion of other ILDs"
     }
   ],
   "concepts": [
-    "Tension Pneumothorax",
-    "Spontaneous Pneumothorax",
-    "Pleural Effusion",
-    "Hemothorax",
-    "Pericardial Tamponade",
-    "Pulmonary Embolism",
-    "Asthma Exacerbation",
-    "Pneumonia",
-    "COPD Exacerbation",
-    "Myocardial Infarction",
-    "Pericarditis",
-    "Costochondritis",
-    "Rib Fracture",
-    "Esophageal Rupture",
-    "Lung Cancer",
-    "Aortic Dissection",
-    "Pulmonary Hypertension",
-    "Bronchiectasis",
-    "Congestive Heart Failure",
-    "Lung Abscess"
+    "Idiopathic Pulmonary Fibrosis",
+    "Sarcoidosis",
+    "Interstitial pneumonia",
+    "Pneumoconiosis",
+    "Hypersensitivity pneumonitis",
+    "Connective tissue disease ILD",
+    "Drug-induced ILD",
+    "Chronic eosinophilic pneumonia",
+    "Desquamative interstitial pneumonia",
+    "Lymphangioleiomyomatosis",
+    "Pulmonary Langerhans cell histiocytosis",
+    "Acute interstitial pneumonia",
+    "Nonspecific interstitial pneumonia",
+    "Cryptogenic organizing pneumonia",
+    "Respiratory bronchiolitis ILD",
+    "Pulmonary alveolar proteinosis",
+    "Eosinophilic granulomatosis with polyangiitis",
+    "Goodpasture syndrome",
+    "Granulomatosis with polyangiitis",
+    "Microscopic polyangiitis"
   ],
   "explanations": {
-    "tile_0": "Tracheal deviation to the contralateral side is a classic sign of tension pneumothorax.",
-    "tile_1": "Hypotension occurs due to decreased venous return caused by increased intrathoracic pressure.",
-    "tile_2": "Decreased breath sounds are found on the affected side due to collapsed lung.",
-    "tile_3": "Ultrasound can reveal a pleural line or 'barcode sign' indicating pneumothorax.",
-    "tile_4": "Jugular venous distension (JVD) can occur due to impaired venous return to the heart.",
-    "tile_5": "Hyperresonance on percussion is found on the affected side due to air-filled pleural space.",
-    "tile_6": "Tachycardia can occur as a compensatory response to hypoxia and hypotension.",
-    "tile_7": "Chest pain, often sudden and severe, is a common symptom of pneumothorax.",
-    "tile_8": "Dyspnea or difficulty breathing is a common symptom due to decreased lung capacity on the affected side."
+    "tile_0": "Velcro crackles on auscultation are a characteristic finding in patients with IPF, resembling the sound made when separating a Velcro fastener.",
+    "tile_1": "Clubbing, a bulbous enlargement of the ends of fingers or toes, is often seen in IPF and signifies advanced disease.",
+    "tile_2": "Dry cough is a common symptom of IPF and is often one of the first symptoms.",
+    "tile_3": "Dyspnea, particularly on exertion, is a common symptom of IPF and usually progressive.",
+    "tile_4": "IPF, by definition, is a form of ILD that occurs without a known cause.",
+    "tile_5": "A usual interstitial pneumonia (UIP) pattern on high-resolution CT scan is a classic radiologic finding in IPF.",
+    "tile_6": "Subpleural fibrosis, or thickening of tissue beneath the pleural surface, is a typical finding in IPF.",
+    "tile_7": "Honeycombing on CT, which refers to the appearance of clustered cystic air spaces, is a classic but late feature of IPF.",
+    "tile_8": "Exclusion of other ILDs is a part of the diagnostic criteria for IPF."
   }
 }
