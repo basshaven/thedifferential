@@ -1,78 +1,85 @@
 {
-  "date": "2025-07-24",
-  "discipline": "Infectious Disease",
+  "date": "2025-07-25",
+  "discipline": "Hematology",
   "category": "diagnosis",
-  "topic_rationale": "Choosing 'Legionella pneumonia' as it is a common cause of severe community-acquired pneumonia (CAP) that can be overlooked due to its unique transmission and diagnostic modalities. It is an educational opportunity to highlight key features of this disease.",
-  "answer": "Legionella Pneumonia",
+  "topic_rationale": "Polycythemia Vera is a myeloproliferative neoplasm that can lead to severe complications if left untreated. It is characterized by an increase in the number of red cells in the blood. It's a condition that's not common, not too rare, and diagnostically challenging, making it a good learning opportunity.",
+  "answer": "Polycythemia Vera",
+  "acceptable_answers": [
+    "Polycythemia Vera",
+    "PV",
+    "Polycythemia Rubra Vera",
+    "Primary Polycythemia",
+    "Vaquez's disease"
+  ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Hotel stay recent"
+      "clue": "Elevated Hb/Hct"
     },
     {
       "difficulty": "easy",
-      "clue": "Hyponatremia"
+      "clue": "JAK2 mutation"
     },
     {
       "difficulty": "medium",
-      "clue": "Cough productive"
+      "clue": "Plethora"
     },
     {
       "difficulty": "medium",
-      "clue": "High fever"
+      "clue": "Pruritus after bath"
     },
     {
       "difficulty": "medium",
-      "clue": "Abnormal LFTs"
+      "clue": "Splenomegaly"
     },
     {
       "difficulty": "hard",
-      "clue": "No response to \u03b2-lactam"
+      "clue": "Thrombosis"
     },
     {
       "difficulty": "hard",
-      "clue": "Diarrhea present"
+      "clue": "EPO low"
     },
     {
       "difficulty": "hard",
-      "clue": "CXR: patchy infiltrates"
+      "clue": "Leukocytosis"
     },
     {
       "difficulty": "hard",
-      "clue": "Urine antigen positive"
+      "clue": "Thrombocytosis"
     }
   ],
   "concepts": [
-    "Legionella Pneumonia",
-    "Pneumococcal Pneumonia",
-    "Mycoplasma Pneumonia",
-    "Viral Pneumonia",
-    "Tuberculosis",
-    "Staphylococcal Pneumonia",
-    "Aspiration Pneumonia",
-    "Pneumonia in Immunocompromised Host",
-    "Influenza",
-    "Pulmonary Embolism",
-    "Acute Bronchitis",
-    "COPD Exacerbation",
-    "Asthma Exacerbation",
-    "Interstitial Lung Disease",
-    "Heart Failure",
-    "Lung Cancer",
-    "Hantavirus Pulmonary Syndrome",
-    "Q Fever",
-    "Histoplasmosis",
-    "SARS"
+    "Polycythemia Vera",
+    "Essential Thrombocythemia",
+    "Chronic Myeloid Leukemia",
+    "Secondary Polycythemia",
+    "Myelofibrosis",
+    "Chronic Myelomonocytic Leukemia",
+    "Hypoxia",
+    "Renal cell carcinoma",
+    "Leukemia",
+    "Hemochromatosis",
+    "Hodgkin Lymphoma",
+    "Non-Hodgkin Lymphoma",
+    "Myelodysplastic Syndromes",
+    "Hepatocellular Carcinoma",
+    "Thyroid Disease",
+    "Myeloproliferative Neoplasm",
+    "Pheochromocytoma",
+    "Pulmonary Fibrosis",
+    "Chronic Obstructive Pulmonary Disease",
+    "Congenital Heart Disease"
   ],
   "explanations": {
-    "tile_0": "Legionella is often associated with outbreaks in buildings with complex water systems like hotels.",
-    "tile_1": "Hyponatremia is a common electrolyte disturbance in Legionella due to SIADH.",
-    "tile_2": "Productive cough is a common symptom of Legionella pneumonia.",
-    "tile_3": "High fever is a typical feature of Legionella.",
-    "tile_4": "Abnormal liver function tests can be seen in Legionella infection.",
-    "tile_5": "Legionella is resistant to \u03b2-lactam antibiotics due to the absence of peptidoglycan in its cell wall.",
-    "tile_6": "Gastrointestinal symptoms like diarrhea are common in Legionella infection.",
-    "tile_7": "Chest X-ray in Legionella pneumonia often shows patchy infiltrates.",
-    "tile_8": "Urine antigen test is a quick and specific diagnostic test for Legionella."
+    "tile_0": "Polycythemia Vera is characterized by an increase in the number of red cells in the blood, leading to elevated hemoglobin and hematocrit.",
+    "tile_1": "The majority of patients with Polycythemia Vera have a mutation in the JAK2 gene.",
+    "tile_2": "Plethora, or ruddy complexion, is a common physical finding in Polycythemia Vera due to increased red blood cells.",
+    "tile_3": "Pruritus, especially after a hot bath, is a common symptom in Polycythemia Vera due to increased basophils.",
+    "tile_4": "Splenomegaly is often seen in Polycythemia Vera, due to extramedullary hematopoiesis.",
+    "tile_5": "Thrombosis is a major complication of Polycythemia Vera due to increased blood viscosity and platelet activation.",
+    "tile_6": "In Polycythemia Vera, erythropoietin (EPO) levels are typically low or normal due to feedback inhibition from increased red blood cell mass.",
+    "tile_7": "Leukocytosis is often seen in Polycythemia Vera, due to proliferation of all three myeloid cell lines.",
+    "tile_8": "Thrombocytosis is often seen in Polycythemia Vera, due to proliferation of all three myeloid cell lines."
   }
 }
