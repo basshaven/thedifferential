@@ -2,18 +2,19 @@
   "date": "2025-07-25",
   "discipline": "Hematology",
   "category": "diagnosis",
-  "topic_rationale": "Polycythemia vera is a classic myeloproliferative disorder that has a unique set of diagnostic criteria. Understanding these features can help with early detection, management, and prevention of complications.",
+  "topic_rationale": "Polycythemia Vera (PV) is a myeloproliferative neoplasm characterized by increased red blood cell mass. It is a classic teaching case for hematologic malignancies and is diagnostically challenging due to its diverse clinical manifestations.",
   "answer": "Polycythemia Vera",
   "acceptable_answers": [
     "Polycythemia Vera",
-    "Polycythemia",
     "PV",
-    "Primary Polycythemia"
+    "Primary Polycythemia",
+    "Polycythaemia Vera",
+    "Polycythemia Rubra Vera"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Elevated HCT"
+      "clue": "Elevated Hct"
     },
     {
       "difficulty": "easy",
@@ -45,7 +46,7 @@
     },
     {
       "difficulty": "hard",
-      "clue": "Increased neutrophils"
+      "clue": "Absence of Ph1 chromosome"
     }
   ],
   "concepts": [
@@ -55,30 +56,30 @@
     "Chronic Myeloid Leukemia",
     "Myelofibrosis",
     "Iron Deficiency Anemia",
-    "Pernicious Anemia",
-    "Thrombotic Thrombocytopenic Purpura",
-    "Hemolytic Anemia",
-    "Sickle Cell Disease",
+    "Hemochromatosis",
+    "Sickle Cell Anemia",
     "Leukemia",
     "Multiple Myeloma",
-    "Lymphoma",
+    "Thalassemia",
+    "Hemolytic Anemia",
+    "Hodgkin's Lymphoma",
+    "Non-Hodgkin's Lymphoma",
+    "Acute Myeloid Leukemia",
+    "Chronic Lymphocytic Leukemia",
+    "Acute Lymphoblastic Leukemia",
     "Myelodysplastic Syndrome",
-    "Aplastic Anemia",
-    "Hemochromatosis",
-    "Megaloblastic Anemia",
-    "Hypothyroidism",
-    "Liver Disease",
-    "Chronic Kidney Disease"
+    "Hereditary Spherocytosis",
+    "Glucose-6-Phosphate Dehydrogenase Deficiency"
   ],
   "explanations": {
-    "tile_0": "Elevated hematocrit is a defining characteristic of Polycythemia Vera.",
-    "tile_1": "JAK2 mutation is present in 95% of Polycythemia Vera cases, confirming the diagnosis.",
-    "tile_2": "Pruritus, especially after a warm bath, is a common symptom of Polycythemia Vera due to increased histamine release by basophils.",
-    "tile_3": "Erythromelalgia, or burning pain and redness of the extremities, is a common symptom in Polycythemia Vera due to increased blood viscosity and platelet activation.",
-    "tile_4": "Splenomegaly occurs in Polycythemia Vera due to extramedullary hematopoiesis.",
-    "tile_5": "Low erythropoietin (EPO) levels help distinguish primary from secondary polycythemia. In Polycythemia Vera, EPO levels are low or normal despite high red cell mass.",
-    "tile_6": "Thrombosis history is common in Polycythemia Vera due to increased blood viscosity and platelet activation.",
-    "tile_7": "Hypercellular bone marrow with panmyelosis is seen in Polycythemia Vera.",
-    "tile_8": "Increased neutrophils and other granulocytes are seen in Polycythemia Vera due to uncontrolled proliferation of all three myeloid cell lines."
+    "tile_0": "Polycythemia vera is characterized by an increased hematocrit due to overproduction of red blood cells.",
+    "tile_1": "The majority of patients with Polycythemia Vera have a mutation in the JAK2 gene (V617F most common).",
+    "tile_2": "Post-bath pruritus is a common symptom of Polycythemia Vera, likely due to increased histamine release from basophils.",
+    "tile_3": "Erythromelalgia, or burning, painful erythema of the hands and feet, is a common symptom of Polycythemia Vera.",
+    "tile_4": "Splenomegaly is frequently present in Polycythemia Vera due to extramedullary hematopoiesis.",
+    "tile_5": "In Polycythemia Vera, erythropoietin (EPO) levels are typically low or normal due to feedback inhibition from increased red cell mass.",
+    "tile_6": "Patients with Polycythemia Vera are at an increased risk of thrombotic events.",
+    "tile_7": "Bone marrow in Polycythemia Vera is hypercellular due to increased production of all three cell lines (panmyelosis).",
+    "tile_8": "Absence of the Philadelphia chromosome (Ph1) helps to exclude chronic myeloid leukemia, which can present similarly to Polycythemia Vera."
   }
 }
