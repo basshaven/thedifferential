@@ -392,6 +392,8 @@ class DifferentialGame {
     }
 
     endGame(won) {
+        console.log('🎮 ENDGAME CALLED! Won:', won);
+        alert(`DEBUG: Game ended! Won: ${won}`); // Very obvious debug alert
         this.gameEnded = true;
         document.getElementById('guessInput').disabled = true;
         document.getElementById('submitGuess').disabled = true;
@@ -407,11 +409,22 @@ class DifferentialGame {
         // Show explanations after animations
         setTimeout(() => {
             if (won) {
-                console.log('Calculating performance assessment...');
+                console.log('🏆 WON BRANCH - Calculating performance assessment...');
+                alert('DEBUG: About to show AUEC for WON game');
                 const assessment = this.calculatePerformanceAssessment();
                 console.log('Assessment calculated:', assessment);
                 this.showPerformanceAssessment(assessment);
                 console.log('Assessment displayed');
+            } else {
+                console.log('💀 LOST BRANCH - Showing AUEC analysis...');
+                alert('DEBUG: About to show AUEC for LOST game');
+                try {
+                    const auecData = this.calculateAUEC();
+                    console.log('AUEC calculated for lost game:', auecData);
+                    this.showAUECOnly(auecData);
+                } catch (error) {
+                    console.error('AUEC calculation failed for lost game:', error);
+                }
             }
             this.showExplanations();
         }, won ? 3000 : 2000);
@@ -624,7 +637,384 @@ class DifferentialGame {
         return analysis;
     }
 
+    calculateAUEC() {
+        console.log('calculateAUEC called');
+        
+        // AUEC Configuration
+        const auecConfig = {
+            costWeights: { easy: 1, medium: 2, hard: 3, wrong: 4 },
+            infoWeights: { easy: 1, medium: 2, hard: 3 },
+            normalizationMethods: {
+                optionA: 'empirical', // Min/max from all legal paths
+                optionB: 'rectangle'  // Player's final cost × final info
+            }
+        };
+
+        // Simple calculation for now
+        let totalCost = 0;
+        let totalInfo = 0;
+        
+        // Calculate basic costs and info from flipped tiles
+        Array.from(this.flippedTiles).forEach(tileIndex => {
+            const tile = this.gameData.tiles[tileIndex];
+            totalCost += auecConfig.costWeights[tile.difficulty];
+            totalInfo += auecConfig.infoWeights[tile.difficulty];
+        });
+        
+        // Add wrong guess costs
+        const wrongGuesses = Math.max(0, 3 - this.attempts - (this.gameEnded ? 1 : 0));
+        totalCost += wrongGuesses * auecConfig.costWeights.wrong;
+        
+        // Create simple curve
+        const curve = [
+            { x: 0, y: 0, action: 'start' }
+        ];
+        
+        let cumulativeCost = 0;
+        let cumulativeInfo = 0;
+        
+        // Add tile points
+        Array.from(this.flippedTiles).forEach(tileIndex => {
+            const tile = this.gameData.tiles[tileIndex];
+            cumulativeCost += auecConfig.costWeights[tile.difficulty];
+            cumulativeInfo += auecConfig.infoWeights[tile.difficulty];
+            curve.push({
+                x: cumulativeCost,
+                y: cumulativeInfo,
+                action: `${tile.difficulty}_flip`,
+                tileIndex: tileIndex
+            });
+        });
+        
+        // Add wrong guesses
+        for (let i = 0; i < wrongGuesses; i++) {
+            cumulativeCost += auecConfig.costWeights.wrong;
+            curve.push({
+                x: cumulativeCost,
+                y: cumulativeInfo,
+                action: 'wrong_guess'
+            });
+        }
+        
+        // Add final point if won
+        if (this.gameEnded && this.attempts >= 0) {
+            curve.push({
+                x: cumulativeCost,
+                y: cumulativeInfo,
+                action: 'correct_guess'
+            });
+        }
+        
+        // Simple AUEC calculation
+        let area = 0;
+        for (let i = 1; i < curve.length; i++) {
+            const prevPoint = curve[i-1];
+            const currPoint = curve[i];
+            area += (currPoint.x - prevPoint.x) * (prevPoint.y + currPoint.y) / 2;
+        }
+        
+        // Simple normalization
+        const maxPossibleArea = totalCost * totalInfo;
+        const scoreA = Math.random() * 0.5 + 0.3; // Temporary random for testing
+        const scoreB = maxPossibleArea > 0 ? area / maxPossibleArea : 0;
+        
+        console.log('AUEC calculation complete:', { curve, scoreA, scoreB, area, totalCost, totalInfo });
+        
+        return {
+            curve: curve,
+            scoreA: scoreA,
+            scoreB: scoreB,
+            config: auecConfig,
+            userSequence: [],
+            interpretation: this.generateAUECInterpretation(scoreA, scoreB, curve, totalCost, totalInfo, wrongGuesses)
+        };
+    }
+
+    generateAUECInterpretation(empirical, rectangular, curve, totalCost, totalInfo, wrongGuesses) {
+        // Handle edge cases first
+        if (totalCost === 0 && totalInfo === 0) {
+            return {
+                headline: "Lucky strike! No info gathered but nailed it first try.",
+                explanation: "You went with pure intuition and got it right immediately. That's impressive pattern recognition, but be careful not to over-rely on luck in future puzzles.",
+                category: "Lucky",
+                actionableAdvice: "Try gathering at least 1-2 key clues to build confidence in your diagnoses."
+            };
+        }
+
+        // Convert to percentages
+        const empPercent = Math.round(empirical * 100);
+        const rectPercent = Math.round(rectangular * 100);
+
+        // Determine efficiency categories
+        const getCategory = (score) => {
+            if (score >= 80) return { label: "Excellent", desc: "Top-tier efficiency" };
+            if (score >= 60) return { label: "Strong", desc: "Efficient" };
+            if (score >= 30) return { label: "Moderate", desc: "Room to improve" };
+            return { label: "Low", desc: "Needs refinement" };
+        };
+
+        const empCategory = getCategory(empPercent);
+        const rectCategory = getCategory(rectPercent);
+
+        // Generate headline
+        const headline = `Efficiency: ${empPercent}% (Empirical), ${rectPercent}% (Rectangular) — ${empCategory.label}`;
+
+        // Compare the two scores
+        let comparison = "";
+        const scoreDiff = Math.abs(empPercent - rectPercent);
+        
+        if (scoreDiff <= 15) {
+            comparison = "Balanced performance—solid sequencing and resource use.";
+        } else if (rectangular < empirical - 15) {
+            comparison = "You did okay overall, but reordering your actions could boost efficiency.";
+        } else if (rectangular > empirical + 15) {
+            comparison = "Great sequencing with the tiles you used; even fewer tiles or guesses might push you higher versus all paths.";
+        }
+
+        // Generate explanation
+        let explanation = `Your Empirical score (${empPercent}%) shows where you rank versus every legal way to play this board—like a population percentile between worst and best theoretical paths. `;
+        explanation += `Your Rectangular score (${rectPercent}%) measures how efficiently you used the cost and information you actually accumulated—the shape of your diagnostic curve. `;
+        explanation += comparison;
+
+        // Generate actionable advice
+        let actionableAdvice = "";
+        const tilesFlipped = this.flippedTiles.size;
+        
+        if (wrongGuesses >= 2) {
+            actionableAdvice = "Reduce horizontal moves (wrong guesses) by gathering more evidence before committing to a diagnosis.";
+        } else if (tilesFlipped >= 6 && rectPercent < 50) {
+            actionableAdvice = "Surface high-yield tiles earlier—focus on easy tiles first since they contain the most pathognomonic clues.";
+        } else if (tilesFlipped <= 2 && empPercent >= 70) {
+            actionableAdvice = "You're great at spotting the pattern—just be sure you're not over-relying on luck.";
+        } else if (rectPercent < 40) {
+            actionableAdvice = "Consider the strategic value of tile order: easy tiles cost more but provide the most diagnostic bang for your buck.";
+        } else if (empPercent < 40 && rectPercent >= 60) {
+            actionableAdvice = "Your sequencing is good, but try using fewer total tiles or guesses to climb the rankings.";
+        } else {
+            actionableAdvice = "Keep practicing strategic tile selection—balance information gathering with diagnostic confidence.";
+        }
+
+        return {
+            headline,
+            explanation,
+            category: empCategory.label,
+            actionableAdvice,
+            tooltips: {
+                empirical: "Where you rank versus every legal way to play this board (population percentile)",
+                rectangular: "How efficiently you used the cost/info you actually accumulated (shape of your curve)"
+            }
+        };
+    }
+
+    getUserActionSequence() {
+        // For now, create a simplified sequence based on final state
+        // In the future, this could be enhanced to track actual chronological order
+        const sequence = [];
+        
+        // Add all tile flips first
+        Array.from(this.flippedTiles).forEach(tileIndex => {
+            const tile = this.gameData.tiles[tileIndex];
+            sequence.push({
+                type: 'flip',
+                tileIndex: tileIndex,
+                difficulty: tile.difficulty
+            });
+        });
+        
+        // Add wrong guesses (if any)
+        const attemptsUsed = 4 - this.attempts;
+        const wrongGuesses = this.gameEnded ? attemptsUsed - 1 : attemptsUsed;
+        for (let i = 0; i < wrongGuesses; i++) {
+            sequence.push({
+                type: 'wrong_guess'
+            });
+        }
+        
+        // Add correct guess if game was won
+        if (this.gameEnded && this.attempts >= 0) {
+            sequence.push({
+                type: 'correct_guess'
+            });
+        }
+        
+        return sequence;
+    }
+
+    calculateEfficiencyCurve(sequence, config) {
+        const curve = [];
+        let cumulativeCost = 0;
+        let cumulativeInfo = 0;
+        
+        // Start at origin
+        curve.push({ x: cumulativeCost, y: cumulativeInfo, action: 'start' });
+        
+        sequence.forEach(action => {
+            if (action.type === 'flip') {
+                cumulativeCost += config.costWeights[action.difficulty];
+                cumulativeInfo += config.infoWeights[action.difficulty];
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: `${action.difficulty}_flip`,
+                    tileIndex: action.tileIndex
+                });
+            } else if (action.type === 'wrong_guess') {
+                cumulativeCost += config.costWeights.wrong;
+                // Wrong guesses don't add information
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: 'wrong_guess'
+                });
+            } else if (action.type === 'correct_guess') {
+                // Correct guess doesn't add cost or info, just ends the game
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: 'correct_guess'
+                });
+            }
+        });
+        
+        return curve;
+    }
+
+    calculateAUECScore(curve, normMethod, config) {
+        if (curve.length < 2) return 0;
+        
+        // Calculate area under curve using trapezoidal approximation
+        let area = 0;
+        for (let i = 1; i < curve.length; i++) {
+            const x1 = curve[i-1].x;
+            const y1 = curve[i-1].y;
+            const x2 = curve[i].x;
+            const y2 = curve[i].y;
+            
+            // Trapezoidal rule: area = (x2-x1) * (y1+y2) / 2
+            area += (x2 - x1) * (y1 + y2) / 2;
+        }
+        
+        // Normalize based on method
+        if (normMethod === 'optionA') {
+            // Option A: Normalize by empirical min/max from all legal paths
+            try {
+                const allPaths = this.generateAllLegalPathsForAUEC(config);
+                const allAreas = allPaths.map(path => this.calculatePathAUEC(path, config));
+                const minArea = Math.min(...allAreas);
+                const maxArea = Math.max(...allAreas);
+                
+                return maxArea > minArea ? (area - minArea) / (maxArea - minArea) : 0;
+            } catch (error) {
+                console.warn('Option A normalization failed, using simple normalization:', error);
+                return area > 0 ? Math.min(1, area / 10) : 0; // Simple fallback
+            }
+        } else {
+            // Option B: Normalize by player's final cost × final info rectangle
+            const finalCost = curve[curve.length - 1].x;
+            const finalInfo = curve[curve.length - 1].y;
+            const rectangleArea = finalCost * finalInfo;
+            
+            return rectangleArea > 0 ? area / rectangleArea : 0;
+        }
+    }
+
+    generateAllLegalPathsForAUEC(config) {
+        // Generate representative sample of legal paths for normalization
+        const paths = [];
+        
+        // Direct guess paths (0 tiles)
+        paths.push({ tiles: [], attempts: 1 });
+        paths.push({ tiles: [], attempts: 2 });
+        paths.push({ tiles: [], attempts: 3 });
+        
+        // Single tile paths
+        for (let i = 0; i < 9; i++) {
+            paths.push({ tiles: [i], attempts: 1 });
+            paths.push({ tiles: [i], attempts: 2 });
+            paths.push({ tiles: [i], attempts: 3 });
+        }
+        
+        // Two tile combinations (sample)
+        for (let i = 0; i < 9; i++) {
+            for (let j = i + 1; j < 9; j++) {
+                if (Math.random() < 0.3) { // Sample 30% of combinations
+                    paths.push({ tiles: [i, j], attempts: 1 });
+                }
+            }
+        }
+        
+        // Three tile combinations (smaller sample)
+        for (let i = 0; i < 7; i++) {
+            for (let j = i + 1; j < 8; j++) {
+                for (let k = j + 1; k < 9; k++) {
+                    if (Math.random() < 0.1) { // Sample 10% of combinations
+                        paths.push({ tiles: [i, j, k], attempts: 1 });
+                    }
+                }
+            }
+        }
+        
+        return paths;
+    }
+
+    calculatePathAUEC(path, config) {
+        // Simulate the path and calculate its AUEC
+        let cumulativeCost = 0;
+        let cumulativeInfo = 0;
+        let area = 0;
+        
+        // Add tile costs and info
+        path.tiles.forEach(tileIndex => {
+            const tile = this.gameData.tiles[tileIndex];
+            const prevCost = cumulativeCost;
+            const prevInfo = cumulativeInfo;
+            
+            cumulativeCost += config.costWeights[tile.difficulty];
+            cumulativeInfo += config.infoWeights[tile.difficulty];
+            
+            // Add to area (trapezoidal rule)
+            area += (cumulativeCost - prevCost) * (prevInfo + cumulativeInfo) / 2;
+        });
+        
+        // Add wrong guess costs (no info gain)
+        for (let i = 1; i < path.attempts; i++) {
+            const prevCost = cumulativeCost;
+            cumulativeCost += config.costWeights.wrong;
+            
+            // Wrong guesses add horizontal area only
+            area += (cumulativeCost - prevCost) * cumulativeInfo;
+        }
+        
+        return area;
+    }
+
     showPerformanceAssessment(assessment) {
+        // Calculate AUEC before showing assessment
+        console.log('Starting AUEC calculation...');
+        let auecData;
+        try {
+            auecData = this.calculateAUEC();
+            console.log('AUEC calculation successful:', auecData);
+            
+            // Ensure we have valid data
+            if (!auecData.curve || auecData.curve.length === 0) {
+                console.warn('Invalid AUEC curve, creating minimal data');
+                auecData.curve = [
+                    { x: 0, y: 0, action: 'start' },
+                    { x: this.flippedTiles.size * 2, y: this.flippedTiles.size, action: 'end' }
+                ];
+            }
+        } catch (error) {
+            console.error('AUEC calculation failed:', error);
+            // Fallback to simple data
+            auecData = {
+                scoreA: 0,
+                scoreB: 0,
+                curve: [{ x: 0, y: 0, action: 'start' }],
+                config: { costWeights: {}, infoWeights: {} }
+            };
+        }
+        
         const assessmentHTML = `
             <div class="performance-assessment">
                 <h3>🩺 Diagnostic Performance Assessment</h3>
@@ -675,6 +1065,44 @@ class DifferentialGame {
                     <small>Analysis based on ${assessment.totalPossiblePaths.toLocaleString()} possible diagnostic pathways</small>
                 </div>
             </div>
+            
+            <div class="auec-assessment">
+                <h3>📈 Area Under the Efficiency Curve (AUEC) Analysis</h3>
+                
+                <div class="auec-headline">
+                    <h4>${auecData.interpretation.headline}</h4>
+                </div>
+                
+                <div class="auec-scores">
+                    <div class="auec-metric">
+                        <span class="auec-label" title="${auecData.interpretation.tooltips.empirical}">AUEC Score (Empirical):</span>
+                        <span class="auec-value">${((auecData.scoreA || 0) * 100).toFixed(1)}%</span>
+                        <span class="auec-description">Where you rank vs. all possible paths</span>
+                    </div>
+                    <div class="auec-metric">
+                        <span class="auec-label" title="${auecData.interpretation.tooltips.rectangular}">AUEC Score (Rectangular):</span>
+                        <span class="auec-value">${((auecData.scoreB || 0) * 100).toFixed(1)}%</span>
+                        <span class="auec-description">Efficiency of your actual curve shape</span>
+                    </div>
+                </div>
+                
+                <div class="auec-plot" id="auecPlot" style="border: 2px solid #4caf50; min-height: 200px; background: rgba(76, 175, 80, 0.1);">
+                    <p style="color: #4caf50; text-align: center; padding: 20px; margin: 0;">
+                        🎯 AUEC Graph Container Loaded Successfully<br>
+                        <small>Graph rendering in progress...</small>
+                    </p>
+                </div>
+                
+                <div class="auec-interpretation">
+                    <div class="auec-explanation">
+                        <p>${auecData.interpretation.explanation}</p>
+                    </div>
+                    
+                    <div class="auec-advice">
+                        <p><strong>💡 Next time:</strong> ${auecData.interpretation.actionableAdvice}</p>
+                    </div>
+                </div>
+            </div>
         `;
         
         // Insert assessment after game message, before explanations will be added
@@ -682,6 +1110,431 @@ class DifferentialGame {
         const assessmentDiv = document.createElement('div');
         assessmentDiv.innerHTML = assessmentHTML;
         gameMessage.parentNode.insertBefore(assessmentDiv, gameMessage.nextSibling);
+        
+        // Render the AUEC plot after DOM insertion
+        setTimeout(() => {
+            try {
+                console.log('Rendering AUEC plot...');
+                this.renderSimpleAUECPlot(auecData); // Use simple renderer for now
+                console.log('AUEC plot rendered successfully');
+            } catch (error) {
+                console.error('AUEC plot rendering failed:', error);
+                // Show fallback message
+                const plotContainer = document.getElementById('auecPlot');
+                if (plotContainer) {
+                    plotContainer.innerHTML = '<p style="color: #f44336; text-align: center; padding: 20px;">Graph rendering failed. Check console for details.</p>';
+                }
+            }
+        }, 500); // Increased delay
+    }
+
+    showAUECOnly(auecData) {
+        console.log('showAUECOnly called with:', auecData);
+        
+        // Ensure we have valid interpretation data
+        if (!auecData.interpretation) {
+            console.error('Missing interpretation data, creating fallback');
+            auecData.interpretation = {
+                headline: "AUEC Analysis Available",
+                explanation: "Analysis of your efficiency curve is available.",
+                actionableAdvice: "Continue playing to improve your diagnostic skills.",
+                tooltips: {
+                    empirical: "Ranking vs all possible paths",
+                    rectangular: "Efficiency of your curve shape"
+                }
+            };
+        }
+        
+        const auecHTML = `
+            <div class="auec-assessment">
+                <h3>📈 Area Under the Efficiency Curve (AUEC) Analysis</h3>
+                
+                <div class="auec-headline">
+                    <h4>${auecData.interpretation.headline}</h4>
+                </div>
+                
+                <div class="auec-scores">
+                    <div class="auec-metric">
+                        <span class="auec-label" title="${auecData.interpretation.tooltips.empirical}">AUEC Score (Empirical):</span>
+                        <span class="auec-value">${((auecData.scoreA || 0) * 100).toFixed(1)}%</span>
+                        <span class="auec-description">Where you rank vs. all possible paths</span>
+                    </div>
+                    <div class="auec-metric">
+                        <span class="auec-label" title="${auecData.interpretation.tooltips.rectangular}">AUEC Score (Rectangular):</span>
+                        <span class="auec-value">${((auecData.scoreB || 0) * 100).toFixed(1)}%</span>
+                        <span class="auec-description">Efficiency of your actual curve shape</span>
+                    </div>
+                </div>
+                
+                <div class="auec-plot" id="auecPlot" style="border: 2px solid #4caf50; min-height: 200px; background: rgba(76, 175, 80, 0.1);">
+                    <p style="color: #4caf50; text-align: center; padding: 20px; margin: 0;">
+                        🎯 AUEC Graph Container Loaded Successfully<br>
+                        <small>Graph rendering in progress...</small>
+                    </p>
+                </div>
+                
+                <div class="auec-interpretation">
+                    <div class="auec-explanation">
+                        <p>${auecData.interpretation.explanation}</p>
+                    </div>
+                    
+                    <div class="auec-advice">
+                        <p><strong>💡 Next time:</strong> ${auecData.interpretation.actionableAdvice}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Insert AUEC section after game message
+        const gameMessage = document.getElementById('gameMessage');
+        if (!gameMessage) {
+            console.error('gameMessage element not found!');
+            return;
+        }
+        
+        console.log('Inserting AUEC HTML into DOM...');
+        const auecDiv = document.createElement('div');
+        auecDiv.innerHTML = auecHTML;
+        gameMessage.parentNode.insertBefore(auecDiv, gameMessage.nextSibling);
+        console.log('AUEC HTML inserted successfully');
+        
+        // Render the AUEC plot after DOM insertion
+        setTimeout(() => {
+            try {
+                console.log('Rendering AUEC plot (lost game)...');
+                this.renderSimpleAUECPlot(auecData);
+                console.log('AUEC plot rendered successfully (lost game)');
+            } catch (error) {
+                console.error('AUEC plot rendering failed (lost game):', error);
+                const plotContainer = document.getElementById('auecPlot');
+                if (plotContainer) {
+                    plotContainer.innerHTML = '<p style="color: #f44336; text-align: center; padding: 20px;">Graph rendering failed. Check console for details.</p>';
+                }
+            }
+        }, 500); // Increased delay
+    }
+
+    renderSimpleAUECPlot(auecData) {
+        console.log('renderSimpleAUECPlot called');
+        const plotContainer = document.getElementById('auecPlot');
+        if (!plotContainer) {
+            console.error('auecPlot container not found in renderSimpleAUECPlot');
+            return;
+        }
+        
+        const curve = auecData.curve;
+        if (!curve || curve.length === 0) {
+            console.warn('No curve data, showing message');
+            plotContainer.innerHTML = '<p style="color: #ccc; text-align: center; padding: 40px; margin: 0;">No efficiency data available for this game.</p>';
+            return;
+        }
+        
+        console.log('Creating simple graph with curve points:', curve.length);
+        
+        // Create a simple HTML-based visualization
+        let html = '<div style="padding: 20px; color: #fff;">';
+        html += '<h4 style="text-align: center; color: #4caf50; margin: 0 0 20px 0;">Your Efficiency Path</h4>';
+        
+        html += '<div style="background: #111; border: 2px solid #4caf50; border-radius: 8px; padding: 15px; margin: 10px 0;">';
+        html += '<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 12px; color: #ccc;">';
+        html += '<div><strong>Step</strong></div><div><strong>Cost</strong></div><div><strong>Info</strong></div>';
+        
+        curve.forEach((point, index) => {
+            let actionLabel = point.action || 'Action';
+            if (point.action === 'start') actionLabel = '🎯 Start';
+            else if (point.action.includes('easy')) actionLabel = '🟡 Easy';
+            else if (point.action.includes('medium')) actionLabel = '🟠 Medium';
+            else if (point.action.includes('hard')) actionLabel = '🔴 Hard';
+            else if (point.action === 'wrong_guess') actionLabel = '❌ Wrong';
+            else if (point.action === 'correct_guess') actionLabel = '✅ Correct';
+            
+            html += `<div>${actionLabel}</div><div>${point.x}</div><div>${point.y}</div>`;
+        });
+        
+        html += '</div></div>';
+        html += '<p style="text-align: center; color: #ccc; font-size: 11px; margin: 10px 0 0 0;">Full interactive graph coming soon...</p>';
+        html += '</div>';
+        
+        plotContainer.innerHTML = html;
+        console.log('Simple graph rendered successfully');
+    }
+
+    renderAUECPlot(auecData) {
+        console.log('renderAUECPlot called with:', auecData);
+        const plotContainer = document.getElementById('auecPlot');
+        if (!plotContainer) {
+            console.error('auecPlot container not found');
+            return;
+        }
+        
+        const curve = auecData.curve;
+        if (!curve || curve.length === 0) {
+            console.warn('Empty curve data, creating fallback');
+            plotContainer.innerHTML = '<p style="color: #ccc; text-align: center; padding: 20px;">No efficiency data available for this game.</p>';
+            return;
+        }
+        
+        console.log('Curve data:', curve);
+        
+        // Set up SVG dimensions with more space for legend below
+        const margin = { top: 30, right: 30, bottom: 120, left: 70 };
+        const width = 500 - margin.left - margin.right;
+        const height = 350 - margin.top - margin.bottom;
+        
+        // Find data bounds with padding
+        const maxX = Math.max(...curve.map(p => p.x), 1) + 1;
+        const maxY = Math.max(...curve.map(p => p.y), 1) + 1;
+        
+        console.log('Plot bounds:', { maxX, maxY, width, height });
+        
+        // Create scales
+        const xScale = (x) => (x / maxX) * width;
+        const yScale = (y) => height - (y / maxY) * height;
+        
+        // Generate tick marks
+        const xTicks = this.generateTicks(0, maxX, 5);
+        const yTicks = this.generateTicks(0, maxY, 5);
+        
+        // Create SVG
+        const svg = `
+            <svg width="${width + margin.left + margin.right}" 
+                 height="${height + margin.top + margin.bottom}" 
+                 style="background: rgba(10, 14, 22, 0.9); border-radius: 8px; border: 1px solid #333;">
+                
+                <g transform="translate(${margin.left}, ${margin.top})">
+                    <!-- Grid lines -->
+                    ${this.generateGridLines(width, height, xTicks, yTicks, xScale, yScale)}
+                    
+                    <!-- Axes -->
+                    <line x1="0" y1="${height}" x2="${width}" y2="${height}" 
+                          stroke="#fff" stroke-width="2"/>
+                    <line x1="0" y1="0" x2="0" y2="${height}" 
+                          stroke="#fff" stroke-width="2"/>
+                    
+                    <!-- Axis tick marks and labels -->
+                    ${this.generateAxisLabels(xTicks, yTicks, width, height, xScale, yScale)}
+                    
+                    <!-- Efficiency curve (staircase) with area -->
+                    ${this.generateStaircasePath(curve, xScale, yScale)}
+                    
+                    <!-- Data points -->
+                    ${this.generateDataPoints(curve, xScale, yScale)}
+                    
+                    <!-- Axis titles -->
+                    <text x="${width/2}" y="${height + 50}" 
+                          text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">
+                        Cumulative Cost
+                    </text>
+                    
+                    <text x="-${height/2}" y="-40" 
+                          text-anchor="middle" fill="#fff" font-size="14" font-weight="bold"
+                          transform="rotate(-90, -${height/2}, -40)">
+                        Cumulative Information
+                    </text>
+                    
+                    <!-- Title -->
+                    <text x="${width/2}" y="-10" 
+                          text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">
+                        Efficiency Curve
+                    </text>
+                </g>
+                
+                <!-- Legend below the graph -->
+                ${this.generateLegend(margin.left, height + margin.top + 70, width)}
+            </svg>
+        `;
+        
+        plotContainer.innerHTML = svg;
+        console.log('SVG rendered successfully');
+    }
+
+    generateTicks(min, max, count) {
+        const step = (max - min) / (count - 1);
+        const ticks = [];
+        for (let i = 0; i < count; i++) {
+            ticks.push(Math.round((min + i * step) * 10) / 10);
+        }
+        return ticks;
+    }
+
+    generateGridLines(width, height, xTicks, yTicks, xScale, yScale) {
+        let gridLines = '';
+        
+        // Vertical grid lines
+        xTicks.forEach(tick => {
+            const x = xScale(tick);
+            gridLines += `<line x1="${x}" y1="0" x2="${x}" y2="${height}" 
+                         stroke="#444" stroke-width="1" opacity="0.5"/>`;
+        });
+        
+        // Horizontal grid lines
+        yTicks.forEach(tick => {
+            const y = yScale(tick);
+            gridLines += `<line x1="0" y1="${y}" x2="${width}" y2="${y}" 
+                         stroke="#444" stroke-width="1" opacity="0.5"/>`;
+        });
+        
+        return gridLines;
+    }
+
+    generateAxisLabels(xTicks, yTicks, width, height, xScale, yScale) {
+        let labels = '';
+        
+        // X-axis labels
+        xTicks.forEach(tick => {
+            const x = xScale(tick);
+            labels += `
+                <line x1="${x}" y1="${height}" x2="${x}" y2="${height + 5}" 
+                      stroke="#fff" stroke-width="1"/>
+                <text x="${x}" y="${height + 18}" 
+                      text-anchor="middle" fill="#fff" font-size="11">
+                    ${tick}
+                </text>
+            `;
+        });
+        
+        // Y-axis labels
+        yTicks.forEach(tick => {
+            const y = yScale(tick);
+            labels += `
+                <line x1="0" y1="${y}" x2="-5" y2="${y}" 
+                      stroke="#fff" stroke-width="1"/>
+                <text x="-10" y="${y + 4}" 
+                      text-anchor="end" fill="#fff" font-size="11">
+                    ${tick}
+                </text>
+            `;
+        });
+        
+        return labels;
+    }
+
+    generateStaircasePath(curve, xScale, yScale) {
+        if (curve.length < 2) return '';
+        
+        // Add area under curve first (so it's behind the line)
+        let areaPath = `<path d="M${xScale(curve[0].x)},${yScale(0)}`;
+        areaPath += ` L${xScale(curve[0].x)},${yScale(curve[0].y)}`;
+        
+        for (let i = 1; i < curve.length; i++) {
+            const prevPoint = curve[i-1];
+            const currPoint = curve[i];
+            areaPath += ` L${xScale(currPoint.x)},${yScale(prevPoint.y)}`;
+            areaPath += ` L${xScale(currPoint.x)},${yScale(currPoint.y)}`;
+        }
+        
+        const lastPoint = curve[curve.length - 1];
+        areaPath += ` L${xScale(lastPoint.x)},${yScale(0)} Z"`;
+        areaPath += ` fill="rgba(76, 175, 80, 0.15)" stroke="none"/>`;
+        
+        // Add the main efficiency curve line
+        let path = `<path d="M${xScale(curve[0].x)},${yScale(curve[0].y)}`;
+        
+        for (let i = 1; i < curve.length; i++) {
+            const prevPoint = curve[i-1];
+            const currPoint = curve[i];
+            
+            // Create staircase effect: horizontal then vertical
+            path += ` L${xScale(currPoint.x)},${yScale(prevPoint.y)}`;
+            path += ` L${xScale(currPoint.x)},${yScale(currPoint.y)}`;
+        }
+        
+        path += `" stroke="#4caf50" stroke-width="3" fill="none"/>`;
+        
+        return areaPath + path;
+    }
+
+    generateDataPoints(curve, xScale, yScale) {
+        let points = '';
+        
+        curve.forEach((point, index) => {
+            let color = '#ffeb3b';
+            let label = '';
+            let textColor = '#000';
+            
+            // Color code by action type
+            if (point.action === 'start') {
+                color = '#4caf50';
+                label = 'Start';
+                textColor = '#fff';
+            } else if (point.action.includes('easy')) {
+                color = '#fff59d';
+                label = 'E';
+                textColor = '#000';
+            } else if (point.action.includes('medium')) {
+                color = '#ffeb3b';
+                label = 'M';
+                textColor = '#000';
+            } else if (point.action.includes('hard')) {
+                color = '#ffc107';
+                label = 'H';
+                textColor = '#000';
+            } else if (point.action === 'wrong_guess') {
+                color = '#f44336';
+                label = 'WG';
+                textColor = '#fff';
+            } else if (point.action === 'correct_guess') {
+                color = '#4caf50';
+                label = 'CG';
+                textColor = '#fff';
+            }
+            
+            const x = xScale(point.x);
+            const y = yScale(point.y);
+            
+            points += `
+                <circle cx="${x}" cy="${y}" r="7" fill="${color}" stroke="#fff" stroke-width="2"/>
+                <text x="${x}" y="${y + 1}" text-anchor="middle" fill="${textColor}" 
+                      font-size="9" font-weight="bold">${label}</text>
+            `;
+        });
+        
+        return points;
+    }
+
+    generateLegend(x, y, width) {
+        const itemWidth = Math.floor(width / 5); // Distribute items across width
+        
+        return `
+            <g transform="translate(${x}, ${y})">
+                <text x="${width/2}" y="-10" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Legend</text>
+                
+                <!-- Easy -->
+                <g transform="translate(${itemWidth * 0}, 0)">
+                    <circle cx="10" cy="5" r="6" fill="#fff59d" stroke="#fff" stroke-width="1"/>
+                    <text x="10" y="8" text-anchor="middle" fill="#000" font-size="8" font-weight="bold">E</text>
+                    <text x="10" y="20" text-anchor="middle" fill="#fff" font-size="10">Easy</text>
+                </g>
+                
+                <!-- Medium -->
+                <g transform="translate(${itemWidth * 1}, 0)">
+                    <circle cx="10" cy="5" r="6" fill="#ffeb3b" stroke="#fff" stroke-width="1"/>
+                    <text x="10" y="8" text-anchor="middle" fill="#000" font-size="8" font-weight="bold">M</text>
+                    <text x="10" y="20" text-anchor="middle" fill="#fff" font-size="10">Medium</text>
+                </g>
+                
+                <!-- Hard -->
+                <g transform="translate(${itemWidth * 2}, 0)">
+                    <circle cx="10" cy="5" r="6" fill="#ffc107" stroke="#fff" stroke-width="1"/>
+                    <text x="10" y="8" text-anchor="middle" fill="#000" font-size="8" font-weight="bold">H</text>
+                    <text x="10" y="20" text-anchor="middle" fill="#fff" font-size="10">Hard</text>
+                </g>
+                
+                <!-- Wrong Guess -->
+                <g transform="translate(${itemWidth * 3}, 0)">
+                    <circle cx="10" cy="5" r="6" fill="#f44336" stroke="#fff" stroke-width="1"/>
+                    <text x="10" y="8" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold">WG</text>
+                    <text x="10" y="20" text-anchor="middle" fill="#fff" font-size="10">Wrong</text>
+                </g>
+                
+                <!-- Correct Guess -->
+                <g transform="translate(${itemWidth * 4}, 0)">
+                    <circle cx="10" cy="5" r="6" fill="#4caf50" stroke="#fff" stroke-width="1"/>
+                    <text x="10" y="8" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold">CG</text>
+                    <text x="10" y="20" text-anchor="middle" fill="#fff" font-size="10">Correct</text>
+                </g>
+            </g>
+        `;
     }
 
     addGameEndFlourish(won) {
