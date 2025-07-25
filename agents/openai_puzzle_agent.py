@@ -173,6 +173,19 @@ class OpenAIPuzzleAgent(BaseAgent):
                 self.logger.error(f"Missing required field: {field}")
                 return False
         
+        # Validate acceptable_answers if present
+        if 'acceptable_answers' in puzzle:
+            acceptable_answers = puzzle['acceptable_answers']
+            if not isinstance(acceptable_answers, list):
+                self.logger.error("acceptable_answers must be a list")
+                return False
+            if len(acceptable_answers) < 1:
+                self.logger.error("acceptable_answers must contain at least the primary answer")
+                return False
+            # First item should match the primary answer
+            if acceptable_answers[0].lower().strip() != puzzle['answer'].lower().strip():
+                self.logger.warning("First acceptable answer should match primary answer")
+        
         # Validate tiles
         tiles = puzzle['tiles']
         if len(tiles) != 9:

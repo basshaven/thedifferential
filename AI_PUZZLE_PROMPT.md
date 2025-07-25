@@ -132,7 +132,31 @@ Generate 20-25 plausible alternatives based on your puzzle category:
 - **Similar adverse events** from different drugs
 - **Unrelated conditions** that might present similarly
 
-### Step 5: Tile Explanations (Post-Game)
+### Step 5: Generate Acceptable Answer Variations
+Create 5-6 medically appropriate variations of your answer that users might reasonably enter:
+
+#### **Guidelines for Acceptable Answers:**
+- **Always include the primary answer first**
+- **Organism vs Disease**: If primary is "Legionella pneumonia", include "Legionella"
+- **Formal vs Common names**: "Myocardial infarction" + "Heart attack" + "MI"
+- **Syndrome variations**: "Sheehan syndrome" + "Sheehan's syndrome"  
+- **Abbreviations**: Include common medical abbreviations when appropriate
+- **Alternative terminology**: "Guillain-Barré" + "Acute inflammatory demyelinating polyneuropathy"
+- **Related conditions**: Only if clinically synonymous (not just similar)
+
+#### **Examples by Category:**
+
+**Diagnosis Examples:**
+- Legionella Pneumonia → ["Legionella Pneumonia", "Legionella", "Legionnaire's disease", "Legionnaires disease", "Legionella pneumophila"]
+- Myocardial Infarction → ["Myocardial Infarction", "Heart attack", "MI", "STEMI", "Acute MI"]
+
+**Lab Test Examples:**  
+- Anti-CCP Antibody → ["Anti-CCP Antibody", "Anti-CCP", "Cyclic citrullinated peptide antibody", "CCP antibody"]
+
+**Adverse Event Examples:**
+- Vancomycin Nephrotoxicity → ["Vancomycin Nephrotoxicity", "Vancomycin-induced nephrotoxicity", "Vancomycin kidney damage", "Vanco nephrotoxicity"]
+
+### Step 6: Tile Explanations (Post-Game)
 For each tile, provide a 1-2 sentence explanation of how it relates to the diagnosis. This will be shown to users after they complete the puzzle for educational value.
 
 ## Required Output Format
@@ -143,7 +167,15 @@ For each tile, provide a 1-2 sentence explanation of how it relates to the diagn
   "discipline": "[Chosen medical discipline]",
   "category": "[diagnosis/lab_test/adverse_event]",
   "topic_rationale": "[Brief explanation of why this topic was chosen]",
-  "answer": "[Exact answer - diagnosis name, test name, or adverse event]",
+  "answer": "[Primary/official answer - diagnosis name, test name, or adverse event]",
+  "acceptable_answers": [
+    "[Primary answer exactly as above]",
+    "[Common variation 1 - e.g., organism name instead of disease]",
+    "[Common variation 2 - e.g., synonymous disease name]", 
+    "[Common variation 3 - e.g., abbreviation or informal name]",
+    "[Common variation 4 - e.g., alternative medical terminology]",
+    "[Common variation 5 - e.g., related condition name]"
+  ],
   "tiles": [
     {"difficulty": "easy", "clue": "[Clue text ≤20 chars]"},
     {"difficulty": "easy", "clue": "[Clue text ≤20 chars]"},

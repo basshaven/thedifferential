@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer Matching Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-case { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .pass { background-color: #d4edda; }
+        .fail { background-color: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>Answer Matching System Test</h1>
+    
+    <div id="testResults"></div>
+    
+    <script>
+        // Simplified version of the matching functions for testing
+        function normalizeAnswer(answer) {
+            if (!answer) return '';
+            
+            return answer
+                .toLowerCase()
+                .trim()
+                .replace(/['\-\s]+/g, ' ')
+                .replace(/[^\w\s]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function levenshteinDistance(str1, str2) {
+            const matrix = [];
+            
+            for (let i = 0; i <= str2.length; i++) {
+                matrix[i] = [i];
+            }
+            
+            for (let j = 0; j <= str1.length; j++) {
+                matrix[0][j] = j;
+            }
+            
+            for (let i = 1; i <= str2.length; i++) {
+                for (let j = 1; j <= str1.length; j++) {
+                    if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+            
+            return matrix[str2.length][str1.length];
+        }
+
+        function isPartialMatch(input, target) {
+            const inputWords = input.split(' ').filter(word => word.length > 2);
+            const targetWords = target.split(' ').filter(word => word.length > 2);
+            
+            if (inputWords.length === 0 || targetWords.length === 0) return false;
+            
+            if (inputWords.length === 1 && targetWords.includes(inputWords[0])) {
+                return true;
+            }
+            
+            const matchingWords = inputWords.filter(word => targetWords.includes(word));
+            return matchingWords.length >= Math.min(inputWords.length, targetWords.length) * 0.7;
+        }
+
+        function checkAnswerMatch(userInput, gameData) {
+            if (!userInput || !gameData) return false;
+            
+            const normalizedInput = normalizeAnswer(userInput);
+            
+            if (normalizedInput === normalizeAnswer(gameData.answer)) {
+                return true;
+            }
+            
+            if (gameData.acceptable_answers && Array.isArray(gameData.acceptable_answers)) {
+                for (const acceptableAnswer of gameData.acceptable_answers) {
+                    if (normalizedInput === normalizeAnswer(acceptableAnswer)) {
+                        return true;
+                    }
+                }
+            }
+            
+            if (normalizedInput.length < 3) return false;
+            
+            const targets = [gameData.answer];
+            if (gameData.acceptable_answers) {
+                targets.push(...gameData.acceptable_answers);
+            }
+            
+            for (const target of targets) {
+                const normalizedTarget = normalizeAnswer(target);
+                
+                if (levenshteinDistance(normalizedInput, normalizedTarget) <= Math.max(1, Math.floor(normalizedTarget.length * 0.15))) {
+                    return true;
+                }
+                
+                if (isPartialMatch(normalizedInput, normalizedTarget)) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // Test cases
+        const testCases = [
+            {
+                name: "Legionella Test Cases",
+                gameData: {
+                    answer: "Legionella Pneumonia",
+                    acceptable_answers: [
+                        "Legionella Pneumonia",
+                        "Legionella",
+                        "Legionnaire's disease",
+                        "Legionnaires disease",
+                        "Legionaires disease",
+                        "Legionella pneumophila"
+                    ]
+                },
+                tests: [
+                    { input: "Legionella Pneumonia", expected: true },
+                    { input: "legionella pneumonia", expected: true },
+                    { input: "Legionella", expected: true },
+                    { input: "legionella", expected: true },
+                    { input: "Legionnaire's disease", expected: true },
+                    { input: "Legionnaires disease", expected: true },
+                    { input: "legionnaires disease", expected: true },
+                    { input: "Legionaires disease", expected: true }, // typo
+                    { input: "legionela", expected: true }, // typo
+                    { input: "Legionella pneumophila", expected: true },
+                    { input: "pneumonia", expected: false }, // too generic
+                    { input: "strep", expected: false }, // wrong
+                ]
+            },
+            {
+                name: "Myocardial Infarction Test Cases", 
+                gameData: {
+                    answer: "Myocardial Infarction",
+                    acceptable_answers: [
+                        "Myocardial Infarction",
+                        "Heart attack", 
+                        "MI",
+                        "STEMI",
+                        "Acute MI"
+                    ]
+                },
+                tests: [
+                    { input: "Myocardial Infarction", expected: true },
+                    { input: "myocardial infarction", expected: true },
+                    { input: "Heart attack", expected: true },
+                    { input: "heart attack", expected: true },
+                    { input: "MI", expected: true },
+                    { input: "mi", expected: true },
+                    { input: "STEMI", expected: true },
+                    { input: "Acute MI", expected: true },
+                    { input: "myocardial", expected: true }, // partial match
+                    { input: "infarction", expected: true }, // partial match
+                    { input: "myocardail infarction", expected: true }, // typo
+                    { input: "stroke", expected: false }, // wrong
+                ]
+            }
+        ];
+
+        function runTests() {
+            const resultsDiv = document.getElementById('testResults');
+            let totalTests = 0;
+            let passedTests = 0;
+
+            testCases.forEach(testCase => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.innerHTML = `<h2>${testCase.name}</h2>`;
+                resultsDiv.appendChild(sectionDiv);
+
+                testCase.tests.forEach(test => {
+                    totalTests++;
+                    const result = checkAnswerMatch(test.input, testCase.gameData);
+                    const passed = result === test.expected;
+                    if (passed) passedTests++;
+
+                    const testDiv = document.createElement('div');
+                    testDiv.className = `test-case ${passed ? 'pass' : 'fail'}`;
+                    testDiv.innerHTML = `
+                        <strong>Input:</strong> "${test.input}" 
+                        <strong>Expected:</strong> ${test.expected} 
+                        <strong>Got:</strong> ${result} 
+                        <strong>${passed ? 'PASS' : 'FAIL'}</strong>
+                    `;
+                    resultsDiv.appendChild(testDiv);
+                });
+            });
+
+            const summaryDiv = document.createElement('div');
+            summaryDiv.innerHTML = `<h2>Summary: ${passedTests}/${totalTests} tests passed</h2>`;
+            resultsDiv.appendChild(summaryDiv);
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

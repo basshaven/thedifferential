@@ -41,6 +41,13 @@ class DifferentialGame {
         return {
             "date": "2025-07-24",
             "answer": "Minimal Change Disease",
+            "acceptable_answers": [
+                "Minimal Change Disease",
+                "MCD",
+                "Minimal change nephropathy",
+                "Minimal change glomerulopathy",
+                "Lipoid nephrosis"
+            ],
             "tiles": [
                 {
                     "difficulty": "easy",
@@ -244,7 +251,7 @@ class DifferentialGame {
     makeGuess() {
         if (this.gameEnded || this.attempts <= 0 || !this.selectedConcept) return;
 
-        const isCorrect = this.selectedConcept.toLowerCase() === this.gameData.answer.toLowerCase();
+        const isCorrect = this.checkAnswerMatch(this.selectedConcept, this.gameData);
         
         if (isCorrect) {
             const bonus = this.getScoreChange('', 'correct_guess');
@@ -268,6 +275,119 @@ class DifferentialGame {
         this.updateDisplay();
         document.getElementById('guessInput').value = '';
         this.selectedConcept = '';
+    }
+
+    checkAnswerMatch(userInput, gameData) {
+        if (!userInput || !gameData) return false;
+        
+        // Normalize user input
+        const normalizedInput = this.normalizeAnswer(userInput);
+        
+        // Check primary answer
+        if (normalizedInput === this.normalizeAnswer(gameData.answer)) {
+            return true;
+        }
+        
+        // Check acceptable answers if they exist
+        if (gameData.acceptable_answers && Array.isArray(gameData.acceptable_answers)) {
+            for (const acceptableAnswer of gameData.acceptable_answers) {
+                if (normalizedInput === this.normalizeAnswer(acceptableAnswer)) {
+                    return true;
+                }
+            }
+        }
+        
+        // Check fuzzy matching for typos
+        if (this.isFuzzyMatch(normalizedInput, gameData)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    normalizeAnswer(answer) {
+        if (!answer) return '';
+        
+        return answer
+            .toLowerCase()
+            .trim()
+            // Remove punctuation
+            .replace(/['\-\s]+/g, ' ')
+            .replace(/[^\w\s]/g, '')
+            // Normalize whitespace
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    isFuzzyMatch(normalizedInput, gameData) {
+        // Only check fuzzy matching if input is reasonable length
+        if (normalizedInput.length < 3) return false;
+        
+        const targets = [gameData.answer];
+        if (gameData.acceptable_answers) {
+            targets.push(...gameData.acceptable_answers);
+        }
+        
+        for (const target of targets) {
+            const normalizedTarget = this.normalizeAnswer(target);
+            
+            // Check if input is very close (1-2 character difference)
+            if (this.levenshteinDistance(normalizedInput, normalizedTarget) <= Math.max(1, Math.floor(normalizedTarget.length * 0.15))) {
+                return true;
+            }
+            
+            // Check if input contains the key part of the answer (for partial matches)
+            if (this.isPartialMatch(normalizedInput, normalizedTarget)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    levenshteinDistance(str1, str2) {
+        const matrix = [];
+        
+        for (let i = 0; i <= str2.length; i++) {
+            matrix[i] = [i];
+        }
+        
+        for (let j = 0; j <= str1.length; j++) {
+            matrix[0][j] = j;
+        }
+        
+        for (let i = 1; i <= str2.length; i++) {
+            for (let j = 1; j <= str1.length; j++) {
+                if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1, // substitution
+                        matrix[i][j - 1] + 1,     // insertion
+                        matrix[i - 1][j] + 1      // deletion
+                    );
+                }
+            }
+        }
+        
+        return matrix[str2.length][str1.length];
+    }
+
+    isPartialMatch(input, target) {
+        // Check if input is a significant part of the target (organism vs disease name)
+        const inputWords = input.split(' ').filter(word => word.length > 2);
+        const targetWords = target.split(' ').filter(word => word.length > 2);
+        
+        if (inputWords.length === 0 || targetWords.length === 0) return false;
+        
+        // If input is just one significant word and it matches a word in target
+        if (inputWords.length === 1 && targetWords.includes(inputWords[0])) {
+            return true;
+        }
+        
+        // Check if most significant words match
+        const matchingWords = inputWords.filter(word => targetWords.includes(word));
+        return matchingWords.length >= Math.min(inputWords.length, targetWords.length) * 0.7;
     }
 
     endGame(won) {

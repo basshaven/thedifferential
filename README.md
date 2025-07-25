@@ -11,6 +11,7 @@ A minimalist, NYT-style daily medical puzzle game where players diagnose conditi
 - **Strategic scoring**: Easy tiles -3 points, Medium -2, Hard -1 
 - **Key Strategy**: Easy tiles cost MORE but contain the most pathognomonic/characteristic clues
 - **Optimal Play**: Flip easy tiles first to get maximum diagnostic value per point
+- **Smart answer matching**: Accepts medical variations, typos, abbreviations, synonyms
 - **Base score**: 25 points, range 0-100
 - **3 attempts** with guess bonuses: 1st +25, 2nd +10, 3rd +0
 - **Wrong guess penalty**: -5 points each
@@ -26,6 +27,14 @@ A minimalist, NYT-style daily medical puzzle game where players diagnose conditi
 - **🎯 Tile previews** in explanations match the game board appearance
 - **📊 Score logging** tracks every action and point change throughout the game
 - **🔍 Post-game exploration** - continue clicking tiles after game ends to see remaining clues
+
+### **🧠 Smart Answer System**
+- **Multiple acceptable answers**: "Legionella" = "Legionnaire's disease" = "Legionella pneumonia"
+- **Typo tolerance**: "legionela" → "legionella" (minor spelling errors accepted)
+- **Punctuation flexible**: "Sheehan's syndrome" = "Sheehan syndrome" = "sheehans syndrome"
+- **Medical abbreviations**: "MI" = "Myocardial infarction" = "Heart attack"
+- **Organism vs disease**: "Legionella" accepted for "Legionella pneumonia"
+- **Case insensitive**: All matching is case-insensitive
 
 ## 📋 **DAILY UPDATE INSTRUCTIONS**
 
@@ -132,7 +141,15 @@ The AI generates different types of medical puzzles:
 {
   "date": "2025-07-24",
   "discipline": "Endocrinology", 
+  "category": "diagnosis",
   "answer": "Sheehan's Syndrome",
+  "acceptable_answers": [
+    "Sheehan's Syndrome",
+    "Sheehan syndrome", 
+    "Sheehans syndrome",
+    "Postpartum pituitary necrosis",
+    "Postpartum hypopituitarism"
+  ],
   "tiles": [
     {"difficulty": "easy", "clue": "Postpartum woman"},
     {"difficulty": "easy", "clue": "Severe hemorrhage"},
