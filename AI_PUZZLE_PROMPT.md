@@ -40,13 +40,13 @@ Select ONE medical discipline from this comprehensive list:
 First, choose the TYPE of puzzle you want to create:
 
 #### **Available Puzzle Categories:**
-1. **Medical Diagnosis (70% of puzzles)**: Diagnose a specific medical condition
+1. **Medical Diagnosis (50% of puzzles)**: Diagnose a specific medical condition
    - Examples: "Sheehan's Syndrome", "Aortic Dissection", "Takotsubo Cardiomyopathy"
    
-2. **Laboratory Test (20% of puzzles)**: Identify the most appropriate diagnostic test
+2. **Laboratory Test (30% of puzzles)**: Identify the most appropriate diagnostic test
    - Examples: "Anti-CCP Antibody", "Troponin I Assay", "HbA1c Testing"
    
-3. **Drug Adverse Event (10% of puzzles)**: Identify a drug-related adverse reaction
+3. **Drug Adverse Event (20% of puzzles)**: Identify a drug-related adverse reaction
    - Examples: "Vancomycin-induced nephrotoxicity", "Heparin-induced thrombocytopenia"
 
 **Chosen Category**: [Select diagnosis, lab_test, or adverse_event]
@@ -109,7 +109,7 @@ Create exactly 9 clues following this **strategic difficulty hierarchy** (easy t
 - **Strategy**: Confirmatory details for experts - cheapest at -1 point
 - **Examples**: "Anti-GQ1b positive", "Nerve conduction slow", "EMG: denervation"
 
-**CRITICAL PRINCIPLE**: Easy tiles should be so characteristic that an expert could guess the answer from just 1-2 easy tiles. Avoid generic demographics ("35yo male") in easy tiles.
+**CRITICAL PRINCIPLE**: Easy tiles should be so characteristic that an expert could guess the answer from just 1-2 easy tiles. Knowing both easy tiles should essentially be a dead giveaway. Avoid generic demographics ("35yo male") in easy tiles.
 
 ### Step 4: Create Alternative Options List
 Generate 20-25 plausible alternatives based on your puzzle category:
@@ -133,7 +133,7 @@ Generate 20-25 plausible alternatives based on your puzzle category:
 - **Unrelated conditions** that might present similarly
 
 ### Step 5: Generate Acceptable Answer Variations
-Create 5-6 medically appropriate variations of your answer that users might reasonably enter:
+Create 5-6 medically appropriate variations of your answer that users might reasonably enter, including British/American English spelling variations:
 
 #### **Guidelines for Acceptable Answers:**
 - **Always include the primary answer first**
@@ -209,12 +209,12 @@ For each tile, provide a 1-2 sentence explanation of how it relates to the diagn
 
 ## Quality Criteria
 - **Clues must be factually accurate** and evidence-based
-- **Easy tiles must be pathognomonic** - characteristic features that strongly suggest the answer
+- **Easy tiles must be pathognomonic** - characteristic features that strongly suggest the answer. Knowing both easy tiles is essentially a dead giveaway.
 - **Avoid generic demographics in easy tiles** (age/gender alone tells you nothing specific)
 - **Difficulty should reflect diagnostic value**, not medical complexity
 - **No abbreviations without context** (spell out what's needed)  
 - **Hard tiles can be technical** but should be definitive when present
-- **Ensure diagnostic coherence** - all clues should point to the answer
+- **Ensure diagnostic coherence** - all clues should point to the answer and be specific to that concept
 - **Strategic value alignment** - most expensive tiles (easy) should provide most diagnostic value
 
 ### Examples of GOOD vs BAD Easy Tiles:
@@ -227,7 +227,7 @@ For each tile, provide a 1-2 sentence explanation of how it relates to the diagn
 - ❌ BAD: "Blood test", "Lab ordered"
 
 **For Vancomycin Nephrotoxicity:**
-- ✅ GOOD: "Creatinine doubled", "Recent vancomycin"
+- ✅ GOOD: "Creatinine doubled", "Recent glycopeptide use"
 - ❌ BAD: "ICU patient", "On antibiotics"
 
 ## Educational Goals

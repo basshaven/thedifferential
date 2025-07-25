@@ -330,6 +330,15 @@ h1 {
     font-weight: 500;
 }
 
+.metric-reason {
+    display: block;
+    color: #999;
+    font-size: 13px;
+    font-style: italic;
+    margin-top: 5px;
+    line-height: 1.3;
+}
+
 .path-analysis {
     background: rgba(20, 24, 32, 0.4);
     border-radius: 8px;
@@ -533,6 +542,20 @@ label {
     margin-bottom: 15px;
     font-size: 1.2rem;
     color: #ffeb3b;
+}
+
+.footer-info {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    opacity: 0.7;
+}
+
+.footer-info span {
+    color: #999;
+    font-size: 12px;
+    font-style: italic;
 }
 
 .instructions ul {

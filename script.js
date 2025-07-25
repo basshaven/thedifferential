@@ -18,6 +18,7 @@ class DifferentialGame {
         this.setupBoard();
         this.setupGuessInput();
         this.updateDisplay();
+        this.updateLastModified();
     }
 
     async loadGameData() {
@@ -426,10 +427,10 @@ class DifferentialGame {
         
         // Find percentile ranking
         const allEfficiencies = allPaths.map(path => this.calculatePathEfficiency(path));
-        allEfficiencies.sort((a, b) => b - a); // Sort descending (best to worst)
+        allEfficiencies.sort((a, b) => a - b); // Sort ascending (worst to best)
         
-        const userRank = allEfficiencies.findIndex(efficiency => efficiency <= userEfficiency);
-        const percentile = Math.round((userRank / allEfficiencies.length) * 100);
+        const userRank = allEfficiencies.findIndex(efficiency => efficiency >= userEfficiency);
+        const percentile = Math.round(((allEfficiencies.length - userRank - 1) / allEfficiencies.length) * 100);
         
         // Calculate additional metrics
         const tilesFlipped = this.flippedTiles.size;
@@ -527,24 +528,56 @@ class DifferentialGame {
 
     calculateDiagnosticSpeed(userPath) {
         // Classify based on tiles flipped before correct guess
-        if (userPath.numTiles <= 2) return "Lightning Fast";
-        if (userPath.numTiles <= 4) return "Quick";
-        if (userPath.numTiles <= 6) return "Methodical";
-        if (userPath.numTiles <= 8) return "Thorough";
-        return "Exhaustive";
+        if (userPath.numTiles <= 2) return { 
+            category: "Lightning Fast",
+            reason: `Diagnosed with minimal evidence (${userPath.numTiles} tiles). Shows pattern recognition mastery.`
+        };
+        if (userPath.numTiles <= 4) return {
+            category: "Quick", 
+            reason: `Diagnosed efficiently (${userPath.numTiles} tiles). Good balance of speed and certainty.`
+        };
+        if (userPath.numTiles <= 6) return {
+            category: "Methodical",
+            reason: `Gathered moderate evidence (${userPath.numTiles} tiles). Systematic diagnostic approach.`
+        };
+        if (userPath.numTiles <= 8) return {
+            category: "Thorough",
+            reason: `Comprehensive evidence gathering (${userPath.numTiles} tiles). Cautious but complete approach.`
+        };
+        return {
+            category: "Exhaustive",
+            reason: `Revealed most/all tiles (${userPath.numTiles}/9). Very thorough, risk-averse approach.`
+        };
     }
 
     calculateRiskTolerance(userPath) {
         // Analyze tile selection pattern
+        if (userPath.numTiles === 0) {
+            return {
+                category: "Maximum Risk",
+                reason: "Guessed without any evidence. Pure pattern recognition or lucky guess."
+            };
+        }
+        
         const easyTiles = userPath.tiles.filter(idx => this.gameData.tiles[idx].difficulty === 'easy').length;
+        const mediumTiles = userPath.tiles.filter(idx => this.gameData.tiles[idx].difficulty === 'medium').length;
         const hardTiles = userPath.tiles.filter(idx => this.gameData.tiles[idx].difficulty === 'hard').length;
         
-        const easyRatio = easyTiles / userPath.numTiles || 0;
-        const hardRatio = hardTiles / userPath.numTiles || 0;
+        const easyRatio = easyTiles / userPath.numTiles;
+        const hardRatio = hardTiles / userPath.numTiles;
         
-        if (easyRatio >= 0.6) return "Conservative";
-        if (hardRatio >= 0.5) return "Risk-Averse";
-        return "Balanced";
+        if (easyRatio >= 0.6) return {
+            category: "Conservative",
+            reason: `Prioritized easy tiles (${easyTiles}/${userPath.numTiles}). Focuses on high-value, pathognomonic clues.`
+        };
+        if (hardRatio >= 0.5) return {
+            category: "Efficient",
+            reason: `Emphasized hard tiles (${hardTiles}/${userPath.numTiles}). Values low-cost, technical details.`
+        };
+        return {
+            category: "Balanced",
+            reason: `Mixed tile selection (Easy: ${easyTiles}, Medium: ${mediumTiles}, Hard: ${hardTiles}). Systematic approach.`
+        };
     }
 
     analyzeUserPath(userPath) {
@@ -613,11 +646,13 @@ class DifferentialGame {
                     </div>
                     <div class="metric">
                         <span class="metric-label">Diagnostic Speed:</span>
-                        <span class="metric-value">${assessment.diagnosticSpeed}</span>
+                        <span class="metric-value">${assessment.diagnosticSpeed.category}</span>
+                        <span class="metric-reason">${assessment.diagnosticSpeed.reason}</span>
                     </div>
                     <div class="metric">
                         <span class="metric-label">Risk Profile:</span>
-                        <span class="metric-value">${assessment.riskAssessment}</span>
+                        <span class="metric-value">${assessment.riskAssessment.category}</span>
+                        <span class="metric-reason">${assessment.riskAssessment.reason}</span>
                     </div>
                     <div class="metric">
                         <span class="metric-label">Evidence Gathered:</span>
@@ -747,6 +782,58 @@ class DifferentialGame {
     updateDisplay() {
         document.getElementById('score').textContent = this.score;
         document.getElementById('attempts').textContent = this.attempts;
+    }
+
+    updateLastModified() {
+        // Try to get the last modified time from the server
+        fetch('today.json', { method: 'HEAD' })
+            .then(response => {
+                const lastModified = response.headers.get('Last-Modified');
+                if (lastModified) {
+                    const date = new Date(lastModified);
+                    const formattedDate = date.toLocaleDateString('en-US', {
+                        month: '2-digit',
+                        day: '2-digit', 
+                        year: 'numeric'
+                    });
+                    const formattedTime = date.toLocaleTimeString('en-US', {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                    document.getElementById('lastUpdated').textContent = 
+                        `Last updated ${formattedDate} ${formattedTime}`;
+                } else {
+                    // Fallback to using the date from the JSON data
+                    if (this.gameData && this.gameData.date) {
+                        const gameDate = new Date(this.gameData.date + 'T00:00:00');
+                        const formattedDate = gameDate.toLocaleDateString('en-US', {
+                            month: '2-digit',
+                            day: '2-digit',
+                            year: 'numeric'
+                        });
+                        document.getElementById('lastUpdated').textContent = 
+                            `Puzzle date ${formattedDate}`;
+                    }
+                }
+            })
+            .catch(() => {
+                // If fetch fails, use the date from the JSON data
+                if (this.gameData && this.gameData.date) {
+                    const gameDate = new Date(this.gameData.date + 'T00:00:00');
+                    const formattedDate = gameDate.toLocaleDateString('en-US', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        year: 'numeric'
+                    });
+                    document.getElementById('lastUpdated').textContent = 
+                        `Puzzle date ${formattedDate}`;
+                } else {
+                    document.getElementById('lastUpdated').textContent = 
+                        'Last updated: Unknown';
+                }
+            });
     }
 }
 
