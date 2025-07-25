@@ -1,82 +1,78 @@
 {
   "date": "2025-07-24",
-  "discipline": "Pharmacy",
+  "discipline": "Hematology",
   "category": "diagnosis",
-  "topic_rationale": "Serotonin Syndrome is a potentially life-threatening condition caused by an excess of serotonin in the brain. It's an important diagnosis for pharmacists to recognize due to the increasing use of serotonergic drugs.",
-  "answer": "Serotonin Syndrome",
+  "topic_rationale": "Chosen topic is 'Paroxysmal Nocturnal Hemoglobinuria (PNH)'. This is a rare and life-threatening disease, which is often overlooked or misdiagnosed. It provides an excellent teaching case for understanding complement-mediated diseases and the importance of flow cytometry in diagnosing hematological disorders.",
+  "answer": "Paroxysmal Nocturnal Hemoglobinuria",
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Recent SSRI start"
+      "clue": "Hemolytic anemia"
     },
     {
       "difficulty": "easy",
-      "clue": "Hyperreflexia, clonus"
+      "clue": "Dark urine on waking"
     },
     {
       "difficulty": "medium",
-      "clue": "Agitation, restlessness"
+      "clue": "Pancytopenia"
     },
     {
       "difficulty": "medium",
-      "clue": "Autonomic dysregulation"
+      "clue": "Thrombosis unusual sites"
     },
     {
       "difficulty": "medium",
-      "clue": "Neuromuscular hyperactivity"
+      "clue": "Smooth muscle dystonia"
     },
     {
       "difficulty": "hard",
-      "clue": "Serotonin-enhancing drugs"
+      "clue": "CD55/CD59 deficient RBCs"
     },
     {
       "difficulty": "hard",
-      "clue": "Hyperthermia, diaphoresis"
+      "clue": "Raised LDH"
     },
     {
       "difficulty": "hard",
-      "clue": "No neuroleptic history"
+      "clue": "Flow cytometry positive"
     },
     {
       "difficulty": "hard",
-      "clue": "Symptoms resolve post-drug"
+      "clue": "Ham's test positive"
     }
   ],
   "concepts": [
-    "Serotonin Syndrome",
-    "Neuroleptic Malignant Syndrome",
-    "Anticholinergic Toxicity",
-    "Benzodiazepine Withdrawal",
-    "SSRI Discontinuation Syndrome",
-    "Malignant Hyperthermia",
-    "Sympathomimetic Toxicity",
-    "Hypothyroidism",
-    "Hyperthyroidism",
-    "Generalized Anxiety Disorder",
-    "Panic Disorder",
-    "Bipolar Disorder",
-    "Schizophrenia",
-    "Alcohol Withdrawal",
-    "Opioid Withdrawal",
-    "GHB Withdrawal",
-    "Barbiturate Withdrawal",
-    "Menopausal Hot Flashes",
-    "Hyperhidrosis",
-    "Fibromyalgia",
-    "Chronic Fatigue Syndrome",
-    "Major Depressive Disorder",
-    "Post-Traumatic Stress Disorder",
-    "Obsessive-Compulsive Disorder"
+    "Paroxysmal Nocturnal Hemoglobinuria",
+    "Autoimmune hemolytic anemia",
+    "Hereditary spherocytosis",
+    "Sickle cell disease",
+    "Thalassemia",
+    "Leukemia",
+    "Myelodysplastic syndrome",
+    "Aplastic anemia",
+    "Iron deficiency anemia",
+    "Vitamin B12 deficiency",
+    "Folic acid deficiency",
+    "G6PD deficiency",
+    "Polycythemia vera",
+    "Myelofibrosis",
+    "Hemolytic uremic syndrome",
+    "Thrombotic thrombocytopenic purpura",
+    "Disseminated intravascular coagulation",
+    "Hemophilia",
+    "Von Willebrand disease",
+    "Deep vein thrombosis"
   ],
   "explanations": {
-    "tile_0": "Serotonin Syndrome is commonly associated with the recent introduction or increase in dose of a serotonergic medication, such as an SSRI.",
-    "tile_1": "Hyperreflexia and clonus are classic neuromuscular features of Serotonin Syndrome.",
-    "tile_2": "Restlessness and agitation are common mental state changes in Serotonin Syndrome.",
-    "tile_3": "Autonomic dysregulation occurs in Serotonin Syndrome, represented by symptoms such as tachycardia, labile blood pressure, and hyperthermia.",
-    "tile_4": "Neuromuscular hyperactivity, including tremor, muscle rigidity, and spontaneous clonus, is a key feature of Serotonin Syndrome.",
-    "tile_5": "Serotonin Syndrome can be precipitated by a variety of drugs that increase serotonin concentrations in the brain.",
-    "tile_6": "Hyperthermia and diaphoresis are manifestations of the autonomic instability seen in Serotonin Syndrome.",
-    "tile_7": "The absence of a recent history of neuroleptic use helps differentiate Serotonin Syndrome from Neuroleptic Malignant Syndrome, a key differential diagnosis.",
-    "tile_8": "The resolution of symptoms after the discontinuation of the causative drug is a key diagnostic feature of Serotonin Syndrome."
+    "tile_0": "In PNH, there is intravascular hemolysis, leading to a hemolytic anemia. This is a characteristic feature of the disease.",
+    "tile_1": "Patients with PNH often report dark-colored urine upon waking, due to overnight hemolysis.",
+    "tile_2": "PNH can cause a decrease in all types of blood cells (pancytopenia) due to bone marrow failure.",
+    "tile_3": "PNH is associated with thrombosis in unusual sites, such as hepatic, abdominal, cerebral veins.",
+    "tile_4": "Smooth muscle dystonias, such as esophageal spasm and erectile dysfunction, are associated with PNH.",
+    "tile_5": "Deficiency of CD55/CD59 on red blood cells leads to increased complement-mediated lysis, characteristic of PNH.",
+    "tile_6": "Raised LDH is a marker of increased cell turnover, seen in conditions like PNH with ongoing hemolysis.",
+    "tile_7": "Flow cytometry is a key diagnostic test for PNH, showing a population of cells lacking GPI-linked proteins.",
+    "tile_8": "Ham's test (acidified serum lysis test) is a screening test for PNH, but has largely been replaced by flow cytometry."
   }
 }
