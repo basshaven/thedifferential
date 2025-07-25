@@ -1,85 +1,86 @@
 {
   "date": "2025-07-25",
-  "discipline": "Infectious Disease",
+  "discipline": "Neurology",
   "category": "diagnosis",
-  "topic_rationale": "Chosen topic is 'Legionella Pneumonia' due to its distinct clinical features. It's not too common but also not too rare. It's valuable from an educational perspective as it helps underline the importance of considering travel and exposure history in the diagnosis.",
-  "answer": "Legionella Pneumonia",
+  "topic_rationale": "Amyotrophic Lateral Sclerosis (ALS) is a progressive neurodegenerative disease that affects nerve cells in the brain and spinal cord. It's a challenging diagnosis that requires a synthesis of multiple clues and a significant learning opportunity.",
+  "answer": "Amyotrophic Lateral Sclerosis",
   "acceptable_answers": [
-    "Legionella Pneumonia",
-    "Legionella",
-    "Legionnaire's Disease",
-    "Legionnaires Disease",
-    "Legionella pneumophila"
+    "Amyotrophic Lateral Sclerosis",
+    "ALS",
+    "Lou Gehrig's Disease",
+    "Motor Neuron Disease",
+    "MND",
+    "Charcot's Disease"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Travel history"
+      "clue": "Upper & Lower MN signs"
     },
     {
       "difficulty": "easy",
-      "clue": "Hyponatremia"
+      "clue": "Progressive weakness"
     },
     {
       "difficulty": "medium",
-      "clue": "GI symptoms"
+      "clue": "Bulbar symptoms"
     },
     {
       "difficulty": "medium",
-      "clue": "CNS symptoms"
+      "clue": "Normal sensory exam"
     },
     {
       "difficulty": "medium",
-      "clue": "Nonproductive cough"
+      "clue": "No bowel/bladder issues"
     },
     {
       "difficulty": "hard",
-      "clue": "Increased CPK"
+      "clue": "EMG: widespread denervation"
     },
     {
       "difficulty": "hard",
-      "clue": "Increased LDH"
+      "clue": "No cognitive impairment"
     },
     {
       "difficulty": "hard",
-      "clue": "Sputum Gram Stain"
+      "clue": "Normal MRI brain/spine"
     },
     {
       "difficulty": "hard",
-      "clue": "Elevated liver enzymes"
+      "clue": "Exclusion of other diseases"
     }
   ],
   "concepts": [
-    "Legionella Pneumonia",
-    "Pneumococcal Pneumonia",
-    "Mycoplasma Pneumonia",
-    "Chlamydophila Pneumonia",
-    "Viral Pneumonia",
-    "Tuberculosis",
-    "Atypical Pneumonia",
-    "Community-acquired Pneumonia",
-    "Hospital-acquired Pneumonia",
-    "Pulmonary Embolism",
-    "Bronchitis",
-    "Asthma",
-    "COPD",
-    "Interstitial Lung Disease",
-    "Lung Cancer",
-    "Pleural Effusion",
-    "Acute Respiratory Distress Syndrome",
-    "Influenza",
-    "Bronchiectasis",
-    "Cystic Fibrosis"
+    "Amyotrophic Lateral Sclerosis",
+    "Multiple Sclerosis",
+    "Spinal Muscular Atrophy",
+    "Peripheral Neuropathy",
+    "Guillain-Barre Syndrome",
+    "Charcot-Marie-Tooth Disease",
+    "Myasthenia Gravis",
+    "Parkinson's Disease",
+    "Huntington's Disease",
+    "Alzheimer's Disease",
+    "Stroke",
+    "Bell's Palsy",
+    "Lambert-Eaton Syndrome",
+    "Polio",
+    "Progressive Supranuclear Palsy",
+    "Primary Lateral Sclerosis",
+    "Progressive Muscular Atrophy",
+    "Frontotemporal Dementia",
+    "Chronic Inflammatory Demyelinating Polyneuropathy",
+    "Cervical Spondylosis"
   ],
   "explanations": {
-    "tile_0": "Travel history is significant in Legionella pneumonia because it is often associated with travel and places with complex water systems, like hotels and hospitals.",
-    "tile_1": "Hyponatremia is a common finding in patients with Legionella pneumonia due to syndrome of inappropriate antidiuretic hormone secretion (SIADH).",
-    "tile_2": "Gastrointestinal symptoms such as diarrhea, nausea, vomiting, and abdominal pain are more frequently associated with Legionella pneumonia than with other types of pneumonia.",
-    "tile_3": "CNS symptoms such as confusion or other neurologic abnormalities are commonly seen in Legionella pneumonia.",
-    "tile_4": "Nonproductive cough is typical in the presentation of Legionella pneumonia.",
-    "tile_5": "Increased creatine phosphokinase (CPK) can be seen in severe Legionella pneumonia, indicating rhabdomyolysis.",
-    "tile_6": "Increased lactate dehydrogenase (LDH) is often found in patients with Legionella pneumonia.",
-    "tile_7": "Sputum Gram stain usually fails to reveal the causative organism in cases of Legionella pneumonia.",
-    "tile_8": "Elevated liver enzymes, indicating liver involvement, are also seen in cases of severe Legionella pneumonia."
+    "tile_0": "Amyotrophic Lateral Sclerosis (ALS) is characterized by the presence of both upper and lower motor neuron signs.",
+    "tile_1": "Progressive weakness is a key feature of ALS, typically starting in one limb and spreading to other parts of the body.",
+    "tile_2": "Bulbar symptoms such as dysarthria and dysphagia occur as the disease progresses.",
+    "tile_3": "In ALS, sensory examination is usually normal as sensory neurons are typically not affected.",
+    "tile_4": "ALS does not directly affect bowel or bladder function.",
+    "tile_5": "Electromyography (EMG) typically shows evidence of widespread denervation which is a diagnostic clue for ALS.",
+    "tile_6": "While cognitive impairment can occur in some patients with ALS, it is not a universal feature and its absence does not rule out the disease.",
+    "tile_7": "In ALS, MRI of the brain and spine is usually normal, helping to exclude other diagnoses.",
+    "tile_8": "ALS is a diagnosis of exclusion; other diseases must be ruled out before confirming the diagnosis."
   }
 }
