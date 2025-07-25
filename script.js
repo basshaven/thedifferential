@@ -640,26 +640,40 @@ class DifferentialGame {
     calculateAUEC() {
         console.log('calculateAUEC called');
         
-        // AUEC Configuration
-        const auecConfig = {
-            costWeights: { easy: 1, medium: 2, hard: 3, wrong: 4 },
-            infoWeights: { easy: 1, medium: 2, hard: 3 },
-            normalizationMethods: {
-                optionA: 'empirical', // Min/max from all legal paths
-                optionB: 'rectangle'  // Player's final cost × final info
+        try {
+            // AUEC Configuration
+            const auecConfig = {
+                costWeights: { easy: 1, medium: 2, hard: 3, wrong: 4 },
+                infoWeights: { easy: 1, medium: 2, hard: 3 },
+                normalizationMethods: {
+                    optionA: 'empirical', // Min/max from all legal paths
+                    optionB: 'rectangle'  // Player's final cost × final info
+                }
+            };
+
+            // Validate required properties exist
+            if (!this.gameData || !this.gameData.tiles) {
+                throw new Error('Game data or tiles not available');
             }
-        };
+            
+            if (!this.flippedTiles) {
+                throw new Error('Flipped tiles data not available');
+            }
 
         // Simple calculation for now
         let totalCost = 0;
         let totalInfo = 0;
         
-        // Calculate basic costs and info from flipped tiles
-        Array.from(this.flippedTiles).forEach(tileIndex => {
-            const tile = this.gameData.tiles[tileIndex];
-            totalCost += auecConfig.costWeights[tile.difficulty];
-            totalInfo += auecConfig.infoWeights[tile.difficulty];
-        });
+            // Calculate basic costs and info from flipped tiles
+            Array.from(this.flippedTiles).forEach(tileIndex => {
+                const tile = this.gameData.tiles[tileIndex];
+                if (!tile) {
+                    console.warn(`Tile ${tileIndex} not found in game data`);
+                    return;
+                }
+                totalCost += auecConfig.costWeights[tile.difficulty] || 0;
+                totalInfo += auecConfig.infoWeights[tile.difficulty] || 0;
+            });
         
         // Add wrong guess costs
         const wrongGuesses = Math.max(0, 3 - this.attempts - (this.gameEnded ? 1 : 0));
@@ -673,18 +687,20 @@ class DifferentialGame {
         let cumulativeCost = 0;
         let cumulativeInfo = 0;
         
-        // Add tile points
-        Array.from(this.flippedTiles).forEach(tileIndex => {
-            const tile = this.gameData.tiles[tileIndex];
-            cumulativeCost += auecConfig.costWeights[tile.difficulty];
-            cumulativeInfo += auecConfig.infoWeights[tile.difficulty];
-            curve.push({
-                x: cumulativeCost,
-                y: cumulativeInfo,
-                action: `${tile.difficulty}_flip`,
-                tileIndex: tileIndex
+            // Add tile points
+            Array.from(this.flippedTiles).forEach(tileIndex => {
+                const tile = this.gameData.tiles[tileIndex];
+                if (!tile) return;
+                
+                cumulativeCost += auecConfig.costWeights[tile.difficulty] || 0;
+                cumulativeInfo += auecConfig.infoWeights[tile.difficulty] || 0;
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: `${tile.difficulty}_flip`,
+                    tileIndex: tileIndex
+                });
             });
-        });
         
         // Add wrong guesses
         for (let i = 0; i < wrongGuesses; i++) {
@@ -718,16 +734,43 @@ class DifferentialGame {
         const scoreA = Math.random() * 0.5 + 0.3; // Temporary random for testing
         const scoreB = maxPossibleArea > 0 ? area / maxPossibleArea : 0;
         
-        console.log('AUEC calculation complete:', { curve, scoreA, scoreB, area, totalCost, totalInfo });
-        
-        return {
-            curve: curve,
-            scoreA: scoreA,
-            scoreB: scoreB,
-            config: auecConfig,
-            userSequence: [],
-            interpretation: this.generateAUECInterpretation(scoreA, scoreB, curve, totalCost, totalInfo, wrongGuesses)
-        };
+            console.log('AUEC calculation complete:', { curve, scoreA, scoreB, area, totalCost, totalInfo });
+            
+            return {
+                curve: curve,
+                scoreA: scoreA,
+                scoreB: scoreB,
+                config: auecConfig,
+                userSequence: [],
+                interpretation: this.generateAUECInterpretation(scoreA, scoreB, curve, totalCost, totalInfo, wrongGuesses)
+            };
+            
+        } catch (error) {
+            console.error('AUEC calculation failed:', error);
+            
+            // Return fallback data
+            const fallbackCurve = [
+                { x: 0, y: 0, action: 'start' },
+                { x: 1, y: 1, action: 'fallback' }
+            ];
+            
+            return {
+                curve: fallbackCurve,
+                scoreA: 0.5,
+                scoreB: 0.5,
+                config: { costWeights: {}, infoWeights: {} },
+                userSequence: [],
+                interpretation: {
+                    headline: "AUEC Analysis (Limited Data)",
+                    explanation: "Unable to calculate full AUEC due to data loading issues. Basic analysis available.",
+                    actionableAdvice: "Try refreshing the page and completing another puzzle.",
+                    tooltips: {
+                        empirical: "Ranking vs all possible paths",
+                        rectangular: "Efficiency of your curve shape"
+                    }
+                }
+            };
+        }
     }
 
     generateAUECInterpretation(empirical, rectangular, curve, totalCost, totalInfo, wrongGuesses) {
