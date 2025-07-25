@@ -1,88 +1,84 @@
 {
   "date": "2025-07-25",
-  "discipline": "Psychiatry",
+  "discipline": "Oncology",
   "category": "diagnosis",
-  "topic_rationale": "Depersonalization-derealization disorder is a fascinating psychopathological phenomenon that is often misunderstood or overlooked. It provides a valuable opportunity to explore the complex interplay of cognition, perception, and emotional regulation in psychiatric disorders.",
-  "answer": "Depersonalization-Derealization Disorder",
+  "topic_rationale": "Multiple Myeloma is a common hematological malignancy that can present with a variety of symptoms, making it a challenging and educational diagnosis.",
+  "answer": "Multiple Myeloma",
   "acceptable_answers": [
-    "Depersonalization-Derealization Disorder",
-    "Depersonalization Disorder",
-    "Derealization Disorder",
-    "DPDR",
-    "Depersonalization syndrome",
-    "Derealization syndrome"
+    "Multiple Myeloma",
+    "MM",
+    "Plasma cell myeloma",
+    "Myeloma"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Feeling detached"
+      "clue": "Bone pain"
     },
     {
       "difficulty": "easy",
-      "clue": "Unreal self"
+      "clue": "Monoclonal spike"
     },
     {
       "difficulty": "medium",
-      "clue": "World seems dreamlike"
+      "clue": "Hypercalcemia"
     },
     {
       "difficulty": "medium",
-      "clue": "Intact reality testing"
+      "clue": "Renal insufficiency"
     },
     {
       "difficulty": "medium",
-      "clue": "Symptoms distressing"
+      "clue": "Anemia"
     },
     {
       "difficulty": "hard",
-      "clue": "Not due to substance"
+      "clue": "Bence Jones protein"
     },
     {
       "difficulty": "hard",
-      "clue": "Not better explained"
+      "clue": "Plasmacytosis"
     },
     {
       "difficulty": "hard",
-      "clue": "Impairs social/occupational functioning"
+      "clue": "Lytic bone lesions"
     },
     {
       "difficulty": "hard",
-      "clue": "Repeated episodes"
+      "clue": "\u03b22-microglobulin elevated"
     }
   ],
   "concepts": [
-    "Depersonalization-Derealization Disorder",
-    "Schizophrenia",
-    "Dissociative Identity Disorder",
-    "Panic Disorder",
-    "Obsessive-Compulsive Disorder",
-    "Post-Traumatic Stress Disorder",
-    "Generalized Anxiety Disorder",
-    "Major Depressive Disorder",
-    "Bipolar Disorder",
-    "Borderline Personality Disorder",
-    "Schizoaffective Disorder",
-    "Brief Psychotic Disorder",
-    "Delusional Disorder",
-    "Adjustment Disorder",
-    "Somatization Disorder",
-    "Conversion Disorder",
-    "Anorexia Nervosa",
-    "Bulimia Nervosa",
-    "Substance-Induced Psychotic Disorder",
-    "Psychotic Disorder due to Medical Condition",
-    "Malingering",
-    "Factitious Disorder"
+    "Multiple Myeloma",
+    "Monoclonal Gammopathy of Undetermined Significance",
+    "Waldenstrom's Macroglobulinemia",
+    "Metastatic Bone Disease",
+    "Hyperparathyroidism",
+    "Chronic Kidney Disease",
+    "Polycythemia Vera",
+    "Hodgkin Lymphoma",
+    "Non-Hodgkin Lymphoma",
+    "Leukemia",
+    "Myelodysplastic Syndrome",
+    "Sarcoidosis",
+    "Ewing's Sarcoma",
+    "Hodgkin's Lymphoma",
+    "Paget's Disease of Bone",
+    "Primary Hyperparathyroidism",
+    "Chronic Lymphocytic Leukemia",
+    "Acute Myeloid Leukemia",
+    "Chronic Myeloid Leukemia",
+    "Acute Lymphoblastic Leukemia"
   ],
   "explanations": {
-    "tile_0": "Depersonalization is a core feature of this disorder, characterized by persistent or recurrent experiences of feeling detached or disconnected from oneself.",
-    "tile_1": "Individuals with this disorder often describe feeling 'unreal' or 'alien' from themselves.",
-    "tile_2": "Derealization refers to experiences of unreality or detachment from, or unfamiliarity with, the world\u2014be it individuals, inanimate objects, or all surroundings.",
-    "tile_3": "Despite the perceptual distortions, individuals with this disorder retain the capacity to distinguish between their own internal experiences and the external reality.",
-    "tile_4": "The symptoms are not simply experienced as intrusive thoughts or daydreaming but are truly distressing and interfere with the individual's functioning.",
-    "tile_5": "The disorder is not a direct physiological consequence of a substance\u2014such as a drug of abuse or a medication.",
-    "tile_6": "The depersonalization and derealization experiences are not better explained by another mental disorder, such as schizophrenia, panic disorder, acute stress disorder, another dissociative disorder, or a personality disorder.",
-    "tile_7": "The disorder causes clinically significant distress or impairment in social, occupational, or other important areas of functioning.",
-    "tile_8": "The disorder is characterized by the presence of persistent or recurrent experiences of depersonalization, derealization, or both."
+    "tile_0": "Bone pain in Multiple Myeloma is caused by the proliferation of plasma cells in the bone marrow, leading to bone destruction and pain.",
+    "tile_1": "Monoclonal spike, or M-spike, is a peak seen on serum protein electrophoresis, indicating a large amount of a single type of immunoglobulin - a hallmark of Multiple Myeloma.",
+    "tile_2": "Hypercalcemia in Multiple Myeloma occurs due to increased bone resorption from the overproduction of osteoclast-stimulating factors by the myeloma cells.",
+    "tile_3": "Renal insufficiency in Multiple Myeloma is caused by the toxic effects of excess light chains on the kidneys, leading to renal impairment.",
+    "tile_4": "Anemia in Multiple Myeloma is caused by the replacement of normal bone marrow by malignant plasma cells, leading to decreased erythropoiesis.",
+    "tile_5": "Bence Jones protein, a type of light chain, is often found in the urine of patients with Multiple Myeloma.",
+    "tile_6": "Plasmacytosis, or an increased number of plasma cells, is seen in the bone marrow of patients with Multiple Myeloma.",
+    "tile_7": "Lytic bone lesions are common in Multiple Myeloma due to increased osteoclast activity stimulated by the myeloma cells.",
+    "tile_8": "\u03b22-microglobulin is a component of MHC class I molecules, and its levels are often elevated in the serum of patients with Multiple Myeloma, reflecting a high tumor burden."
   }
 }
