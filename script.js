@@ -406,8 +406,11 @@ class DifferentialGame {
         // Show explanations after animations
         setTimeout(() => {
             if (won) {
+                console.log('Calculating performance assessment...');
                 const assessment = this.calculatePerformanceAssessment();
+                console.log('Assessment calculated:', assessment);
                 this.showPerformanceAssessment(assessment);
+                console.log('Assessment displayed');
             }
             this.showExplanations();
         }, won ? 3000 : 2000);
@@ -639,11 +642,11 @@ class DifferentialGame {
             </div>
         `;
         
-        // Insert assessment before explanations
-        const explanationsContainer = document.getElementById('explanations');
+        // Insert assessment after game message, before explanations will be added
+        const gameMessage = document.getElementById('gameMessage');
         const assessmentDiv = document.createElement('div');
         assessmentDiv.innerHTML = assessmentHTML;
-        explanationsContainer.parentNode.insertBefore(assessmentDiv, explanationsContainer);
+        gameMessage.parentNode.insertBefore(assessmentDiv, gameMessage.nextSibling);
     }
 
     addGameEndFlourish(won) {
