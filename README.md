@@ -28,6 +28,14 @@ A minimalist, NYT-style daily medical puzzle game where players diagnose conditi
 - **📊 Score logging** tracks every action and point change throughout the game
 - **🔍 Post-game exploration** - continue clicking tiles after game ends to see remaining clues
 
+### **🩺 Diagnostic Performance Assessment**
+- **Percentile ranking**: Compare your approach against all 3,069 possible winning paths
+- **Efficiency analysis**: Mathematical scoring of your diagnostic strategy
+- **Speed classification**: "Lightning Fast", "Quick", "Methodical", "Thorough", "Exhaustive"
+- **Risk profile**: "Conservative", "Risk-Averse", "Balanced" based on tile selection
+- **Personalized feedback**: Detailed analysis of your diagnostic decision-making
+- **Learning insights**: Understand optimal vs suboptimal approaches
+
 ### **🧠 Smart Answer System**
 - **Multiple acceptable answers**: "Legionella" = "Legionnaire's disease" = "Legionella pneumonia"
 - **Typo tolerance**: "legionela" → "legionella" (minor spelling errors accepted)
@@ -179,9 +187,10 @@ The AI generates different types of medical puzzles:
 ## 🎨 **Game Design Philosophy**
 
 - **Minimalist aesthetic** inspired by NYT games
-- **Educational focus** with post-game learning
+- **Educational focus** with post-game learning and performance assessment
 - **Strategic gameplay** where easy tiles provide maximum diagnostic value for higher cost
 - **Pathognomonic approach** - easy tiles contain the most characteristic features
+- **Data-driven feedback** - percentile ranking against all possible approaches
 - **Medical accuracy** with evidence-based puzzles
 - **Mobile-first** responsive design
 - **Celebration of success** with engaging animations

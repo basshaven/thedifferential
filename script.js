@@ -405,8 +405,245 @@ class DifferentialGame {
         
         // Show explanations after animations
         setTimeout(() => {
+            if (won) {
+                const assessment = this.calculatePerformanceAssessment();
+                this.showPerformanceAssessment(assessment);
+            }
             this.showExplanations();
         }, won ? 3000 : 2000);
+    }
+
+    calculatePerformanceAssessment() {
+        // Generate all possible winning paths
+        const allPaths = this.generateAllWinningPaths();
+        
+        // Calculate user's path efficiency
+        const userPath = this.getUserPath();
+        const userEfficiency = this.calculatePathEfficiency(userPath);
+        
+        // Find percentile ranking
+        const allEfficiencies = allPaths.map(path => this.calculatePathEfficiency(path));
+        allEfficiencies.sort((a, b) => b - a); // Sort descending (best to worst)
+        
+        const userRank = allEfficiencies.findIndex(efficiency => efficiency <= userEfficiency);
+        const percentile = Math.round((userRank / allEfficiencies.length) * 100);
+        
+        // Calculate additional metrics
+        const tilesFlipped = this.flippedTiles.size;
+        const attemptsUsed = 4 - this.attempts;
+        const diagnosticSpeed = this.calculateDiagnosticSpeed(userPath);
+        const riskAssessment = this.calculateRiskTolerance(userPath);
+        
+        return {
+            score: this.score,
+            percentile: percentile,
+            efficiency: userEfficiency,
+            tilesFlipped: tilesFlipped,
+            attemptsUsed: attemptsUsed,
+            diagnosticSpeed: diagnosticSpeed,
+            riskAssessment: riskAssessment,
+            totalPossiblePaths: allPaths.length,
+            userPath: userPath,
+            pathAnalysis: this.analyzeUserPath(userPath)
+        };
+    }
+
+    generateAllWinningPaths() {
+        const paths = [];
+        
+        // Generate all possible combinations of tiles that could lead to a win
+        // For each attempt (1st, 2nd, 3rd), try all possible tile combinations
+        
+        for (let attempt = 1; attempt <= 3; attempt++) {
+            // Try all possible combinations of 0 to 9 tiles
+            for (let numTiles = 0; numTiles <= 9; numTiles++) {
+                const combinations = this.generateTileCombinations(numTiles);
+                combinations.forEach(tileSet => {
+                    paths.push({
+                        tiles: tileSet,
+                        attempt: attempt,
+                        numTiles: numTiles
+                    });
+                });
+            }
+        }
+        
+        return paths;
+    }
+
+    generateTileCombinations(numTiles) {
+        if (numTiles === 0) return [[]];
+        
+        const allTiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        const combinations = [];
+        
+        const generateCombos = (current, remaining, needed) => {
+            if (needed === 0) {
+                combinations.push([...current]);
+                return;
+            }
+            
+            for (let i = 0; i < remaining.length; i++) {
+                const tile = remaining[i];
+                const newCurrent = [...current, tile];
+                const newRemaining = remaining.slice(i + 1);
+                generateCombos(newCurrent, newRemaining, needed - 1);
+            }
+        };
+        
+        generateCombos([], allTiles, numTiles);
+        return combinations;
+    }
+
+    calculatePathEfficiency(path) {
+        let score = 25; // Base score
+        
+        // Subtract tile costs
+        path.tiles.forEach(tileIndex => {
+            const tile = this.gameData.tiles[tileIndex];
+            if (tile.difficulty === 'easy') score -= 3;
+            else if (tile.difficulty === 'medium') score -= 2;
+            else if (tile.difficulty === 'hard') score -= 1;
+        });
+        
+        // Add guess bonus
+        const bonuses = [25, 10, 0];
+        score += bonuses[path.attempt - 1];
+        
+        // Normalize to 0-100 range
+        return Math.max(0, Math.min(100, score));
+    }
+
+    getUserPath() {
+        return {
+            tiles: Array.from(this.flippedTiles),
+            attempt: 4 - this.attempts,
+            numTiles: this.flippedTiles.size
+        };
+    }
+
+    calculateDiagnosticSpeed(userPath) {
+        // Classify based on tiles flipped before correct guess
+        if (userPath.numTiles <= 2) return "Lightning Fast";
+        if (userPath.numTiles <= 4) return "Quick";
+        if (userPath.numTiles <= 6) return "Methodical";
+        if (userPath.numTiles <= 8) return "Thorough";
+        return "Exhaustive";
+    }
+
+    calculateRiskTolerance(userPath) {
+        // Analyze tile selection pattern
+        const easyTiles = userPath.tiles.filter(idx => this.gameData.tiles[idx].difficulty === 'easy').length;
+        const hardTiles = userPath.tiles.filter(idx => this.gameData.tiles[idx].difficulty === 'hard').length;
+        
+        const easyRatio = easyTiles / userPath.numTiles || 0;
+        const hardRatio = hardTiles / userPath.numTiles || 0;
+        
+        if (easyRatio >= 0.6) return "Conservative";
+        if (hardRatio >= 0.5) return "Risk-Averse";
+        return "Balanced";
+    }
+
+    analyzeUserPath(userPath) {
+        const analysis = [];
+        
+        // Analyze tile selection strategy
+        const firstTile = userPath.tiles[0];
+        if (firstTile !== undefined) {
+            const firstDifficulty = this.gameData.tiles[firstTile].difficulty;
+            if (firstDifficulty === 'easy') {
+                analysis.push("✅ Started with easy tile - optimal strategy");
+            } else if (firstDifficulty === 'hard') {
+                analysis.push("⚠️ Started with hard tile - less efficient approach");
+            } else {
+                analysis.push("🔄 Started with medium tile - moderate approach");
+            }
+        }
+        
+        // Analyze attempt timing
+        if (userPath.attempt === 1) {
+            if (userPath.numTiles <= 3) {
+                analysis.push("🎯 Expert-level rapid diagnosis");
+            } else {
+                analysis.push("⚡ Quick first attempt despite gathering evidence");
+            }
+        } else if (userPath.attempt === 2) {
+            analysis.push("🤔 Took time to gather more evidence - prudent approach");
+        } else {
+            analysis.push("🔍 Used all attempts - thorough but cautious");
+        }
+        
+        // Analyze efficiency
+        const efficiency = this.calculatePathEfficiency(userPath);
+        if (efficiency >= 90) {
+            analysis.push("🏆 Near-perfect efficiency");
+        } else if (efficiency >= 70) {
+            analysis.push("✨ High efficiency");
+        } else if (efficiency >= 50) {
+            analysis.push("📊 Moderate efficiency");
+        } else {
+            analysis.push("🎓 Room for improvement in efficiency");
+        }
+        
+        return analysis;
+    }
+
+    showPerformanceAssessment(assessment) {
+        const assessmentHTML = `
+            <div class="performance-assessment">
+                <h3>🩺 Diagnostic Performance Assessment</h3>
+                
+                <div class="assessment-score">
+                    <div class="percentile-display">
+                        <span class="percentile-number">${assessment.percentile}th</span>
+                        <span class="percentile-label">Percentile</span>
+                    </div>
+                    <div class="assessment-subtitle">
+                        You performed better than ${assessment.percentile}% of all possible approaches
+                    </div>
+                </div>
+                
+                <div class="assessment-metrics">
+                    <div class="metric">
+                        <span class="metric-label">Final Score:</span>
+                        <span class="metric-value">${assessment.score}/100</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Diagnostic Speed:</span>
+                        <span class="metric-value">${assessment.diagnosticSpeed}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Risk Profile:</span>
+                        <span class="metric-value">${assessment.riskAssessment}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Evidence Gathered:</span>
+                        <span class="metric-value">${assessment.tilesFlipped}/9 tiles</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Attempts Used:</span>
+                        <span class="metric-value">${assessment.attemptsUsed}/3</span>
+                    </div>
+                </div>
+                
+                <div class="path-analysis">
+                    <h4>📋 Your Diagnostic Approach:</h4>
+                    <ul>
+                        ${assessment.pathAnalysis.map(point => `<li>${point}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="assessment-footer">
+                    <small>Analysis based on ${assessment.totalPossiblePaths.toLocaleString()} possible diagnostic pathways</small>
+                </div>
+            </div>
+        `;
+        
+        // Insert assessment before explanations
+        const explanationsContainer = document.getElementById('explanations');
+        const assessmentDiv = document.createElement('div');
+        assessmentDiv.innerHTML = assessmentHTML;
+        explanationsContainer.parentNode.insertBefore(assessmentDiv, explanationsContainer);
     }
 
     addGameEndFlourish(won) {
