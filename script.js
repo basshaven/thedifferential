@@ -1,13 +1,11 @@
 class DifferentialGame {
     constructor() {
         this.gameData = null;
-        this.score = 25;
         this.attempts = 3;
         this.flippedTiles = new Set();
         this.gameEnded = false;
         this.selectedConcept = '';
         this.concepts = [];
-        this.scoreLog = [];
         this.actionSequence = []; // Track chronological order of all actions
         
         this.init();
@@ -179,65 +177,12 @@ class DifferentialGame {
                 timestamp: Date.now()
             });
             
-            this.updateScore(tile.difficulty, 'flip');
-            this.logAction(`Flipped ${tile.difficulty} tile`, this.getScoreChange(tile.difficulty, 'flip'));
         }
         this.updateDisplay();
     }
 
-    updateScore(difficulty, action) {
-        if (action === 'flip') {
-            const scoreMap = {
-                'hard': -1,   // Hard tiles cost least (most valuable info)
-                'medium': -2, // Medium cost
-                'easy': -3    // Easy tiles cost most (least valuable info)
-            };
-            this.score += scoreMap[difficulty];
-        } else if (action === 'correct_guess') {
-            const bonuses = [25, 10, 0];
-            this.score += bonuses[3 - this.attempts];
-        } else if (action === 'wrong_guess') {
-            this.score -= 5;
-        }
 
-        this.score = Math.max(0, Math.min(100, this.score));
-    }
 
-    getScoreChange(difficulty, action) {
-        if (action === 'flip') {
-            const scoreMap = {
-                'hard': -1,
-                'medium': -2,
-                'easy': -3
-            };
-            return scoreMap[difficulty];
-        } else if (action === 'correct_guess') {
-            const bonuses = [25, 10, 0];
-            return bonuses[3 - this.attempts];
-        } else if (action === 'wrong_guess') {
-            return -5;
-        }
-        return 0;
-    }
-
-    logAction(action, scoreChange) {
-        const logElement = document.getElementById('scoreLog');
-        const entry = document.createElement('div');
-        entry.className = 'log-entry';
-        
-        if (scoreChange > 0) {
-            entry.classList.add('score-gain');
-            entry.textContent = `${action}: +${scoreChange} points (${this.score})`;
-        } else if (scoreChange < 0) {
-            entry.classList.add('score-loss');
-            entry.textContent = `${action}: ${scoreChange} points (${this.score})`;
-        } else {
-            entry.textContent = `${action}: ${scoreChange} points (${this.score})`;
-        }
-        
-        logElement.appendChild(entry);
-        logElement.scrollTop = logElement.scrollHeight;
-    }
 
     setupGuessInput() {
         const input = document.getElementById('guessInput');
@@ -271,9 +216,6 @@ class DifferentialGame {
                 timestamp: Date.now()
             });
             
-            const bonus = this.getScoreChange('', 'correct_guess');
-            this.updateScore('', 'correct_guess');
-            this.logAction(`Correct guess on attempt ${4 - this.attempts}`, bonus);
             this.showMessage(`Correct! The answer was ${this.gameData.answer}`, 'success');
             this.endGame(true);
         } else {
@@ -286,8 +228,6 @@ class DifferentialGame {
             });
             
             this.attempts--;
-            this.updateScore('', 'wrong_guess');
-            this.logAction(`Wrong guess: "${this.selectedConcept}"`, -5);
             
             if (this.attempts <= 0) {
                 this.showMessage(`Game Over! The correct answer was ${this.gameData.answer}`, 'error');
@@ -431,228 +371,16 @@ class DifferentialGame {
         
         // Show explanations after animations
         setTimeout(() => {
-            if (won) {
-                console.log('Calculating performance assessment...');
-                const assessment = this.calculatePerformanceAssessment();
-                this.showPerformanceAssessment(assessment);
-            } else {
-                console.log('Showing AUEC analysis for lost game...');
-                try {
-                    const auecData = this.calculateAUEC();
-                    this.showAUECOnly(auecData);
-                } catch (error) {
-                    console.error('AUEC calculation failed for lost game:', error);
-                }
+            // Show AUEC analysis for both won and lost games
+            console.log('Showing AUEC analysis...');
+            try {
+                const auecData = this.calculateAUEC();
+                this.showAUECOnly(auecData);
+            } catch (error) {
+                console.error('AUEC calculation failed:', error);
             }
             this.showExplanations();
         }, won ? 3000 : 2000);
-    }
-
-    calculatePerformanceAssessment() {
-        // Generate all possible winning paths
-        const allPaths = this.generateAllWinningPaths();
-        
-        // Calculate user's path efficiency
-        const userPath = this.getUserPath();
-        const userEfficiency = this.calculatePathEfficiency(userPath);
-        
-        // Find percentile ranking
-        const allEfficiencies = allPaths.map(path => this.calculatePathEfficiency(path));
-        allEfficiencies.sort((a, b) => a - b); // Sort ascending (worst to best)
-        
-        const userRank = allEfficiencies.findIndex(efficiency => efficiency >= userEfficiency);
-        const percentile = Math.round(((allEfficiencies.length - userRank - 1) / allEfficiencies.length) * 100);
-        
-        // Calculate additional metrics
-        const tilesFlipped = this.flippedTiles.size;
-        const attemptsUsed = 4 - this.attempts;
-        const diagnosticSpeed = this.calculateDiagnosticSpeed(userPath);
-        const riskAssessment = this.calculateRiskTolerance(userPath);
-        
-        return {
-            score: this.score,
-            percentile: percentile,
-            efficiency: userEfficiency,
-            tilesFlipped: tilesFlipped,
-            attemptsUsed: attemptsUsed,
-            diagnosticSpeed: diagnosticSpeed,
-            riskAssessment: riskAssessment,
-            totalPossiblePaths: allPaths.length,
-            userPath: userPath,
-            pathAnalysis: this.analyzeUserPath(userPath)
-        };
-    }
-
-    generateAllWinningPaths() {
-        const paths = [];
-        
-        // Generate all possible combinations of tiles that could lead to a win
-        // For each attempt (1st, 2nd, 3rd), try all possible tile combinations
-        
-        for (let attempt = 1; attempt <= 3; attempt++) {
-            // Try all possible combinations of 0 to 9 tiles
-            for (let numTiles = 0; numTiles <= 9; numTiles++) {
-                const combinations = this.generateTileCombinations(numTiles);
-                combinations.forEach(tileSet => {
-                    paths.push({
-                        tiles: tileSet,
-                        attempt: attempt,
-                        numTiles: numTiles
-                    });
-                });
-            }
-        }
-        
-        return paths;
-    }
-
-    generateTileCombinations(numTiles) {
-        if (numTiles === 0) return [[]];
-        
-        const allTiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-        const combinations = [];
-        
-        const generateCombos = (current, remaining, needed) => {
-            if (needed === 0) {
-                combinations.push([...current]);
-                return;
-            }
-            
-            for (let i = 0; i < remaining.length; i++) {
-                const tile = remaining[i];
-                const newCurrent = [...current, tile];
-                const newRemaining = remaining.slice(i + 1);
-                generateCombos(newCurrent, newRemaining, needed - 1);
-            }
-        };
-        
-        generateCombos([], allTiles, numTiles);
-        return combinations;
-    }
-
-    calculatePathEfficiency(path) {
-        let score = 25; // Base score
-        
-        // Subtract tile costs
-        path.tiles.forEach(tileIndex => {
-            const tile = this.gameData.tiles[tileIndex];
-            if (tile.difficulty === 'easy') score -= 3;
-            else if (tile.difficulty === 'medium') score -= 2;
-            else if (tile.difficulty === 'hard') score -= 1;
-        });
-        
-        // Add guess bonus
-        const bonuses = [25, 10, 0];
-        score += bonuses[path.attempt - 1];
-        
-        // Normalize to 0-100 range
-        return Math.max(0, Math.min(100, score));
-    }
-
-    getUserPath() {
-        return {
-            tiles: Array.from(this.flippedTiles),
-            attempt: 4 - this.attempts,
-            numTiles: this.flippedTiles.size
-        };
-    }
-
-    calculateDiagnosticSpeed(userPath) {
-        // Classify based on tiles flipped before correct guess
-        if (userPath.numTiles <= 2) return { 
-            category: "Lightning Fast",
-            reason: `Diagnosed with minimal evidence (${userPath.numTiles} tiles). Shows pattern recognition mastery.`
-        };
-        if (userPath.numTiles <= 4) return {
-            category: "Quick", 
-            reason: `Diagnosed efficiently (${userPath.numTiles} tiles). Good balance of speed and certainty.`
-        };
-        if (userPath.numTiles <= 6) return {
-            category: "Methodical",
-            reason: `Gathered moderate evidence (${userPath.numTiles} tiles). Systematic diagnostic approach.`
-        };
-        if (userPath.numTiles <= 8) return {
-            category: "Thorough",
-            reason: `Comprehensive evidence gathering (${userPath.numTiles} tiles). Cautious but complete approach.`
-        };
-        return {
-            category: "Exhaustive",
-            reason: `Revealed most/all tiles (${userPath.numTiles}/9). Very thorough, risk-averse approach.`
-        };
-    }
-
-    calculateRiskTolerance(userPath) {
-        // Analyze tile selection pattern
-        if (userPath.numTiles === 0) {
-            return {
-                category: "Maximum Risk",
-                reason: "Guessed without any evidence. Pure pattern recognition or lucky guess."
-            };
-        }
-        
-        const easyTiles = userPath.tiles.filter(idx => this.gameData.tiles[idx].difficulty === 'easy').length;
-        const mediumTiles = userPath.tiles.filter(idx => this.gameData.tiles[idx].difficulty === 'medium').length;
-        const hardTiles = userPath.tiles.filter(idx => this.gameData.tiles[idx].difficulty === 'hard').length;
-        
-        const easyRatio = easyTiles / userPath.numTiles;
-        const hardRatio = hardTiles / userPath.numTiles;
-        
-        if (easyRatio >= 0.6) return {
-            category: "Conservative",
-            reason: `Prioritized easy tiles (${easyTiles}/${userPath.numTiles}). Focuses on high-value, pathognomonic clues.`
-        };
-        if (hardRatio >= 0.5) return {
-            category: "Efficient",
-            reason: `Emphasized hard tiles (${hardTiles}/${userPath.numTiles}). Values low-cost, technical details.`
-        };
-        return {
-            category: "Balanced",
-            reason: `Mixed tile selection (Easy: ${easyTiles}, Medium: ${mediumTiles}, Hard: ${hardTiles}). Systematic approach.`
-        };
-    }
-
-    analyzeUserPath(userPath) {
-        const analysis = [];
-        
-        // Analyze tile selection strategy
-        const firstTile = userPath.tiles[0];
-        if (firstTile !== undefined) {
-            const firstDifficulty = this.gameData.tiles[firstTile].difficulty;
-            if (firstDifficulty === 'easy') {
-                analysis.push("✅ Started with easy tile - optimal strategy");
-            } else if (firstDifficulty === 'hard') {
-                analysis.push("⚠️ Started with hard tile - less efficient approach");
-            } else {
-                analysis.push("🔄 Started with medium tile - moderate approach");
-            }
-        }
-        
-        // Analyze attempt timing
-        if (userPath.attempt === 1) {
-            if (userPath.numTiles <= 3) {
-                analysis.push("🎯 Expert-level rapid diagnosis");
-            } else {
-                analysis.push("⚡ Quick first attempt despite gathering evidence");
-            }
-        } else if (userPath.attempt === 2) {
-            analysis.push("🤔 Took time to gather more evidence - prudent approach");
-        } else {
-            analysis.push("🔍 Used all attempts - thorough but cautious");
-        }
-        
-        // Analyze efficiency
-        const efficiency = this.calculatePathEfficiency(userPath);
-        if (efficiency >= 90) {
-            analysis.push("🏆 Near-perfect efficiency");
-        } else if (efficiency >= 70) {
-            analysis.push("✨ High efficiency");
-        } else if (efficiency >= 50) {
-            analysis.push("📊 Moderate efficiency");
-        } else {
-            analysis.push("🎓 Room for improvement in efficiency");
-        }
-        
-        return analysis;
     }
 
     getAUECConfig(scheme = 'intuitive') {
@@ -1305,7 +1033,9 @@ class DifferentialGame {
         }
         
         // Generate the breakdown HTML separately to avoid context issues
+        console.log('Generating AUEC calculation breakdown...');
         const calculationBreakdown = this.generateAUECCalculationBreakdown(auecData);
+        console.log('Breakdown generated:', calculationBreakdown.substring(0, 100) + '...');
         
         const assessmentHTML = `
             <div class="performance-assessment">
@@ -1436,7 +1166,9 @@ class DifferentialGame {
         }
         
         // Generate the breakdown HTML separately to avoid context issues
+        console.log('Generating AUEC calculation breakdown...');
         const calculationBreakdown = this.generateAUECCalculationBreakdown(auecData);
+        console.log('Breakdown generated:', calculationBreakdown.substring(0, 100) + '...');
         
         const auecHTML = `
             <div class="auec-assessment">
@@ -1886,7 +1618,6 @@ class DifferentialGame {
     }
 
     updateDisplay() {
-        document.getElementById('score').textContent = this.score;
         document.getElementById('attempts').textContent = this.attempts;
     }
 
@@ -1943,14 +1674,33 @@ class DifferentialGame {
     }
 
     generateAUECCalculationBreakdown(auecData) {
-        const curve = auecData.curve;
-        const finalCost = curve[curve.length - 1].x;
-        const finalInfo = curve[curve.length - 1].y;
-        const userArea = this.calculateTrueAUEC(curve);
+        try {
+            console.log('Starting generateAUECCalculationBreakdown with data:', auecData);
+            
+            if (!auecData || !auecData.curve) {
+                throw new Error('Invalid auecData or missing curve');
+            }
+            
+            const curve = auecData.curve;
+            if (curve.length === 0) {
+                throw new Error('Empty curve data');
+            }
+            
+            const finalCost = curve[curve.length - 1].x;
+            const finalInfo = curve[curve.length - 1].y;
+            console.log('Final cost:', finalCost, 'Final info:', finalInfo);
+            
+            const userArea = this.calculateTrueAUEC(curve);
+            console.log('User area:', userArea);
         
-        // Analyze the user's path
-        const tiles = this.actionSequence.filter(a => a.type === 'tile_flip');
-        const wrongGuesses = this.actionSequence.filter(a => a.type === 'wrong_guess').length;
+            // Analyze the user's path
+            if (!this.actionSequence) {
+                throw new Error('Missing actionSequence');
+            }
+            
+            const tiles = this.actionSequence.filter(a => a.type === 'tile_flip');
+            const wrongGuesses = this.actionSequence.filter(a => a.type === 'wrong_guess').length;
+            console.log('Tiles:', tiles.length, 'Wrong guesses:', wrongGuesses);
         
         // Calculate efficiency breakdown by tile type
         const tileBreakdown = {
@@ -1960,12 +1710,18 @@ class DifferentialGame {
         };
         
         const config = this.getAUECConfig();
+        console.log('Config loaded:', config);
         
         tiles.forEach(tile => {
+            console.log('Processing tile:', tile);
             const diff = tile.difficulty;
+            if (!diff) {
+                console.warn('Tile missing difficulty:', tile);
+                return;
+            }
             tileBreakdown[diff].count++;
-            tileBreakdown[diff].totalCost += config.costWeights[diff];
-            tileBreakdown[diff].totalInfo += config.infoWeights[diff];
+            tileBreakdown[diff].totalCost += config.costWeights[diff] || 0;
+            tileBreakdown[diff].totalInfo += config.infoWeights[diff] || 0;
         });
         
         // Calculate efficiency metrics
@@ -2036,6 +1792,10 @@ class DifferentialGame {
                 </div>
             </div>
         `;
+        } catch (error) {
+            console.error('Error in generateAUECCalculationBreakdown:', error);
+            return '<div style="color: #f44336; padding: 20px;">Error generating calculation breakdown. Check console for details.</div>';
+        }
     }
 
     generatePathStoryBreakdown(tileBreakdown, wrongGuesses, finalCost, finalInfo) {
@@ -2107,7 +1867,7 @@ class DifferentialGame {
             interpretation += `<p style="margin: 4px 0; color: #ff9800; font-size: 13px;">📊 <strong>Back-loaded curve:</strong> Most info came later, smaller area under curve</p>`;
         }
         
-        const areaRatio = userArea / idealArea;
+        const areaRatio = userArea / perfectArea;
         if (areaRatio >= 0.8) {
             interpretation += `<p style="margin: 4px 0; color: #4caf50; font-size: 13px;">🎯 <strong>Excellent timing:</strong> Your curve area is ${(areaRatio * 100).toFixed(0)}% of theoretical optimal</p>`;
         } else if (areaRatio >= 0.5) {
