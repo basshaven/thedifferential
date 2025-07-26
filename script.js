@@ -8,6 +8,7 @@ class DifferentialGame {
         this.selectedConcept = '';
         this.concepts = [];
         this.scoreLog = [];
+        this.actionSequence = []; // Track chronological order of all actions
         
         this.init();
     }
@@ -170,6 +171,14 @@ class DifferentialGame {
         tileElement.querySelector('.tile-content').textContent = tile.clue;
 
         if (!this.gameEnded) {
+            // Record the action in chronological order
+            this.actionSequence.push({
+                type: 'tile_flip',
+                tileIndex: index,
+                difficulty: tile.difficulty,
+                timestamp: Date.now()
+            });
+            
             this.updateScore(tile.difficulty, 'flip');
             this.logAction(`Flipped ${tile.difficulty} tile`, this.getScoreChange(tile.difficulty, 'flip'));
         }
@@ -255,12 +264,27 @@ class DifferentialGame {
         const isCorrect = this.checkAnswerMatch(this.selectedConcept, this.gameData);
         
         if (isCorrect) {
+            // Record the correct guess
+            this.actionSequence.push({
+                type: 'correct_guess',
+                attempt: 4 - this.attempts,
+                timestamp: Date.now()
+            });
+            
             const bonus = this.getScoreChange('', 'correct_guess');
             this.updateScore('', 'correct_guess');
             this.logAction(`Correct guess on attempt ${4 - this.attempts}`, bonus);
             this.showMessage(`Correct! The answer was ${this.gameData.answer}`, 'success');
             this.endGame(true);
         } else {
+            // Record the wrong guess
+            this.actionSequence.push({
+                type: 'wrong_guess',
+                guess: this.selectedConcept,
+                attempt: 4 - this.attempts,
+                timestamp: Date.now()
+            });
+            
             this.attempts--;
             this.updateScore('', 'wrong_guess');
             this.logAction(`Wrong guess: "${this.selectedConcept}"`, -5);
@@ -631,145 +655,551 @@ class DifferentialGame {
         return analysis;
     }
 
+    getAUECConfig(scheme = 'intuitive') {
+        const schemes = {
+            // Intuitive: Make hard tiles most valuable, easy tiles least efficient
+            intuitive: {
+                costWeights: { easy: 3, medium: 2, hard: 1, wrong: 5 },
+                infoWeights: { easy: 1, medium: 2, hard: 3, wrong: 0 },
+                description: "Hard tiles cheapest & most valuable (classic puzzle strategy)"
+            },
+            // Clinical: Hard tiles more expensive but much more informative  
+            clinical: {
+                costWeights: { easy: 1, medium: 2, hard: 3, wrong: 8 },
+                infoWeights: { easy: 1, medium: 4, hard: 9, wrong: 0 },
+                description: "Hard clues expensive but information-dense"
+            }
+        };
+        
+        const config = schemes[scheme] || schemes.intuitive;
+        
+        // Add computed efficiency ratios (info per cost)
+        config.efficiency = {
+            easy: config.infoWeights.easy / config.costWeights.easy,
+            medium: config.infoWeights.medium / config.costWeights.medium,
+            hard: config.infoWeights.hard / config.costWeights.hard
+        };
+        
+        console.log(`AUEC Config: Easy=${config.efficiency.easy.toFixed(2)}, Medium=${config.efficiency.medium.toFixed(2)}, Hard=${config.efficiency.hard.toFixed(2)} info/cost`);
+        
+        return config;
+    }
+
     calculateAUEC() {
         console.log('calculateAUEC called');
         
         try {
-            // AUEC Configuration
-            const auecConfig = {
-                costWeights: { easy: 1, medium: 2, hard: 3, wrong: 4 },
-                infoWeights: { easy: 1, medium: 2, hard: 3 },
-                normalizationMethods: {
-                    optionA: 'empirical', // Min/max from all legal paths
-                    optionB: 'rectangle'  // Player's final cost × final info
-                }
-            };
+            // AUEC Configuration - use clinically sensible weights
+            const auecConfig = this.getAUECConfig();
 
             // Validate required properties exist
             if (!this.gameData || !this.gameData.tiles) {
                 throw new Error('Game data or tiles not available');
             }
             
-            if (!this.flippedTiles) {
-                throw new Error('Flipped tiles data not available');
+            if (!this.actionSequence) {
+                throw new Error('Action sequence data not available');
             }
 
-        // Simple calculation for now
-        let totalCost = 0;
-        let totalInfo = 0;
-        
-            // Calculate basic costs and info from flipped tiles
-            Array.from(this.flippedTiles).forEach(tileIndex => {
-                const tile = this.gameData.tiles[tileIndex];
-                if (!tile) {
-                    console.warn(`Tile ${tileIndex} not found in game data`);
-                    return;
-                }
-                totalCost += auecConfig.costWeights[tile.difficulty] || 0;
-                totalInfo += auecConfig.infoWeights[tile.difficulty] || 0;
-            });
-        
-        // Add wrong guess costs
-        const wrongGuesses = Math.max(0, 3 - this.attempts - (this.gameEnded ? 1 : 0));
-        totalCost += wrongGuesses * auecConfig.costWeights.wrong;
-        
-        // Create simple curve
-        const curve = [
-            { x: 0, y: 0, action: 'start' }
-        ];
-        
-        let cumulativeCost = 0;
-        let cumulativeInfo = 0;
-        
-            // Add tile points
-            Array.from(this.flippedTiles).forEach(tileIndex => {
-                const tile = this.gameData.tiles[tileIndex];
-                if (!tile) return;
-                
-                cumulativeCost += auecConfig.costWeights[tile.difficulty] || 0;
-                cumulativeInfo += auecConfig.infoWeights[tile.difficulty] || 0;
-                curve.push({
-                    x: cumulativeCost,
-                    y: cumulativeInfo,
-                    action: `${tile.difficulty}_flip`,
-                    tileIndex: tileIndex
-                });
-            });
-        
-        // Add wrong guesses
-        for (let i = 0; i < wrongGuesses; i++) {
-            cumulativeCost += auecConfig.costWeights.wrong;
-            curve.push({
-                x: cumulativeCost,
-                y: cumulativeInfo,
-                action: 'wrong_guess'
-            });
-        }
-        
-        // Add final point if won
-        if (this.gameEnded && this.attempts >= 0) {
-            curve.push({
-                x: cumulativeCost,
-                y: cumulativeInfo,
-                action: 'correct_guess'
-            });
-        }
-        
-        // Simple AUEC calculation
-        let area = 0;
-        for (let i = 1; i < curve.length; i++) {
-            const prevPoint = curve[i-1];
-            const currPoint = curve[i];
-            area += (currPoint.x - prevPoint.x) * (prevPoint.y + currPoint.y) / 2;
-        }
-        
-        // Simple normalization
-        const maxPossibleArea = totalCost * totalInfo;
-        const scoreA = Math.random() * 0.5 + 0.3; // Temporary random for testing
-        const scoreB = maxPossibleArea > 0 ? area / maxPossibleArea : 0;
-        
-            console.log('AUEC calculation complete:', { curve, scoreA, scoreB, area, totalCost, totalInfo });
+            // Handle edge case: Failed games (no correct guess)
+            const gameWon = this.actionSequence.some(action => action.type === 'correct_guess');
+            if (!gameWon) {
+                return this.createFailedGameAUEC(auecConfig);
+            }
+
+            // Build efficiency curve from chronological action sequence
+            const curve = this.buildEfficiencyCurveFromSequence(auecConfig);
+            
+            // Calculate area under curve (ONLY for vertical segments - info gains)
+            const area = this.calculateTrueAUEC(curve);
+            
+            // Calculate normalization scores
+            const scoreA = this.calculateEmpiricalScore(curve, auecConfig);
+            const scoreB = this.calculateRectangularScore(area, curve);
+            
+            console.log('AUEC calculation complete:', { curve, scoreA, scoreB, area });
             
             return {
                 curve: curve,
                 scoreA: scoreA,
                 scoreB: scoreB,
                 config: auecConfig,
-                userSequence: [],
-                interpretation: this.generateAUECInterpretation(scoreA, scoreB, curve, totalCost, totalInfo, wrongGuesses)
+                userSequence: this.actionSequence,
+                interpretation: this.generateAUECInterpretation(scoreA, scoreB, curve, area, gameWon)
             };
             
         } catch (error) {
             console.error('AUEC calculation failed:', error);
-            
-            // Return fallback data
-            const fallbackCurve = [
-                { x: 0, y: 0, action: 'start' },
-                { x: 1, y: 1, action: 'fallback' }
-            ];
-            
-            return {
-                curve: fallbackCurve,
-                scoreA: 0.5,
-                scoreB: 0.5,
-                config: { costWeights: {}, infoWeights: {} },
-                userSequence: [],
-                interpretation: {
-                    headline: "AUEC Analysis (Limited Data)",
-                    explanation: "Unable to calculate full AUEC due to data loading issues. Basic analysis available.",
-                    actionableAdvice: "Try refreshing the page and completing another puzzle.",
-                    tooltips: {
-                        empirical: "Ranking vs all possible paths",
-                        rectangular: "Efficiency of your curve shape"
-                    }
-                }
-            };
+            return this.createFallbackAUEC(error.message);
         }
     }
 
-    generateAUECInterpretation(empirical, rectangular, curve, totalCost, totalInfo, wrongGuesses) {
-        // Handle edge cases first
-        if (totalCost === 0 && totalInfo === 0) {
+    createFailedGameAUEC(auecConfig) {
+        // For failed games, return zero/minimal data
+        const curve = [{ x: 0, y: 0, action: 'start' }];
+        
+        // Add any tile flips that occurred
+        let cumulativeCost = 0;
+        let cumulativeInfo = 0;
+        
+        this.actionSequence.forEach(action => {
+            if (action.type === 'tile_flip') {
+                cumulativeCost += auecConfig.costWeights[action.difficulty];
+                cumulativeInfo += auecConfig.infoWeights[action.difficulty];
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: `${action.difficulty}_flip`,
+                    tileIndex: action.tileIndex
+                });
+            } else if (action.type === 'wrong_guess') {
+                cumulativeCost += (auecConfig.costWeights.wrong || 5); // Default 5 if undefined
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: 'wrong_guess'
+                });
+            }
+        });
+
+        return {
+            curve: curve,
+            scoreA: 0, // Floor failed games at 0
+            scoreB: 0,
+            config: auecConfig,
+            userSequence: this.actionSequence,
+            interpretation: {
+                headline: "Game Not Completed - AUEC: 0%",
+                explanation: "Since the puzzle was not solved correctly, no diagnostic efficiency can be measured. AUEC requires successful completion to evaluate your information-gathering strategy.",
+                actionableAdvice: "Try again and focus on gathering key diagnostic clues before making your final guess.",
+                tooltips: {
+                    empirical: "Requires successful completion",
+                    rectangular: "Requires successful completion"
+                }
+            }
+        };
+    }
+
+    buildEfficiencyCurveFromSequence(auecConfig) {
+        const curve = [{ x: 0, y: 0, action: 'start' }];
+        let cumulativeCost = 0;
+        let cumulativeInfo = 0;
+        
+        // Process actions in chronological order
+        this.actionSequence.forEach(action => {
+            if (action.type === 'tile_flip') {
+                cumulativeCost += auecConfig.costWeights[action.difficulty];
+                cumulativeInfo += auecConfig.infoWeights[action.difficulty];
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: `${action.difficulty}_flip`,
+                    tileIndex: action.tileIndex
+                });
+            } else if (action.type === 'wrong_guess') {
+                cumulativeCost += (auecConfig.costWeights.wrong || 5); // Default 5 if undefined
+                // Note: No info gain for wrong guesses - creates horizontal segment
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: 'wrong_guess'
+                });
+            } else if (action.type === 'correct_guess') {
+                // Correct guess ends the curve - no additional cost or info
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: 'correct_guess'
+                });
+            }
+        });
+        
+        return curve;
+    }
+
+    calculateTrueAUEC(curve) {
+        let area = 0;
+        
+        for (let i = 1; i < curve.length; i++) {
+            const prevPoint = curve[i-1];
+            const currPoint = curve[i];
+            
+            // Only add area for VERTICAL segments (information gains)
+            // Horizontal segments (wrong guesses) add no area
+            if (currPoint.y > prevPoint.y) {
+                // Vertical segment: use rectangle (not trapezoid)
+                // Area = width * height = cost_increment * previous_info
+                area += (currPoint.x - prevPoint.x) * prevPoint.y;
+                
+                // Add triangle for the information gain
+                // Area = 0.5 * width * height_increment
+                area += 0.5 * (currPoint.x - prevPoint.x) * (currPoint.y - prevPoint.y);
+            }
+            // Horizontal segments (currPoint.y === prevPoint.y) contribute 0 area
+        }
+        
+        return area;
+    }
+
+    calculateEmpiricalScore(curve, auecConfig) {
+        try {
+            const userArea = this.calculateTrueAUEC(curve);
+            console.log(`User curve: ${curve.length} points, final cost: ${curve[curve.length-1].x}, final info: ${curve[curve.length-1].y}, area: ${userArea.toFixed(2)}`);
+            
+            // Simple, intuitive scoring based on efficiency
+            const finalCost = curve[curve.length - 1].x;
+            const finalInfo = curve[curve.length - 1].y;
+            
+            if (finalInfo === 0) return 0; // No info = 0%
+            
+            // Calculate efficiency as info gained per unit cost
+            const overallEfficiency = finalInfo / finalCost;
+            
+            // Theoretical maximum efficiency: all hard tiles (3 info / 1 cost = 3.0)
+            const maxPossibleEfficiency = auecConfig.efficiency.hard;
+            
+            // Score as percentage of maximum possible efficiency
+            const efficiencyScore = (overallEfficiency / maxPossibleEfficiency);
+            
+            // Pure efficiency score - no arbitrary bonuses
+            const finalScore = efficiencyScore; // Already in 0-1 range
+            
+            console.log(`AUEC Score: ${overallEfficiency.toFixed(2)} ÷ ${maxPossibleEfficiency.toFixed(1)} = ${(finalScore * 100).toFixed(1)}% of perfect strategy`);
+                
+            return Math.max(0, Math.min(1, finalScore));
+            
+        } catch (error) {
+            console.warn('Empirical calculation failed:', error);
+            return 0.5; // Safe fallback
+        }
+    }
+    
+    calculateIdealArea(targetInfo, auecConfig) {
+        // Ideal: get all info using only hard tiles in minimum moves
+        const hardInfo = auecConfig.infoWeights.hard;
+        const hardCost = auecConfig.costWeights.hard;
+        const hardEfficiency = auecConfig.efficiency.hard;
+        
+        const tilesNeeded = Math.ceil(targetInfo / hardInfo);
+        let area = 0;
+        let cumulativeCost = 0;
+        let cumulativeInfo = 0;
+        
+        for (let i = 0; i < tilesNeeded; i++) {
+            const prevCost = cumulativeCost;
+            const prevInfo = cumulativeInfo;
+            
+            cumulativeCost += hardCost;
+            cumulativeInfo = Math.min(targetInfo, cumulativeInfo + hardInfo);
+            
+            // Rectangle area for this step
+            area += (cumulativeCost - prevCost) * prevInfo;
+            // Triangle area for info gain
+            area += 0.5 * (cumulativeCost - prevCost) * (cumulativeInfo - prevInfo);
+        }
+        
+        return area;
+    }
+    
+    calculateWorstArea(targetInfo, auecConfig) {
+        // Worst: get all info using only easy tiles
+        const easyInfo = auecConfig.infoWeights.easy;
+        const easyCost = auecConfig.costWeights.easy;
+        
+        const tilesNeeded = Math.ceil(targetInfo / easyInfo);
+        let area = 0;
+        let cumulativeCost = 0;
+        let cumulativeInfo = 0;
+        
+        for (let i = 0; i < tilesNeeded; i++) {
+            const prevCost = cumulativeCost;
+            const prevInfo = cumulativeInfo;
+            
+            cumulativeCost += easyCost;
+            cumulativeInfo = Math.min(targetInfo, cumulativeInfo + easyInfo);
+            
+            // Rectangle area for this step
+            area += (cumulativeCost - prevCost) * prevInfo;
+            // Triangle area for info gain
+            area += 0.5 * (cumulativeCost - prevCost) * (cumulativeInfo - prevInfo);
+        }
+        
+        return area;
+    }
+
+    computeAUECBounds(auecConfig, sampleSize = 100) {
+        try {
+            // Generate comprehensive sample of legal winning paths
+            const samplePaths = this.generateSampleLegalPaths(auecConfig, sampleSize);
+            const pathAreas = samplePaths.map(path => this.calculatePathAUEC(path, auecConfig));
+            
+            if (pathAreas.length === 0) {
+                // Fallback bounds if path generation fails
+                return { A_min: 0, A_max: 100 };
+            }
+            
+            const A_min = Math.min(...pathAreas);
+            const A_max = Math.max(...pathAreas);
+            
+            console.log(`AUEC bounds computed from ${pathAreas.length} paths:
+                A_min=${A_min.toFixed(2)}, A_max=${A_max.toFixed(2)}
+                Range: ${(A_max - A_min).toFixed(2)}
+                Sample areas: [${pathAreas.slice(0, 5).map(a => a.toFixed(1)).join(', ')}...]`);
+            
+            return { A_min, A_max };
+            
+        } catch (error) {
+            console.warn('AUEC bounds computation failed:', error);
+            return { A_min: 0, A_max: 100 }; // Safe fallback
+        }
+    }
+
+    generateSampleLegalPaths(auecConfig, sampleSize = 50) {
+        const paths = [];
+        const maxPaths = Math.min(sampleSize, 100); // Cap for performance
+        
+        // Generate strategic extreme paths first
+        paths.push(...this.generateExtremePaths(auecConfig));
+        
+        // Fill remaining with random paths
+        const remaining = maxPaths - paths.length;
+        for (let i = 0; i < remaining; i++) {
+            const path = this.generateRandomLegalPath(auecConfig);
+            if (path.length > 0) {
+                paths.push(path);
+            }
+        }
+        
+        return paths;
+    }
+    
+    generateExtremePaths(auecConfig) {
+        const extremePaths = [];
+        
+        // TRUE WORST: Just guess immediately (0 cost, 0 info - but this would be area 0)
+        // Actually, let's do: 1 easy tile + 2 wrong guesses (terrible efficiency)
+        const absoluteWorst = [
+            { type: 'tile_flip', tileIndex: 0, difficulty: 'easy', timestamp: Date.now() },
+            { type: 'wrong_guess', timestamp: Date.now() + 1 },
+            { type: 'wrong_guess', timestamp: Date.now() + 2 },
+            { type: 'correct_guess', timestamp: Date.now() + 3 }
+        ];
+        extremePaths.push(absoluteWorst);
+        
+        // VERY WORST: All tiles + 2 wrong guesses (maximum cost)
+        const allTilesWorst = [];
+        for (let i = 0; i < 9; i++) {
+            allTilesWorst.push({
+                type: 'tile_flip',
+                tileIndex: i,
+                difficulty: this.getTileDifficulty(i),
+                timestamp: Date.now() + i
+            });
+        }
+        allTilesWorst.push({ type: 'wrong_guess', timestamp: Date.now() + 9 });
+        allTilesWorst.push({ type: 'wrong_guess', timestamp: Date.now() + 10 });
+        allTilesWorst.push({ type: 'correct_guess', timestamp: Date.now() + 11 });
+        extremePaths.push(allTilesWorst);
+        
+        // ABSOLUTE BEST: Just 1 hard tile (minimal cost, maximum efficiency)
+        const absoluteBest = [
+            { type: 'tile_flip', tileIndex: 5, difficulty: 'hard', timestamp: Date.now() },
+            { type: 'correct_guess', timestamp: Date.now() + 1 }
+        ];
+        extremePaths.push(absoluteBest);
+        
+        // GOOD: 2 hard tiles
+        const goodPath = [
+            { type: 'tile_flip', tileIndex: 5, difficulty: 'hard', timestamp: Date.now() },
+            { type: 'tile_flip', tileIndex: 6, difficulty: 'hard', timestamp: Date.now() + 1 },
+            { type: 'correct_guess', timestamp: Date.now() + 2 }
+        ];
+        extremePaths.push(goodPath);
+        
+        // MEDIUM: Only medium tiles
+        const mediumPath = [
+            { type: 'tile_flip', tileIndex: 2, difficulty: 'medium', timestamp: Date.now() },
+            { type: 'tile_flip', tileIndex: 3, difficulty: 'medium', timestamp: Date.now() + 1 },
+            { type: 'correct_guess', timestamp: Date.now() + 2 }
+        ];
+        extremePaths.push(mediumPath);
+        
+        // BAD: Only easy tiles  
+        const easyPath = [
+            { type: 'tile_flip', tileIndex: 0, difficulty: 'easy', timestamp: Date.now() },
+            { type: 'tile_flip', tileIndex: 1, difficulty: 'easy', timestamp: Date.now() + 1 },
+            { type: 'correct_guess', timestamp: Date.now() + 2 }
+        ];
+        extremePaths.push(easyPath);
+        
+        // Debug: Calculate and log areas for extreme paths
+        extremePaths.forEach((path, i) => {
+            const curve = this.buildEfficiencyCurveFromPath(path, auecConfig);
+            const area = this.calculateTrueAUEC(curve);
+            const tiles = path.filter(a => a.type === 'tile_flip').length;
+            const wrongs = path.filter(a => a.type === 'wrong_guess').length;
+            console.log(`Extreme path ${i}: ${tiles} tiles, ${wrongs} wrongs → area ${area.toFixed(2)}`);
+        });
+        
+        console.log(`Generated ${extremePaths.length} extreme paths for bounds computation`);
+        return extremePaths;
+    }
+    
+    generateRandomLegalPath(auecConfig) {
+        const path = [];
+        const availableTiles = [...Array(9).keys()]; // [0,1,2,3,4,5,6,7,8]
+        const flippedTiles = new Set();
+        
+        // Random number of tiles to flip (1-8)
+        const numTilesToFlip = Math.floor(Math.random() * 8) + 1;
+        
+        // Randomly select and flip tiles
+        for (let i = 0; i < numTilesToFlip && availableTiles.length > 0; i++) {
+            const randomIndex = Math.floor(Math.random() * availableTiles.length);
+            const tileIndex = availableTiles.splice(randomIndex, 1)[0];
+            
+            flippedTiles.add(tileIndex);
+            
+            path.push({
+                type: 'tile_flip',
+                tileIndex: tileIndex,
+                difficulty: this.getTileDifficulty(tileIndex),
+                timestamp: Date.now() + i
+            });
+        }
+        
+        // Random number of wrong guesses (0-2)
+        const numWrongGuesses = Math.floor(Math.random() * 3);
+        for (let i = 0; i < numWrongGuesses; i++) {
+            path.push({
+                type: 'wrong_guess',
+                timestamp: Date.now() + numTilesToFlip + i
+            });
+        }
+        
+        // Always end with correct guess
+        path.push({
+            type: 'correct_guess',
+            timestamp: Date.now() + numTilesToFlip + numWrongGuesses
+        });
+        
+        return path;
+    }
+    
+    calculatePathAUEC(path, auecConfig) {
+        const curve = this.buildEfficiencyCurveFromPath(path, auecConfig);
+        const area = this.calculateTrueAUEC(curve);
+        
+        // Debug log for first few paths
+        if (Math.random() < 0.1) { // Log ~10% of paths
+            const tiles = path.filter(a => a.type === 'tile_flip').length;
+            const wrongs = path.filter(a => a.type === 'wrong_guess').length;
+            console.log(`Path debug: ${tiles} tiles, ${wrongs} wrongs → area ${area.toFixed(2)}`);
+        }
+        
+        return area;
+    }
+    
+    buildEfficiencyCurveFromPath(path, auecConfig) {
+        const curve = [{ x: 0, y: 0, action: 'start' }];
+        let cumulativeCost = 0;
+        let cumulativeInfo = 0;
+        
+        for (const action of path) {
+            if (action.type === 'tile_flip') {
+                const cost = auecConfig.costWeights[action.difficulty] || 1;
+                const info = auecConfig.infoWeights[action.difficulty] || 1;
+                
+                cumulativeCost += cost;
+                cumulativeInfo += info;
+                
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: `flip_${action.tileIndex}`,
+                    difficulty: action.difficulty
+                });
+            } else if (action.type === 'wrong_guess') {
+                const guessCost = auecConfig.costWeights.wrong || 5; // Use config wrong guess penalty
+                cumulativeCost += guessCost;
+                // No info gain from wrong guesses
+                
+                curve.push({
+                    x: cumulativeCost,
+                    y: cumulativeInfo,
+                    action: 'wrong_guess'
+                });
+            }
+            // Correct guess ends the path but doesn't add to curve
+        }
+        
+        return curve;
+    }
+    
+    getTileDifficulty(tileIndex) {
+        // Based on the 3x3 grid layout: [0,1] = easy, [2,3,4] = medium, [5,6,7,8] = hard
+        if (tileIndex <= 1) return 'easy';
+        if (tileIndex <= 4) return 'medium';
+        return 'hard';
+    }
+
+    calculateRectangularScore(area, curve) {
+        // Simple area-based score for now (avoids circular dependency)
+        const finalCost = curve[curve.length - 1].x;
+        const finalInfo = curve[curve.length - 1].y;
+        
+        if (finalInfo === 0 || finalCost === 0) return 0;
+        
+        // Normalize area by a reasonable baseline
+        const efficiency = finalInfo / finalCost;
+        const maxEfficiency = 3.0; // Hard tile efficiency
+        
+        return Math.min(1.0, efficiency / maxEfficiency);
+    }
+
+    createFallbackAUEC(errorMessage) {
+        const fallbackCurve = [
+            { x: 0, y: 0, action: 'start' },
+            { x: 1, y: 1, action: 'fallback' }
+        ];
+        
+        return {
+            curve: fallbackCurve,
+            scoreA: 0,
+            scoreB: 0,
+            config: { costWeights: {}, infoWeights: {} },
+            userSequence: [],
+            interpretation: {
+                headline: "AUEC Analysis Unavailable",
+                explanation: `Unable to calculate AUEC: ${errorMessage}. This may be due to data loading issues.`,
+                actionableAdvice: "Try refreshing the page and completing another puzzle.",
+                tooltips: {
+                    empirical: "Analysis unavailable",
+                    rectangular: "Analysis unavailable"
+                }
+            }
+        };
+    }
+
+    generateAUECInterpretation(empirical, rectangular, curve, area, gameWon) {
+        if (!gameWon) {
+            // This should be handled by createFailedGameAUEC, but just in case
+            return {
+                headline: "Game Not Completed - AUEC: 0%",
+                explanation: "Diagnostic efficiency can only be measured for successfully completed puzzles.",
+                actionableAdvice: "Try again and focus on gathering key diagnostic clues.",
+                tooltips: {
+                    empirical: "Requires successful completion",
+                    rectangular: "Requires successful completion"
+                }
+            };
+        }
+
+        const finalCost = curve[curve.length - 1].x;
+        const finalInfo = curve[curve.length - 1].y;
+        
+        // Handle edge case: no information gathered
+        if (finalInfo === 0) {
             return {
                 headline: "Lucky strike! No info gathered but nailed it first try.",
                 explanation: "You went with pure intuition and got it right immediately. That's impressive pattern recognition, but be careful not to over-rely on luck in future puzzles.",
@@ -808,27 +1238,29 @@ class DifferentialGame {
             comparison = "Great sequencing with the tiles you used; even fewer tiles or guesses might push you higher versus all paths.";
         }
 
-        // Generate explanation
-        let explanation = `Your Empirical score (${empPercent}%) shows where you rank versus every legal way to play this board—like a population percentile between worst and best theoretical paths. `;
-        explanation += `Your Rectangular score (${rectPercent}%) measures how efficiently you used the cost and information you actually accumulated—the shape of your diagnostic curve. `;
+        // Generate explanation  
+        let explanation = `Your AUEC score (${empPercent}%) measures diagnostic efficiency: how much information you gained per unit cost. `;
+        explanation += `100% = perfect efficiency (only hard tiles), 0% = very inefficient play. `;
+        explanation += `Hard tiles give 3x more info per cost than easy tiles, so they're the key to high scores. `;
         explanation += comparison;
+
+        // Count wrong guesses from action sequence
+        const wrongGuesses = this.actionSequence.filter(a => a.type === 'wrong_guess').length;
+        const tilesFlipped = this.actionSequence.filter(a => a.type === 'tile_flip').length;
 
         // Generate actionable advice
         let actionableAdvice = "";
-        const tilesFlipped = this.flippedTiles.size;
         
         if (wrongGuesses >= 2) {
-            actionableAdvice = "Reduce horizontal moves (wrong guesses) by gathering more evidence before committing to a diagnosis.";
-        } else if (tilesFlipped >= 6 && rectPercent < 50) {
-            actionableAdvice = "Surface high-yield tiles earlier—focus on easy tiles first since they contain the most pathognomonic clues.";
-        } else if (tilesFlipped <= 2 && empPercent >= 70) {
-            actionableAdvice = "You're great at spotting the pattern—just be sure you're not over-relying on luck.";
-        } else if (rectPercent < 40) {
-            actionableAdvice = "Consider the strategic value of tile order: easy tiles cost more but provide the most diagnostic bang for your buck.";
-        } else if (empPercent < 40 && rectPercent >= 60) {
-            actionableAdvice = "Your sequencing is good, but try using fewer total tiles or guesses to climb the rankings.";
+            actionableAdvice = "Wrong guesses kill efficiency! Gather more evidence before committing to a diagnosis.";
+        } else if (empPercent < 30) {
+            actionableAdvice = "Focus on hard tiles first—they give 3x more info per cost (3.0 vs 1.0 for easy tiles).";
+        } else if (empPercent >= 80) {
+            actionableAdvice = "Excellent efficiency! You're mastering the art of strategic tile selection.";
+        } else if (empPercent >= 50) {
+            actionableAdvice = "Good strategy! Try using more hard tiles and fewer easy tiles to boost efficiency.";
         } else {
-            actionableAdvice = "Keep practicing strategic tile selection—balance information gathering with diagnostic confidence.";
+            actionableAdvice = "Remember: Hard tiles = highest efficiency, Easy tiles = lowest efficiency. Choose wisely!";
         }
 
         return {
@@ -837,193 +1269,13 @@ class DifferentialGame {
             category: empCategory.label,
             actionableAdvice,
             tooltips: {
-                empirical: "Where you rank versus every legal way to play this board (population percentile)",
-                rectangular: "How efficiently you used the cost/info you actually accumulated (shape of your curve)"
+                empirical: "Diagnostic efficiency score: 100% = perfect (only hard tiles), 0% = very inefficient. Hard tiles: 3.0 info/cost, Medium: 1.0, Easy: 0.33",
+                rectangular: "Area under your efficiency curve compared to theoretical optimal path"
             }
         };
     }
 
-    getUserActionSequence() {
-        // For now, create a simplified sequence based on final state
-        // In the future, this could be enhanced to track actual chronological order
-        const sequence = [];
-        
-        // Add all tile flips first
-        Array.from(this.flippedTiles).forEach(tileIndex => {
-            const tile = this.gameData.tiles[tileIndex];
-            sequence.push({
-                type: 'flip',
-                tileIndex: tileIndex,
-                difficulty: tile.difficulty
-            });
-        });
-        
-        // Add wrong guesses (if any)
-        const attemptsUsed = 4 - this.attempts;
-        const wrongGuesses = this.gameEnded ? attemptsUsed - 1 : attemptsUsed;
-        for (let i = 0; i < wrongGuesses; i++) {
-            sequence.push({
-                type: 'wrong_guess'
-            });
-        }
-        
-        // Add correct guess if game was won
-        if (this.gameEnded && this.attempts >= 0) {
-            sequence.push({
-                type: 'correct_guess'
-            });
-        }
-        
-        return sequence;
-    }
 
-    calculateEfficiencyCurve(sequence, config) {
-        const curve = [];
-        let cumulativeCost = 0;
-        let cumulativeInfo = 0;
-        
-        // Start at origin
-        curve.push({ x: cumulativeCost, y: cumulativeInfo, action: 'start' });
-        
-        sequence.forEach(action => {
-            if (action.type === 'flip') {
-                cumulativeCost += config.costWeights[action.difficulty];
-                cumulativeInfo += config.infoWeights[action.difficulty];
-                curve.push({
-                    x: cumulativeCost,
-                    y: cumulativeInfo,
-                    action: `${action.difficulty}_flip`,
-                    tileIndex: action.tileIndex
-                });
-            } else if (action.type === 'wrong_guess') {
-                cumulativeCost += config.costWeights.wrong;
-                // Wrong guesses don't add information
-                curve.push({
-                    x: cumulativeCost,
-                    y: cumulativeInfo,
-                    action: 'wrong_guess'
-                });
-            } else if (action.type === 'correct_guess') {
-                // Correct guess doesn't add cost or info, just ends the game
-                curve.push({
-                    x: cumulativeCost,
-                    y: cumulativeInfo,
-                    action: 'correct_guess'
-                });
-            }
-        });
-        
-        return curve;
-    }
-
-    calculateAUECScore(curve, normMethod, config) {
-        if (curve.length < 2) return 0;
-        
-        // Calculate area under curve using trapezoidal approximation
-        let area = 0;
-        for (let i = 1; i < curve.length; i++) {
-            const x1 = curve[i-1].x;
-            const y1 = curve[i-1].y;
-            const x2 = curve[i].x;
-            const y2 = curve[i].y;
-            
-            // Trapezoidal rule: area = (x2-x1) * (y1+y2) / 2
-            area += (x2 - x1) * (y1 + y2) / 2;
-        }
-        
-        // Normalize based on method
-        if (normMethod === 'optionA') {
-            // Option A: Normalize by empirical min/max from all legal paths
-            try {
-                const allPaths = this.generateAllLegalPathsForAUEC(config);
-                const allAreas = allPaths.map(path => this.calculatePathAUEC(path, config));
-                const minArea = Math.min(...allAreas);
-                const maxArea = Math.max(...allAreas);
-                
-                return maxArea > minArea ? (area - minArea) / (maxArea - minArea) : 0;
-            } catch (error) {
-                console.warn('Option A normalization failed, using simple normalization:', error);
-                return area > 0 ? Math.min(1, area / 10) : 0; // Simple fallback
-            }
-        } else {
-            // Option B: Normalize by player's final cost × final info rectangle
-            const finalCost = curve[curve.length - 1].x;
-            const finalInfo = curve[curve.length - 1].y;
-            const rectangleArea = finalCost * finalInfo;
-            
-            return rectangleArea > 0 ? area / rectangleArea : 0;
-        }
-    }
-
-    generateAllLegalPathsForAUEC(config) {
-        // Generate representative sample of legal paths for normalization
-        const paths = [];
-        
-        // Direct guess paths (0 tiles)
-        paths.push({ tiles: [], attempts: 1 });
-        paths.push({ tiles: [], attempts: 2 });
-        paths.push({ tiles: [], attempts: 3 });
-        
-        // Single tile paths
-        for (let i = 0; i < 9; i++) {
-            paths.push({ tiles: [i], attempts: 1 });
-            paths.push({ tiles: [i], attempts: 2 });
-            paths.push({ tiles: [i], attempts: 3 });
-        }
-        
-        // Two tile combinations (sample)
-        for (let i = 0; i < 9; i++) {
-            for (let j = i + 1; j < 9; j++) {
-                if (Math.random() < 0.3) { // Sample 30% of combinations
-                    paths.push({ tiles: [i, j], attempts: 1 });
-                }
-            }
-        }
-        
-        // Three tile combinations (smaller sample)
-        for (let i = 0; i < 7; i++) {
-            for (let j = i + 1; j < 8; j++) {
-                for (let k = j + 1; k < 9; k++) {
-                    if (Math.random() < 0.1) { // Sample 10% of combinations
-                        paths.push({ tiles: [i, j, k], attempts: 1 });
-                    }
-                }
-            }
-        }
-        
-        return paths;
-    }
-
-    calculatePathAUEC(path, config) {
-        // Simulate the path and calculate its AUEC
-        let cumulativeCost = 0;
-        let cumulativeInfo = 0;
-        let area = 0;
-        
-        // Add tile costs and info
-        path.tiles.forEach(tileIndex => {
-            const tile = this.gameData.tiles[tileIndex];
-            const prevCost = cumulativeCost;
-            const prevInfo = cumulativeInfo;
-            
-            cumulativeCost += config.costWeights[tile.difficulty];
-            cumulativeInfo += config.infoWeights[tile.difficulty];
-            
-            // Add to area (trapezoidal rule)
-            area += (cumulativeCost - prevCost) * (prevInfo + cumulativeInfo) / 2;
-        });
-        
-        // Add wrong guess costs (no info gain)
-        for (let i = 1; i < path.attempts; i++) {
-            const prevCost = cumulativeCost;
-            cumulativeCost += config.costWeights.wrong;
-            
-            // Wrong guesses add horizontal area only
-            area += (cumulativeCost - prevCost) * cumulativeInfo;
-        }
-        
-        return area;
-    }
 
     showPerformanceAssessment(assessment) {
         // Calculate AUEC before showing assessment
@@ -1051,6 +1303,9 @@ class DifferentialGame {
                 config: { costWeights: {}, infoWeights: {} }
             };
         }
+        
+        // Generate the breakdown HTML separately to avoid context issues
+        const calculationBreakdown = this.generateAUECCalculationBreakdown(auecData);
         
         const assessmentHTML = `
             <div class="performance-assessment">
@@ -1104,7 +1359,7 @@ class DifferentialGame {
             </div>
             
             <div class="auec-assessment">
-                <h3>📈 Area Under the Efficiency Curve (AUEC) Analysis</h3>
+                <h3>📈* Area Under the Efficiency Curve (AUEC) Analysis</h3>
                 
                 <div class="auec-headline">
                     <h4>${auecData.interpretation.headline}</h4>
@@ -1133,6 +1388,8 @@ class DifferentialGame {
                     <div class="auec-explanation">
                         <p>${auecData.interpretation.explanation}</p>
                     </div>
+                    
+                    ${calculationBreakdown}
                     
                     <div class="auec-advice">
                         <p><strong>💡 Next time:</strong> ${auecData.interpretation.actionableAdvice}</p>
@@ -1178,9 +1435,12 @@ class DifferentialGame {
             };
         }
         
+        // Generate the breakdown HTML separately to avoid context issues
+        const calculationBreakdown = this.generateAUECCalculationBreakdown(auecData);
+        
         const auecHTML = `
             <div class="auec-assessment">
-                <h3>📈 Area Under the Efficiency Curve (AUEC) Analysis</h3>
+                <h3>📈* Area Under the Efficiency Curve (AUEC) Analysis</h3>
                 
                 <div class="auec-headline">
                     <h4>${auecData.interpretation.headline}</h4>
@@ -1209,6 +1469,8 @@ class DifferentialGame {
                     <div class="auec-explanation">
                         <p>${auecData.interpretation.explanation}</p>
                     </div>
+                    
+                    ${calculationBreakdown}
                     
                     <div class="auec-advice">
                         <p><strong>💡 Next time:</strong> ${auecData.interpretation.actionableAdvice}</p>
@@ -1261,9 +1523,18 @@ class DifferentialGame {
         const width = 500 - margin.left - margin.right;
         const height = 350 - margin.top - margin.bottom;
         
-        // Find data bounds with padding
-        const maxX = Math.max(...curve.map(p => p.x), 1) + 1;
-        const maxY = Math.max(...curve.map(p => p.y), 1) + 1;
+        // Find data bounds and extend to maximum possible values
+        const dataMaxX = Math.max(...curve.map(p => p.x), 1);
+        const dataMaxY = Math.max(...curve.map(p => p.y), 1);
+        
+        // Calculate theoretical maximum values
+        const config = auecData.config || this.getAUECConfig();
+        const maxPossibleCost = 9 * 3 + 2 * 5; // All tiles + 2 wrong guesses = 37
+        const maxPossibleInfo = 9 * 3; // All hard tiles = 27
+        
+        // Extend axes to show full range, but ensure data is visible
+        const maxX = Math.max(dataMaxX + 2, Math.min(maxPossibleCost, dataMaxX * 2));
+        const maxY = Math.max(dataMaxY + 1, Math.min(maxPossibleInfo, dataMaxY * 2));
         
         // Create scales
         const xScale = (x) => (x / maxX) * width;
@@ -1301,13 +1572,13 @@ class DifferentialGame {
                     <!-- Axis titles -->
                     <text x="${width/2}" y="${height + 50}" 
                           text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">
-                        Cumulative Cost
+                        Cost
                     </text>
                     
-                    <text x="-${height/2}" y="-40" 
+                    <text x="-${height/2}" y="-50" 
                           text-anchor="middle" fill="#fff" font-size="14" font-weight="bold"
-                          transform="rotate(-90, -${height/2}, -40)">
-                        Cumulative Information
+                          transform="rotate(-90, -${height/2}, -50)">
+                        Information
                     </text>
                     
                     <!-- Title -->
@@ -1327,10 +1598,14 @@ class DifferentialGame {
 
 
     generateTicks(min, max, count) {
-        const step = (max - min) / (count - 1);
+        const step = Math.max(1, Math.ceil((max - min) / (count - 1)));
         const ticks = [];
-        for (let i = 0; i < count; i++) {
-            ticks.push(Math.round((min + i * step) * 10) / 10);
+        for (let i = min; i <= max; i += step) {
+            ticks.push(Math.round(i)); // Ensure integer values only
+        }
+        // Always include max if it's not already there
+        if (ticks[ticks.length - 1] !== Math.round(max)) {
+            ticks.push(Math.round(max));
         }
         return ticks;
     }
@@ -1665,6 +1940,204 @@ class DifferentialGame {
                         'Last updated: Unknown';
                 }
             });
+    }
+
+    generateAUECCalculationBreakdown(auecData) {
+        const curve = auecData.curve;
+        const finalCost = curve[curve.length - 1].x;
+        const finalInfo = curve[curve.length - 1].y;
+        const userArea = this.calculateTrueAUEC(curve);
+        
+        // Analyze the user's path
+        const tiles = this.actionSequence.filter(a => a.type === 'tile_flip');
+        const wrongGuesses = this.actionSequence.filter(a => a.type === 'wrong_guess').length;
+        
+        // Calculate efficiency breakdown by tile type
+        const tileBreakdown = {
+            easy: { count: 0, totalCost: 0, totalInfo: 0 },
+            medium: { count: 0, totalCost: 0, totalInfo: 0 },
+            hard: { count: 0, totalCost: 0, totalInfo: 0 }
+        };
+        
+        const config = this.getAUECConfig();
+        
+        tiles.forEach(tile => {
+            const diff = tile.difficulty;
+            tileBreakdown[diff].count++;
+            tileBreakdown[diff].totalCost += config.costWeights[diff];
+            tileBreakdown[diff].totalInfo += config.infoWeights[diff];
+        });
+        
+        // Calculate efficiency metrics
+        const overallEfficiency = finalInfo / finalCost;
+        const perfectStrategy = config.efficiency.hard; // 3.0 (only hard tiles)
+        const worstStrategy = config.efficiency.easy; // 0.33 (only easy tiles)
+        
+        // Your efficiency as percentage of perfect strategy
+        const efficiencyScore = Math.min(100, (overallEfficiency / perfectStrategy * 100));
+        
+        // Calculate theoretical bounds for comparison
+        const perfectArea = this.calculateIdealArea(finalInfo, config);
+        const worstArea = this.calculateWorstArea(finalInfo, config);
+        
+        return `
+            <div class="auec-calculation-breakdown">
+                <h5 style="color: #4caf50; margin: 15px 0 10px 0; font-size: 16px;">🧮 How Your Score Was Calculated</h5>
+                
+                <div class="calculation-section">
+                    <h6 style="color: #ffeb3b; margin: 10px 0 5px 0;">📊 Your Diagnostic Path Analysis</h6>
+                    <div style="background: rgba(20, 24, 32, 0.6); padding: 12px; border-radius: 6px; margin: 8px 0;">
+                        ${this.generatePathStoryBreakdown(tileBreakdown, wrongGuesses, finalCost, finalInfo)}
+                    </div>
+                </div>
+
+                <div class="calculation-section">
+                    <h6 style="color: #ffeb3b; margin: 10px 0 5px 0;">⚡ Diagnostic Efficiency Analysis</h6>
+                    <div style="background: rgba(20, 24, 32, 0.6); padding: 12px; border-radius: 6px; margin: 8px 0;">
+                        <p style="margin: 4px 0; color: #ccc; font-size: 13px;">
+                            <strong>Your Efficiency:</strong> ${finalInfo} info ÷ ${finalCost} cost = <span style="color: #4caf50;">${overallEfficiency.toFixed(2)} info/cost</span>
+                        </p>
+                        <p style="margin: 4px 0; color: #ccc; font-size: 13px;">
+                            <strong>Perfect Strategy:</strong> Only hard tiles = <span style="color: #4caf50;">${perfectStrategy.toFixed(1)} info/cost</span> (best possible)
+                        </p>
+                        <p style="margin: 4px 0; color: #ccc; font-size: 13px;">
+                            <strong>Worst Strategy:</strong> Only easy tiles = <span style="color: #f44336;">${worstStrategy.toFixed(2)} info/cost</span> (avoid this!)
+                        </p>
+                        <p style="margin: 4px 0; color: #ccc; font-size: 13px;">
+                            <strong>Your Score:</strong> ${overallEfficiency.toFixed(2)} ÷ ${perfectStrategy.toFixed(1)} = <span style="color: #4caf50;">${efficiencyScore.toFixed(0)}% of perfect</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="calculation-section">
+                    <h6 style="color: #ffeb3b; margin: 10px 0 5px 0;">🎯 Strategy Examples</h6>
+                    <div style="background: rgba(20, 24, 32, 0.6); padding: 12px; border-radius: 6px; margin: 8px 0;">
+                        ${this.generateStrategyExamples(finalInfo, config, userArea, perfectArea, worstArea)}
+                    </div>
+                </div>
+
+                <div class="calculation-section">
+                    <h6 style="color: #ffeb3b; margin: 10px 0 5px 0;">📈 Your Curve Analysis</h6>
+                    <div style="background: rgba(20, 24, 32, 0.6); padding: 12px; border-radius: 6px; margin: 8px 0;">
+                        ${this.generateCurveInterpretation(curve, userArea, perfectArea)}
+                    </div>
+                </div>
+
+                <div class="calculation-section">
+                    <h6 style="color: #ffeb3b; margin: 10px 0 5px 0;">🏆 Final Score</h6>
+                    <div style="background: rgba(20, 24, 32, 0.6); padding: 12px; border-radius: 6px; margin: 8px 0;">
+                        <p style="margin: 6px 0 0 0; color: #4caf50; font-size: 16px; font-weight: bold; text-align: center;">
+                            <strong>AUEC Score: ${efficiencyScore.toFixed(0)}% of Perfect Strategy</strong>
+                        </p>
+                        <p style="margin: 4px 0; color: #ccc; font-size: 12px; text-align: center; font-style: italic;">
+                            (Pure diagnostic efficiency - no arbitrary bonuses)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    generatePathStoryBreakdown(tileBreakdown, wrongGuesses, finalCost, finalInfo) {
+        let story = "";
+        const config = this.getAUECConfig();
+        
+        // Build the story of what happened
+        const steps = [];
+        
+        if (tileBreakdown.hard.count > 0) {
+            steps.push(`<span style="color: #4caf50;">${tileBreakdown.hard.count} hard tile${tileBreakdown.hard.count > 1 ? 's' : ''}</span> (${tileBreakdown.hard.totalInfo} info, ${tileBreakdown.hard.totalCost} cost)`);
+        }
+        if (tileBreakdown.medium.count > 0) {
+            steps.push(`<span style="color: #ffeb3b;">${tileBreakdown.medium.count} medium tile${tileBreakdown.medium.count > 1 ? 's' : ''}</span> (${tileBreakdown.medium.totalInfo} info, ${tileBreakdown.medium.totalCost} cost)`);
+        }
+        if (tileBreakdown.easy.count > 0) {
+            steps.push(`<span style="color: #ff9800;">${tileBreakdown.easy.count} easy tile${tileBreakdown.easy.count > 1 ? 's' : ''}</span> (${tileBreakdown.easy.totalInfo} info, ${tileBreakdown.easy.totalCost} cost)`);
+        }
+        if (wrongGuesses > 0) {
+            steps.push(`<span style="color: #f44336;">${wrongGuesses} wrong guess${wrongGuesses > 1 ? 'es' : ''}</span> (0 info, ${wrongGuesses * config.costWeights.wrong} cost)`);
+        }
+        
+        story = `<p style="margin: 4px 0; color: #ccc; font-size: 13px;">You used: ${steps.join(' + ')}</p>`;
+        story += `<p style="margin: 4px 0; color: #ccc; font-size: 13px;"><strong>Total:</strong> ${finalInfo} information gained for ${finalCost} cost</p>`;
+        
+        return story;
+    }
+
+    generateStrategyExamples(finalInfo, config, userArea, perfectArea, worstArea) {
+        // Calculate what perfect and worst strategies would look like for this amount of info
+        const hardTilesNeeded = Math.ceil(finalInfo / config.infoWeights.hard);
+        const perfectCost = hardTilesNeeded * config.costWeights.hard;
+        const perfectEfficiency = config.efficiency.hard;
+        
+        const easyTilesNeeded = Math.ceil(finalInfo / config.infoWeights.easy);
+        const worstCost = easyTilesNeeded * config.costWeights.easy;
+        const worstEfficiency = config.efficiency.easy;
+        
+        return `
+            <p style="margin: 4px 0; color: #4caf50; font-size: 13px;">
+                <strong>🥇 Perfect Strategy:</strong> Use ${hardTilesNeeded} hard tile${hardTilesNeeded > 1 ? 's' : ''} → ${finalInfo} info for ${perfectCost} cost → ${perfectEfficiency.toFixed(1)} efficiency → Area: ${perfectArea.toFixed(1)}
+            </p>
+            <p style="margin: 4px 0; color: #f44336; font-size: 13px;">
+                <strong>🥉 Worst Strategy:</strong> Use ${easyTilesNeeded} easy tile${easyTilesNeeded > 1 ? 's' : ''} → ${finalInfo} info for ${worstCost} cost → ${worstEfficiency.toFixed(2)} efficiency → Area: ${worstArea.toFixed(1)}
+            </p>
+            <p style="margin: 4px 0; color: #ffeb3b; font-size: 13px;">
+                <strong>📊 Your Strategy:</strong> Mixed approach → ${finalInfo} info → Efficiency between ${worstEfficiency.toFixed(2)} and ${perfectEfficiency.toFixed(1)} → Area: ${userArea.toFixed(1)}
+            </p>
+        `;
+    }
+
+    generateCurveInterpretation(curve, userArea, perfectArea) {
+        let interpretation = "";
+        
+        // Analyze curve shape
+        const hasWrongGuesses = curve.some((point, i) => 
+            i > 0 && point.y === curve[i-1].y && point.x > curve[i-1].x
+        );
+        
+        const frontLoaded = this.isCurveFrontLoaded(curve);
+        
+        if (hasWrongGuesses) {
+            interpretation += `<p style="margin: 4px 0; color: #f44336; font-size: 13px;">⚠️ <strong>Horizontal segments:</strong> Wrong guesses that added cost but no information</p>`;
+        }
+        
+        if (frontLoaded) {
+            interpretation += `<p style="margin: 4px 0; color: #4caf50; font-size: 13px;">📈 <strong>Front-loaded curve:</strong> You gained information early, creating a larger area</p>`;
+        } else {
+            interpretation += `<p style="margin: 4px 0; color: #ff9800; font-size: 13px;">📊 <strong>Back-loaded curve:</strong> Most info came later, smaller area under curve</p>`;
+        }
+        
+        const areaRatio = userArea / idealArea;
+        if (areaRatio >= 0.8) {
+            interpretation += `<p style="margin: 4px 0; color: #4caf50; font-size: 13px;">🎯 <strong>Excellent timing:</strong> Your curve area is ${(areaRatio * 100).toFixed(0)}% of theoretical optimal</p>`;
+        } else if (areaRatio >= 0.5) {
+            interpretation += `<p style="margin: 4px 0; color: #ffeb3b; font-size: 13px;">⭐ <strong>Good timing:</strong> Your curve area is ${(areaRatio * 100).toFixed(0)}% of theoretical optimal</p>`;
+        } else {
+            interpretation += `<p style="margin: 4px 0; color: #ff9800; font-size: 13px;">🎲 <strong>Late information:</strong> Your curve area is ${(areaRatio * 100).toFixed(0)}% of optimal - try getting key info earlier</p>`;
+        }
+        
+        return interpretation;
+    }
+
+    isCurveFrontLoaded(curve) {
+        if (curve.length < 3) return false;
+        
+        const finalInfo = curve[curve.length - 1].y;
+        const finalCost = curve[curve.length - 1].x;
+        
+        // Check if we got >50% of final info in first 50% of final cost
+        const halfwayCost = finalCost / 2;
+        let infoAtHalfway = 0;
+        
+        for (let point of curve) {
+            if (point.x <= halfwayCost) {
+                infoAtHalfway = point.y;
+            } else {
+                break;
+            }
+        }
+        
+        return infoAtHalfway >= (finalInfo * 0.5);
     }
 }
 
