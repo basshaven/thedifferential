@@ -1,84 +1,86 @@
 {
-  "date": "2025-07-25",
-  "discipline": "Oncology",
+  "date": "2025-07-26",
+  "discipline": "Endocrinology",
   "category": "diagnosis",
-  "topic_rationale": "Multiple Myeloma is a common hematological malignancy that can present with a variety of symptoms, making it a challenging and educational diagnosis.",
-  "answer": "Multiple Myeloma",
+  "topic_rationale": "Addison's disease is a rare, chronic endocrine disorder wherein the adrenal glands do not produce enough steroid hormones. It's an educational topic as it is potentially life-threatening and requires lifelong management.",
+  "answer": "Addison's disease",
   "acceptable_answers": [
-    "Multiple Myeloma",
-    "MM",
-    "Plasma cell myeloma",
-    "Myeloma"
+    "Addison's disease",
+    "Primary adrenal insufficiency",
+    "Addison's",
+    "Chronic adrenal insufficiency",
+    "Adrenal hypofunction",
+    "Hypocortisolism"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Bone pain"
+      "clue": "Hyperpigmentation"
     },
     {
       "difficulty": "easy",
-      "clue": "Monoclonal spike"
+      "clue": "Postural hypotension"
     },
     {
       "difficulty": "medium",
-      "clue": "Hypercalcemia"
+      "clue": "Hypoglycemia"
     },
     {
       "difficulty": "medium",
-      "clue": "Renal insufficiency"
+      "clue": "Fatigue"
     },
     {
       "difficulty": "medium",
-      "clue": "Anemia"
+      "clue": "Hyponatremia"
     },
     {
       "difficulty": "hard",
-      "clue": "Bence Jones protein"
+      "clue": "Hyperkalemia"
     },
     {
       "difficulty": "hard",
-      "clue": "Plasmacytosis"
+      "clue": "Low cortisol level"
     },
     {
       "difficulty": "hard",
-      "clue": "Lytic bone lesions"
+      "clue": "High ACTH level"
     },
     {
       "difficulty": "hard",
-      "clue": "\u03b22-microglobulin elevated"
+      "clue": "Adrenal Absence CT"
     }
   ],
   "concepts": [
-    "Multiple Myeloma",
-    "Monoclonal Gammopathy of Undetermined Significance",
-    "Waldenstrom's Macroglobulinemia",
-    "Metastatic Bone Disease",
+    "Addison's disease",
+    "Secondary adrenal insufficiency",
+    "Cushing's syndrome",
+    "Conn's syndrome",
+    "Pheochromocytoma",
+    "Adrenal adenoma",
+    "Diabetic Ketoacidosis",
+    "Hyperthyroidism",
+    "Hypothyroidism",
+    "Hypoparathyroidism",
     "Hyperparathyroidism",
-    "Chronic Kidney Disease",
-    "Polycythemia Vera",
-    "Hodgkin Lymphoma",
-    "Non-Hodgkin Lymphoma",
-    "Leukemia",
-    "Myelodysplastic Syndrome",
-    "Sarcoidosis",
-    "Ewing's Sarcoma",
-    "Hodgkin's Lymphoma",
-    "Paget's Disease of Bone",
-    "Primary Hyperparathyroidism",
-    "Chronic Lymphocytic Leukemia",
-    "Acute Myeloid Leukemia",
-    "Chronic Myeloid Leukemia",
-    "Acute Lymphoblastic Leukemia"
+    "Hypopituitarism",
+    "Sheehan's syndrome",
+    "Septic shock",
+    "Dehydration",
+    "Heart failure",
+    "Acute kidney injury",
+    "Chronic kidney disease",
+    "Liver disease",
+    "Anorexia nervosa"
   ],
   "explanations": {
-    "tile_0": "Bone pain in Multiple Myeloma is caused by the proliferation of plasma cells in the bone marrow, leading to bone destruction and pain.",
-    "tile_1": "Monoclonal spike, or M-spike, is a peak seen on serum protein electrophoresis, indicating a large amount of a single type of immunoglobulin - a hallmark of Multiple Myeloma.",
-    "tile_2": "Hypercalcemia in Multiple Myeloma occurs due to increased bone resorption from the overproduction of osteoclast-stimulating factors by the myeloma cells.",
-    "tile_3": "Renal insufficiency in Multiple Myeloma is caused by the toxic effects of excess light chains on the kidneys, leading to renal impairment.",
-    "tile_4": "Anemia in Multiple Myeloma is caused by the replacement of normal bone marrow by malignant plasma cells, leading to decreased erythropoiesis.",
-    "tile_5": "Bence Jones protein, a type of light chain, is often found in the urine of patients with Multiple Myeloma.",
-    "tile_6": "Plasmacytosis, or an increased number of plasma cells, is seen in the bone marrow of patients with Multiple Myeloma.",
-    "tile_7": "Lytic bone lesions are common in Multiple Myeloma due to increased osteoclast activity stimulated by the myeloma cells.",
-    "tile_8": "\u03b22-microglobulin is a component of MHC class I molecules, and its levels are often elevated in the serum of patients with Multiple Myeloma, reflecting a high tumor burden."
+    "tile_0": "Hyperpigmentation in Addison's disease is due to high ACTH levels which also stimulate melanin production.",
+    "tile_1": "Postural hypotension results from aldosterone deficiency leading to sodium loss, volume depletion, and hypotension.",
+    "tile_2": "Hypoglycemia in Addison's disease occurs due to cortisol deficiency, impairing gluconeogenesis.",
+    "tile_3": "Fatigue is a common symptom of Addison's disease due to the lack of cortisol.",
+    "tile_4": "Hyponatremia is caused by aldosterone deficiency leading to impaired renal sodium reabsorption.",
+    "tile_5": "Hyperkalemia occurs because of decreased aldosterone, leading to reduced renal potassium excretion.",
+    "tile_6": "Low cortisol level is the main hormonal feature of Addison's disease due to adrenal insufficiency.",
+    "tile_7": "High ACTH level is due to lack of negative feedback inhibition by cortisol.",
+    "tile_8": "Absence or atrophy of adrenal glands on CT scan can be seen in Addison's disease."
   }
 }
