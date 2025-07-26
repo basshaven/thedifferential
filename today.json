@@ -1,86 +1,80 @@
 {
   "date": "2025-07-26",
-  "discipline": "Endocrinology",
+  "discipline": "Cardiology",
   "category": "diagnosis",
-  "topic_rationale": "Addison's disease is a rare, chronic endocrine disorder wherein the adrenal glands do not produce enough steroid hormones. It's an educational topic as it is potentially life-threatening and requires lifelong management.",
-  "answer": "Addison's disease",
+  "topic_rationale": "Chosen topic is 'Takotsubo Cardiomyopathy', a unique cardiac condition that presents like a heart attack but is usually triggered by severe stress. It is educational as it highlights the importance of considering emotional and mental health in the differential of cardiac diseases.",
+  "answer": "Takotsubo Cardiomyopathy",
   "acceptable_answers": [
-    "Addison's disease",
-    "Primary adrenal insufficiency",
-    "Addison's",
-    "Chronic adrenal insufficiency",
-    "Adrenal hypofunction",
-    "Hypocortisolism"
+    "Takotsubo Cardiomyopathy",
+    "Takotsubo's Cardiomyopathy",
+    "Broken Heart Syndrome",
+    "Stress Cardiomyopathy",
+    "Apical Ballooning Syndrome"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Hyperpigmentation"
+      "clue": "Apical Ballooning"
     },
     {
       "difficulty": "easy",
-      "clue": "Postural hypotension"
+      "clue": "Severe Stress Event"
     },
     {
       "difficulty": "medium",
-      "clue": "Hypoglycemia"
+      "clue": "Transient LV Dysfunction"
     },
     {
       "difficulty": "medium",
-      "clue": "Fatigue"
+      "clue": "Postmenopausal Woman"
     },
     {
       "difficulty": "medium",
-      "clue": "Hyponatremia"
+      "clue": "Chest Pain, Dyspnea"
     },
     {
       "difficulty": "hard",
-      "clue": "Hyperkalemia"
+      "clue": "Normal Coronary Arteries"
     },
     {
       "difficulty": "hard",
-      "clue": "Low cortisol level"
+      "clue": "Elevated Troponin"
     },
     {
       "difficulty": "hard",
-      "clue": "High ACTH level"
+      "clue": "ECG: ST Elevation"
     },
     {
       "difficulty": "hard",
-      "clue": "Adrenal Absence CT"
+      "clue": "Recovery in Weeks"
     }
   ],
   "concepts": [
-    "Addison's disease",
-    "Secondary adrenal insufficiency",
-    "Cushing's syndrome",
-    "Conn's syndrome",
-    "Pheochromocytoma",
-    "Adrenal adenoma",
-    "Diabetic Ketoacidosis",
-    "Hyperthyroidism",
-    "Hypothyroidism",
-    "Hypoparathyroidism",
-    "Hyperparathyroidism",
-    "Hypopituitarism",
-    "Sheehan's syndrome",
-    "Septic shock",
-    "Dehydration",
-    "Heart failure",
-    "Acute kidney injury",
-    "Chronic kidney disease",
-    "Liver disease",
-    "Anorexia nervosa"
+    "Takotsubo Cardiomyopathy",
+    "Acute Myocardial Infarction",
+    "Stress Induced Cardiomyopathy",
+    "Congestive Heart Failure",
+    "Cardiogenic Shock",
+    "Pericarditis",
+    "Aortic Dissection",
+    "Panic Disorder",
+    "Coronary Artery Spasm",
+    "Dilated Cardiomyopathy",
+    "Hypertrophic Cardiomyopathy",
+    "Arrhythmogenic Right Ventricular Cardiomyopathy",
+    "Mitral Valve Prolapse Syndrome",
+    "Acute Pericarditis",
+    "Pulmonary Embolism"
   ],
   "explanations": {
-    "tile_0": "Hyperpigmentation in Addison's disease is due to high ACTH levels which also stimulate melanin production.",
-    "tile_1": "Postural hypotension results from aldosterone deficiency leading to sodium loss, volume depletion, and hypotension.",
-    "tile_2": "Hypoglycemia in Addison's disease occurs due to cortisol deficiency, impairing gluconeogenesis.",
-    "tile_3": "Fatigue is a common symptom of Addison's disease due to the lack of cortisol.",
-    "tile_4": "Hyponatremia is caused by aldosterone deficiency leading to impaired renal sodium reabsorption.",
-    "tile_5": "Hyperkalemia occurs because of decreased aldosterone, leading to reduced renal potassium excretion.",
-    "tile_6": "Low cortisol level is the main hormonal feature of Addison's disease due to adrenal insufficiency.",
-    "tile_7": "High ACTH level is due to lack of negative feedback inhibition by cortisol.",
-    "tile_8": "Absence or atrophy of adrenal glands on CT scan can be seen in Addison's disease."
+    "tile_0": "Apical ballooning is a classic echocardiographic finding in Takotsubo cardiomyopathy, where the left ventricle takes a distinctive shape similar to a 'takotsubo', a Japanese octopus trap.",
+    "tile_1": "Takotsubo Cardiomyopathy is often precipitated by a severe stressor, either physical or emotional, hence the name 'stress cardiomyopathy'.",
+    "tile_2": "Takotsubo cardiomyopathy is characterized by transient left ventricular dysfunction, with recovery usually within weeks.",
+    "tile_3": "The condition is more common in postmenopausal women, though the reason for this is unclear.",
+    "tile_4": "Patients with Takotsubo cardiomyopathy often present with symptoms similar to a heart attack, including chest pain and shortness of breath.",
+    "tile_5": "Despite the similar presentation to a heart attack, coronary angiography in Takotsubo cardiomyopathy typically shows normal or near-normal coronary arteries.",
+    "tile_6": "Troponin levels are typically elevated in Takotsubo cardiomyopathy, further mimicking an acute myocardial infarction.",
+    "tile_7": "ECG changes in Takotsubo cardiomyopathy can mimic those seen in acute coronary syndrome, including ST segment elevation.",
+    "tile_8": "Unlike most forms of cardiomyopathy, the left ventricular dysfunction in Takotsubo cardiomyopathy is usually reversible, with complete recovery often occurring within weeks."
   }
 }
