@@ -952,7 +952,7 @@ class DifferentialGame {
         const rectCategory = getCategory(rectPercent);
 
         // Generate headline
-        const headline = `Efficiency: ${empPercent}% (Empirical), ${rectPercent}% (Rectangular) — ${empCategory.label}`;
+        const headline = `Diagnostic Efficiency: ${empPercent}% — ${empCategory.label}`;
 
         // Compare the two scores
         let comparison = "";
@@ -1089,7 +1089,7 @@ class DifferentialGame {
             </div>
             
             <div class="auec-assessment">
-                <h3>📈* Area Under the Efficiency Curve (AUEC) Analysis</h3>
+                <h3>📈 Area Under the Efficiency Curve (AUEC) Analysis</h3>
                 
                 <div class="auec-headline">
                     <h4>${auecData.interpretation.headline}</h4>
@@ -1100,11 +1100,6 @@ class DifferentialGame {
                         <span class="auec-label" title="${auecData.interpretation.tooltips.empirical}">AUEC Score (Empirical):</span>
                         <span class="auec-value">${((auecData.scoreA || 0) * 100).toFixed(1)}%</span>
                         <span class="auec-description">Where you rank vs. all possible paths</span>
-                    </div>
-                    <div class="auec-metric">
-                        <span class="auec-label" title="${auecData.interpretation.tooltips.rectangular}">AUEC Score (Rectangular):</span>
-                        <span class="auec-value">${((auecData.scoreB || 0) * 100).toFixed(1)}%</span>
-                        <span class="auec-description">Efficiency of your actual curve shape</span>
                     </div>
                 </div>
                 
@@ -1172,7 +1167,7 @@ class DifferentialGame {
         
         const auecHTML = `
             <div class="auec-assessment">
-                <h3>📈* Area Under the Efficiency Curve (AUEC) Analysis</h3>
+                <h3>📈 Area Under the Efficiency Curve (AUEC) Analysis</h3>
                 
                 <div class="auec-headline">
                     <h4>${auecData.interpretation.headline}</h4>
@@ -1183,11 +1178,6 @@ class DifferentialGame {
                         <span class="auec-label" title="${auecData.interpretation.tooltips.empirical}">AUEC Score (Empirical):</span>
                         <span class="auec-value">${((auecData.scoreA || 0) * 100).toFixed(1)}%</span>
                         <span class="auec-description">Where you rank vs. all possible paths</span>
-                    </div>
-                    <div class="auec-metric">
-                        <span class="auec-label" title="${auecData.interpretation.tooltips.rectangular}">AUEC Score (Rectangular):</span>
-                        <span class="auec-value">${((auecData.scoreB || 0) * 100).toFixed(1)}%</span>
-                        <span class="auec-description">Efficiency of your actual curve shape</span>
                     </div>
                 </div>
                 
@@ -1250,23 +1240,20 @@ class DifferentialGame {
         }
         
         
-        // Set up SVG dimensions
+        // Set up SVG dimensions with 1:1 aspect ratio
         const margin = { top: 30, right: 30, bottom: 120, left: 70 };
-        const width = 500 - margin.left - margin.right;
-        const height = 350 - margin.top - margin.bottom;
+        const plotSize = 400; // Square plot area for 1:1 aspect ratio
+        const width = plotSize;
+        const height = plotSize;
         
-        // Find data bounds and extend to maximum possible values
-        const dataMaxX = Math.max(...curve.map(p => p.x), 1);
-        const dataMaxY = Math.max(...curve.map(p => p.y), 1);
-        
-        // Calculate theoretical maximum values
+        // Calculate theoretical maximum values (always use full limits)
         const config = auecData.config || this.getAUECConfig();
         const maxPossibleCost = 9 * 3 + 2 * 5; // All tiles + 2 wrong guesses = 37
         const maxPossibleInfo = 9 * 3; // All hard tiles = 27
         
-        // Extend axes to show full range, but ensure data is visible
-        const maxX = Math.max(dataMaxX + 2, Math.min(maxPossibleCost, dataMaxX * 2));
-        const maxY = Math.max(dataMaxY + 1, Math.min(maxPossibleInfo, dataMaxY * 2));
+        // Always use full axis limits for consistency
+        const maxX = maxPossibleCost;
+        const maxY = maxPossibleInfo;
         
         // Create scales
         const xScale = (x) => (x / maxX) * width;

@@ -51,13 +51,25 @@
                 game.gameEnded = true;
                 
                 const auecData = game.calculateAUEC();
-                results.innerHTML += `<div class="test-result">
-                    <h3>✅ AUEC Calculation Test PASSED</h3>
-                    <p><strong>Curve points:</strong> ${auecData.curve.length}</p>
-                    <p><strong>Score A:</strong> ${(auecData.scoreA * 100).toFixed(1)}%</p>
-                    <p><strong>Score B:</strong> ${(auecData.scoreB * 100).toFixed(1)}%</p>
-                    <p><strong>Headline:</strong> ${auecData.interpretation.headline}</p>
-                </div>`;
+                
+                // Test if the breakdown function exists
+                if (typeof game.generateAUECCalculationBreakdown === 'function') {
+                    const breakdown = game.generateAUECCalculationBreakdown(auecData);
+                    results.innerHTML += `<div class="test-result">
+                        <h3>✅ AUEC Calculation Test PASSED</h3>
+                        <p><strong>Curve points:</strong> ${auecData.curve.length}</p>
+                        <p><strong>Score A:</strong> ${(auecData.scoreA * 100).toFixed(1)}%</p>
+                        <p><strong>Score B:</strong> ${(auecData.scoreB * 100).toFixed(1)}%</p>
+                        <p><strong>Headline:</strong> ${auecData.interpretation.headline}</p>
+                        <p><strong>Breakdown function:</strong> ✅ Available</p>
+                        <p><strong>Breakdown preview:</strong> ${breakdown.substring(0, 100)}...</p>
+                    </div>`;
+                } else {
+                    results.innerHTML += `<div class="test-result">
+                        <h3>⚠️ AUEC Function Missing</h3>
+                        <p>generateAUECCalculationBreakdown function not found!</p>
+                    </div>`;
+                }
             } catch (error) {
                 results.innerHTML += `<div class="test-result">
                     <h3>❌ AUEC Calculation Test FAILED</h3>
