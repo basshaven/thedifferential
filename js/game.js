@@ -224,6 +224,12 @@ class DifferentialGame {
         const userInput = this.selectedConcept.trim();
         if (!userInput) return;
         
+        // Enforce rule: Must flip at least one tile before any guess
+        if (this.flippedTiles.size === 0) {
+            this.showMessage('You must reveal at least one clue before making a diagnosis!', 'error');
+            return;
+        }
+        
         const isCorrect = this.checkAnswerMatch(userInput, this.gameData);
         
         if (isCorrect) {

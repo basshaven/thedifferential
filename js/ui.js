@@ -114,9 +114,9 @@ DifferentialGame.prototype.renderFullAUECPlot = function(auecData) {
     
     // Calculate theoretical maximum values (always use full limits)
     const config = auecData.config || this.getAUECConfig();
-    // Max cost: 2×8(easy) + 3×4(medium) + 4×1(hard) + 2×10(wrong) = 52
+    // Max cost: 2×9(easy) + 3×6(medium) + 4×2(hard) + 2×8(wrong) = 18+18+8+16 = 60
     const maxPossibleCost = 2 * config.costWeights.easy + 3 * config.costWeights.medium + 4 * config.costWeights.hard + 2 * config.costWeights.wrong;
-    // Max info: 2×2(easy) + 3×4(medium) + 4×9(hard) = 52
+    // Max info: 2×9(easy) + 3×6(medium) + 4×6(hard) = 18+18+24 = 60
     const maxPossibleInfo = 2 * config.infoWeights.easy + 3 * config.infoWeights.medium + 4 * config.infoWeights.hard;
     
     // Always use full axis limits for consistency

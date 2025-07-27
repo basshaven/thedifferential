@@ -6,22 +6,17 @@
 // Extend DifferentialGame with AUEC methods
 DifferentialGame.prototype.getAUECConfig = function(scheme = 'intuitive') {
     const schemes = {
-        // Expert Diagnostician: Hard tiles give exponentially more info per cost
-        // Models how experts extract maximum insight from subtle findings
-        expert: {
-            costWeights: { easy: 8, medium: 4, hard: 1, wrong: 10 },
-            infoWeights: { easy: 2, medium: 4, hard: 9, wrong: 0 },
-            description: "Expert strategy: Hard tiles = 9.0 info/cost vs Easy = 0.25 info/cost"
-        },
-        // Novice Diagnostician: Relies heavily on obvious, expensive tests
-        novice: {
-            costWeights: { easy: 3, medium: 2, hard: 1, wrong: 5 },
-            infoWeights: { easy: 6, medium: 3, hard: 1, wrong: 0 },
-            description: "Novice strategy: Easy tiles preferred but inefficient overall"
+        // New integer-weight system designed for proper area normalization
+        // Pattern: Easy tiles high-info but equally high-cost (low ratio)
+        // Hard tiles maintain high info/cost ratio for expert reward
+        strategic: {
+            costWeights: { easy: 9, medium: 6, hard: 2, wrong: 8 },
+            infoWeights: { easy: 9, medium: 6, hard: 6, wrong: 0 },
+            description: "Strategic system: Easy=1.0, Medium=1.0, Hard=3.0 info/cost ratio"
         }
     };
     
-    const config = schemes[scheme] || schemes.expert;
+    const config = schemes[scheme] || schemes.strategic;
     
     // Add computed efficiency ratios (info per cost)
     config.efficiency = {
@@ -51,9 +46,10 @@ DifferentialGame.prototype.calculateAUEC = function() {
             throw new Error('Action sequence data not available');
         }
 
-        // Handle edge case: Failed games (no correct guess)
+        // Handle edge case: Failed games (no correct guess) - return 0% score immediately
         const gameWon = this.actionSequence.some(action => action.type === 'correct_guess');
         if (!gameWon) {
+            console.log('Failed game detected - returning 0% AUEC score');
             return this.createFailedGameAUEC(auecConfig);
         }
 
@@ -167,12 +163,14 @@ DifferentialGame.prototype.calculateTrueAUEC = function(curve) {
         const prevPoint = curve[i - 1];
         const currPoint = curve[i];
         
-        // Only count vertical segments (information gains)
+        // Only add area when info increases (trapezoid rule)
         if (currPoint.y > prevPoint.y) {
-            const width = currPoint.x - prevPoint.x;
-            const height = currPoint.y - prevPoint.y;
-            area += width * height;
+            const dx = currPoint.x - prevPoint.x;
+            // Trapezoid area: dx * (y1 + y2) / 2
+            const trapezoidArea = dx * (prevPoint.y + currPoint.y) / 2;
+            area += trapezoidArea;
         }
+        // Horizontal moves (wrong guesses) contribute no area
     }
     
     return area;
@@ -182,34 +180,21 @@ DifferentialGame.prototype.calculateEmpiricalScore = function(curve, auecConfig)
     if (!curve || curve.length === 0) return 0;
     
     try {
-        // Calculate total efficiency achieved by user
-        let overallEfficiency = 0;
+        // Calculate user's actual area under curve
+        const userArea = this.calculateTrueAUEC(curve);
         
-        // Get efficiency for each action
-        for (let i = 1; i < curve.length; i++) {
-            const point = curve[i];
-            const costIncrement = curve[i].x - curve[i-1].x;
-            const infoIncrement = curve[i].y - curve[i-1].y;
-            
-            if (costIncrement > 0 && infoIncrement > 0) {
-                const actionEfficiency = infoIncrement / costIncrement;
-                overallEfficiency += actionEfficiency * costIncrement; // Weight by cost
-            }
-        }
+        // Get cached bounds for inverse normalization (smaller area = better score)
+        const { bestArea, worstArea } = this.getAUECBounds(auecConfig);
         
-        // Calculate maximum possible efficiency (all hard tiles)
-        const maxPossibleEfficiency = auecConfig.efficiency.hard * (curve[curve.length - 1].x || 1);
-        
-        if (maxPossibleEfficiency > 0) {
-            // Score as percentage of maximum possible efficiency
-            const efficiencyScore = (overallEfficiency / maxPossibleEfficiency);
+        // Normalize to 0-100 scale (inverse: smaller area = higher score)
+        if (worstArea > bestArea) {
+            const normalizedScore = (worstArea - userArea) / (worstArea - bestArea);
+            const clampedScore = Math.max(0, Math.min(1, normalizedScore));
             
-            // Pure efficiency score - no arbitrary bonuses
-            const finalScore = efficiencyScore; // Already in 0-1 range
+            console.log(`AUEC Area: ${userArea.toFixed(1)} (best: ${bestArea.toFixed(1)}, worst: ${worstArea.toFixed(1)})`);
+            console.log(`Inverse normalized: ${(clampedScore * 100).toFixed(1)}% of optimal strategy`);
             
-            console.log(`AUEC Score: ${overallEfficiency.toFixed(2)} ÷ ${maxPossibleEfficiency.toFixed(1)} = ${(finalScore * 100).toFixed(1)}% of perfect strategy`);
-            
-            return Math.max(0, Math.min(1, finalScore));
+            return clampedScore;
         }
         
         return 0;
@@ -249,26 +234,81 @@ DifferentialGame.prototype.calculateWorstArea = function(targetInfo, auecConfig)
     return totalCost * totalInfo;
 };
 
-DifferentialGame.prototype.computeAUECBounds = function(auecConfig, sampleSize = 100) {
-    // Generate sample of legal paths to understand distribution
-    const samplePaths = this.generateSampleLegalPaths(auecConfig, sampleSize);
-    const areas = samplePaths.map(path => this.calculatePathAUEC(path, auecConfig));
+DifferentialGame.prototype.getAUECBounds = function(auecConfig) {
+    // Cache bounds to avoid recalculation
+    const cacheKey = `${auecConfig.costWeights.easy}_${auecConfig.costWeights.medium}_${auecConfig.costWeights.hard}_${auecConfig.costWeights.wrong}`;
     
-    // Add theoretical extremes
-    const extremePaths = this.generateExtremePaths(auecConfig);
-    extremePaths.forEach(path => {
-        areas.push(this.calculatePathAUEC(path, auecConfig));
-    });
+    if (!this._auecBoundsCache) {
+        this._auecBoundsCache = {};
+    }
     
-    areas.sort((a, b) => a - b);
+    if (this._auecBoundsCache[cacheKey]) {
+        return this._auecBoundsCache[cacheKey];
+    }
     
-    return {
-        min: areas[0] || 0,
-        max: areas[areas.length - 1] || 100,
-        percentile10: areas[Math.floor(areas.length * 0.1)] || 0,
-        percentile90: areas[Math.floor(areas.length * 0.9)] || 100,
-        median: areas[Math.floor(areas.length * 0.5)] || 50
-    };
+    // Calculate extreme paths for inverse scoring (smaller area = better performance)
+    const bestArea = this.calculateMaxArea(auecConfig);   // Best path: Hard flip → correct (area = 6)
+    const worstArea = this.calculateMinArea(auecConfig);  // Worst path: All tiles + 2WG (area = 1032)
+    
+    const bounds = { bestArea, worstArea };
+    this._auecBoundsCache[cacheKey] = bounds;
+    
+    console.log(`AUEC Bounds: best=${bestArea.toFixed(1)}, worst=${worstArea.toFixed(1)}`);
+    return bounds;
+};
+
+DifferentialGame.prototype.calculateMaxArea = function(auecConfig) {
+    // Best path: Flip one hard tile, then correct guess
+    // Point 1: (0, 0)
+    // Point 2: (2, 6) - one hard tile
+    // Point 3: (2, 6) - correct guess (no move)
+    
+    const hardCost = auecConfig.costWeights.hard;
+    const hardInfo = auecConfig.infoWeights.hard;
+    
+    // Trapezoid area from (0,0) to (hardCost, hardInfo)
+    // Area = dx * (y1 + y2) / 2 = hardCost * (0 + hardInfo) / 2
+    const maxArea = hardCost * hardInfo / 2;
+    
+    return maxArea;
+};
+
+DifferentialGame.prototype.calculateMinArea = function(auecConfig) {
+    // Worst legal solved path: All tiles in order (Easy→Medium→Hard) + 2 wrong guesses + correct
+    const { costWeights, infoWeights } = auecConfig;
+    
+    const curve = [{ x: 0, y: 0 }]; // Start
+    let x = 0, y = 0;
+    
+    // 2 Easy tiles
+    for (let i = 0; i < 2; i++) {
+        x += costWeights.easy;
+        y += infoWeights.easy;
+        curve.push({ x, y });
+    }
+    
+    // 3 Medium tiles
+    for (let i = 0; i < 3; i++) {
+        x += costWeights.medium;
+        y += infoWeights.medium;
+        curve.push({ x, y });
+    }
+    
+    // 4 Hard tiles
+    for (let i = 0; i < 4; i++) {
+        x += costWeights.hard;
+        y += infoWeights.hard;
+        curve.push({ x, y });
+    }
+    
+    // 2 Wrong guesses (horizontal moves)
+    for (let i = 0; i < 2; i++) {
+        x += costWeights.wrong;
+        curve.push({ x, y }); // No info increase
+    }
+    
+    // Calculate area for this worst path
+    return this.calculateTrueAUEC(curve);
 };
 
 DifferentialGame.prototype.generateSampleLegalPaths = function(auecConfig, sampleSize = 50) {
@@ -446,7 +486,7 @@ DifferentialGame.prototype.generateAUECInterpretation = function(empirical, rect
     // Generate explanation
     let explanation = `Your AUEC score (${empPercent}%) measures diagnostic efficiency: how much information you gained per unit cost. `;
     
-    explanation += `Hard tiles give ${config.efficiency.hard.toFixed(1)}x more info per cost than easy tiles (${config.efficiency.hard.toFixed(1)} vs ${config.efficiency.easy.toFixed(2)}), rewarding expert pattern recognition. `;
+    explanation += `Hard tiles give ${config.efficiency.hard.toFixed(1)}x more info per cost than easy/medium tiles (${config.efficiency.hard.toFixed(1)} vs ${config.efficiency.easy.toFixed(1)}), rewarding strategic thinking. `;
     
     if (empPercent >= 70) {
         explanation += "Excellent efficiency suggests you prioritized hard tiles and avoided unnecessary moves.";
@@ -532,10 +572,10 @@ DifferentialGame.prototype.generateAUECCalculationBreakdown = function(auecData)
         let finalCost = totalCost + (wrongGuesses * auecData.config.costWeights.wrong);
         let finalInfo = totalInfo; // Wrong guesses don't add info
         
-        // Calculate final metrics
-        const overallEfficiency = weightedEfficiency / totalCost;
-        const perfectStrategy = auecData.config.efficiency.hard * finalCost;
-        const efficiencyScore = Math.min(100, (overallEfficiency / perfectStrategy * 100));
+        // Use the already-calculated area-based score for consistency
+        const areaScore = auecData.scoreA * 100; // Convert to percentage
+        const userArea = this.calculateTrueAUEC(auecData.curve);
+        const { bestArea, worstArea } = this.getAUECBounds(auecData.config);
         
         // Generate the breakdown
         html += '<div style="font-family: monospace; font-size: 12px; line-height: 1.4;">';
@@ -555,20 +595,22 @@ DifferentialGame.prototype.generateAUECCalculationBreakdown = function(auecData)
             html += `</div>`;
         }
         
-        // Final calculation
+        // Final calculation using consistent area-based scoring
         html += '<div style="margin: 15px 0 10px 0; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 4px;">';
-        html += '<h6 style="color: #4caf50; margin: 0 0 8px 0;">🏆 Final Score Calculation</h6>';
-        html += `<div><strong>Your Efficiency:</strong> ${overallEfficiency.toFixed(2)} info per cost</div>`;
-        html += `<div><strong>Perfect Strategy:</strong> ${perfectStrategy.toFixed(2)} (all hard tiles)</div>`;
+        html += '<h6 style="color: #4caf50; margin: 0 0 8px 0;">🏆 Final AUEC Score</h6>';
+        html += `<div><strong>Your Area:</strong> ${userArea.toFixed(1)} (trapezoids under curve)</div>`;
+        html += `<div><strong>Best Possible:</strong> ${bestArea.toFixed(1)} (1 hard tile → correct)</div>`;
+        html += `<div><strong>Worst Possible:</strong> ${worstArea.toFixed(1)} (all tiles + wrong guesses)</div>`;
         html += `<div style="border-top: 1px solid #333; margin-top: 8px; padding-top: 8px;">`;
-        html += `<strong>Your Score:</strong> ${overallEfficiency.toFixed(2)} ÷ ${perfectStrategy.toFixed(1)} = <span style="color: #4caf50;">${efficiencyScore.toFixed(0)}% of perfect</span>`;
+        html += `<strong>Your Score:</strong> <span style="color: #4caf50;">${areaScore.toFixed(1)}% strategic efficiency</span>`;
+        html += `<br><small style="color: #999;">Smaller area = better strategy (less waste, more efficiency)</small>`;
         html += `</div></div>`;
         
         html += '</div>';
         
         // Strategy examples
         html += this.generateStrategyExamples(finalInfo, auecData.config, 
-            auecData.scoreA * 100, perfectStrategy, 0);
+            areaScore, bestArea, worstArea);
         
         html += '</div>';
         
@@ -600,12 +642,13 @@ DifferentialGame.prototype.generatePathStoryBreakdown = function(tileBreakdown, 
     return story;
 };
 
-DifferentialGame.prototype.generateStrategyExamples = function(finalInfo, config, userArea, perfectArea, worstArea) {
+DifferentialGame.prototype.generateStrategyExamples = function(finalInfo, config, userScore, bestArea, worstArea) {
     let examples = '<h6 style="color: #ffeb3b; margin: 10px 0 5px 0;">💡 Strategy Comparison</h6>';
     examples += '<div style="font-size: 11px; line-height: 1.3;">';
-    examples += `<div>🏆 <strong>Perfect:</strong> All hard tiles → ${config.efficiency.hard.toFixed(1)} efficiency</div>`;
-    examples += `<div>👤 <strong>You:</strong> ${(userArea / 10).toFixed(1)}% of perfect strategy</div>`;
-    examples += `<div>📈 <strong>Tip:</strong> Hard tiles give ${config.efficiency.hard.toFixed(1)}x more info per cost than easy tiles</div>`;
+    examples += `<div>🏆 <strong>Perfect:</strong> 1 hard tile → area ${bestArea.toFixed(1)} → 100% score</div>`;
+    examples += `<div>👤 <strong>You:</strong> ${userScore.toFixed(1)}% strategic efficiency</div>`;
+    examples += `<div>📈 <strong>Key:</strong> Hard tiles cost ${config.costWeights.hard} but give ${config.infoWeights.hard} info (${config.efficiency.hard.toFixed(1)}x efficiency)</div>`;
+    examples += `<div>⚡ <strong>Strategy:</strong> Start with hard tiles to minimize area under curve</div>`;
     examples += '</div>';
     
     return examples;
