@@ -43,7 +43,7 @@ DifferentialGame.prototype.showAUECOnly = function(auecData) {
                 <div class="auec-metric">
                     <span class="auec-label" title="${auecData.interpretation.tooltips.empirical}">AUEC Score (Empirical):</span>
                     <span class="auec-value">${((auecData.scoreA || 0) * 100).toFixed(1)}%</span>
-                    <span class="auec-description">Where you rank vs. all possible paths</span>
+                    <span class="auec-description">Strategic efficiency: smaller area under curve = better score</span>
                 </div>
             </div>
             

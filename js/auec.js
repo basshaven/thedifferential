@@ -71,7 +71,7 @@ DifferentialGame.prototype.calculateAUEC = function() {
             scoreB: scoreB,
             config: auecConfig,
             userSequence: this.actionSequence,
-            interpretation: this.generateAUECInterpretation(scoreA, scoreB, curve, area, gameWon)
+            interpretation: this.generateAUECInterpretation(scoreA, scoreB, curve, area, gameWon, auecConfig)
         };
         
     } catch (error) {
@@ -114,7 +114,7 @@ DifferentialGame.prototype.createFailedGameAUEC = function(auecConfig) {
         scoreB: 0,
         config: auecConfig,
         userSequence: this.actionSequence,
-        interpretation: this.generateAUECInterpretation(0, 0, curve, 0, false)
+        interpretation: this.generateAUECInterpretation(0, 0, curve, 0, false, auecConfig)
     };
 };
 
@@ -424,25 +424,28 @@ DifferentialGame.prototype.calculateRectangularScore = function(area, curve) {
 };
 
 DifferentialGame.prototype.createFallbackAUEC = function(errorMessage) {
+    const config = this.getAUECConfig();
+    const fallbackCurve = [{ x: 0, y: 0, action: 'start' }, { x: 1, y: 1, action: 'fallback' }];
+    
     return {
-        curve: [{ x: 0, y: 0, action: 'start' }, { x: 1, y: 1, action: 'fallback' }],
+        curve: fallbackCurve,
         scoreA: 0,
         scoreB: 0,
-        config: this.getAUECConfig(),
+        config: config,
         userSequence: this.actionSequence || [],
         interpretation: {
-            headline: "Analysis Unavailable",
-            explanation: `AUEC calculation failed: ${errorMessage}`,
-            advice: "Please try refreshing the page.",
+            headline: "AUEC Analysis Error",
+            explanation: `Unable to calculate diagnostic efficiency: ${errorMessage}. This usually indicates a technical issue.`,
+            advice: "Try refreshing the page or playing the puzzle again. If the problem persists, the issue may be temporary.",
             tooltips: {
-                empirical: "Analysis unavailable",
+                empirical: "AUEC calculation unavailable due to error",
                 rectangular: "Analysis unavailable"
             }
         }
     };
 };
 
-DifferentialGame.prototype.generateAUECInterpretation = function(empirical, rectangular, curve, area, gameWon) {
+DifferentialGame.prototype.generateAUECInterpretation = function(empirical, rectangular, curve, area, gameWon, config) {
     if (!gameWon) {
         return {
             headline: "Game incomplete - analysis limited",
