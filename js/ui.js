@@ -112,24 +112,30 @@ DifferentialGame.prototype.renderFullAUECPlot = function(auecData) {
     const width = plotSize;
     const height = plotSize;
     
-    // Calculate theoretical maximum values (always use full limits)
+    // Calculate appropriate scaling based on user's actual curve
     const config = auecData.config || this.getAUECConfig();
-    // Max cost: 2×9(easy) + 3×6(medium) + 4×2(hard) + 2×8(wrong) = 18+18+8+16 = 60
-    const maxPossibleCost = 2 * config.costWeights.easy + 3 * config.costWeights.medium + 4 * config.costWeights.hard + 2 * config.costWeights.wrong;
-    // Max info: 2×9(easy) + 3×6(medium) + 4×6(hard) = 18+18+24 = 60
-    const maxPossibleInfo = 2 * config.infoWeights.easy + 3 * config.infoWeights.medium + 4 * config.infoWeights.hard;
     
-    // Always use full axis limits for consistency
-    const maxX = maxPossibleCost;
-    const maxY = maxPossibleInfo;
+    // Get user's actual max values
+    const userMaxX = Math.max(...curve.map(p => p.x));
+    const userMaxY = Math.max(...curve.map(p => p.y));
+    
+    // Add padding for better visualization (25% extra space)
+    const paddingFactor = 1.25;
+    const maxX = Math.max(userMaxX * paddingFactor, 10); // Minimum 10 for readability
+    const maxY = Math.max(userMaxY * paddingFactor, 10); // Minimum 10 for readability
+    
+    // Ensure reasonable minimums for very small curves
+    const minAxisSize = 20;
+    const finalMaxX = Math.max(maxX, minAxisSize);
+    const finalMaxY = Math.max(maxY, minAxisSize);
     
     // Create scales
-    const xScale = (x) => (x / maxX) * width;
-    const yScale = (y) => height - (y / maxY) * height;
+    const xScale = (x) => (x / finalMaxX) * width;
+    const yScale = (y) => height - (y / finalMaxY) * height;
     
     // Generate tick marks
-    const xTicks = this.generateTicks(0, maxX, 5);
-    const yTicks = this.generateTicks(0, maxY, 5);
+    const xTicks = this.generateTicks(0, finalMaxX, 5);
+    const yTicks = this.generateTicks(0, finalMaxY, 5);
     
     // Create SVG
     const svg = `
@@ -170,7 +176,7 @@ DifferentialGame.prototype.renderFullAUECPlot = function(auecData) {
                 <!-- Plot title -->
                 <text x="${width/2}" y="-10" 
                       text-anchor="middle" fill="#4caf50" font-size="16" font-weight="bold">
-                    Diagnostic Efficiency Curve
+                    Your Diagnostic Efficiency Curve (Zoomed View)
                 </text>
                 
                 <!-- Legend -->

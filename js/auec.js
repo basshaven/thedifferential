@@ -605,8 +605,12 @@ DifferentialGame.prototype.generateAUECCalculationBreakdown = function(auecData)
         html += `<div><strong>Best Possible:</strong> ${bestArea.toFixed(1)} (1 hard tile → correct)</div>`;
         html += `<div><strong>Worst Possible:</strong> ${worstArea.toFixed(1)} (all tiles + wrong guesses)</div>`;
         html += `<div style="border-top: 1px solid #333; margin-top: 8px; padding-top: 8px;">`;
+        html += `<strong>📊 Score Calculation:</strong><br>`;
+        html += `<code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 3px; font-family: monospace;">`;
+        html += `(${worstArea.toFixed(1)} - ${userArea.toFixed(1)}) ÷ (${worstArea.toFixed(1)} - ${bestArea.toFixed(1)}) × 100 = ${areaScore.toFixed(1)}%`;
+        html += `</code><br>`;
         html += `<strong>Your Score:</strong> <span style="color: #4caf50;">${areaScore.toFixed(1)}% strategic efficiency</span>`;
-        html += `<br><small style="color: #999;">Smaller area = better strategy (less waste, more efficiency)</small>`;
+        html += `<br><small style="color: #999;">Formula: (worst - yours) ÷ (worst - best) × 100 | Smaller area = better strategy</small>`;
         html += `</div></div>`;
         
         html += '</div>';
