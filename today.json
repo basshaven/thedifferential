@@ -1,106 +1,105 @@
 {
   "date": "2025-07-27",
-  "discipline": "Gastroenterology",
-  "category": "diagnosis",
-  "topic_rationale": "Celiac disease is a common, yet often misdiagnosed, condition. With a variety of presentations, diagnosis can be challenging and relies on expert interpretation of clinical and laboratory findings. This puzzle provides an opportunity to learn about these critical clues for diagnosis.",
-  "answer": "Celiac Disease",
+  "discipline": "Neurology",
+  "category": "Diagnosis",
+  "topic_rationale": "Multiple Sclerosis (MS) is a chronic neurological disorder that affects the central nervous system. It is a complex disease with a variety of presenting symptoms, making it an excellent choice for a diagnostic puzzle. Understanding MS can help clinicians provide better patient care and educate patients about the disease.",
+  "answer": "Multiple Sclerosis",
   "acceptable_answers": [
-    "Celiac Disease",
-    "Celiac Sprue",
-    "Gluten Sensitive Enteropathy"
+    "Multiple Sclerosis",
+    "MS"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Diarrhea chronic"
+      "clue": "Fatigue common"
     },
     {
       "difficulty": "easy",
-      "clue": "Weight loss"
+      "clue": "Vision problems"
     },
     {
       "difficulty": "medium",
-      "clue": "Anemia iron-def"
+      "clue": "Lhermitte's sign"
     },
     {
       "difficulty": "medium",
-      "clue": "Aphthous stomatitis"
+      "clue": "Spasticity"
     },
     {
       "difficulty": "medium",
-      "clue": "Dermatitis herpetiformis"
+      "clue": "Bowel dysfunctions"
     },
     {
       "difficulty": "hard",
-      "clue": "HLA-DQ2/DQ8 positive"
+      "clue": "MRI brain lesions"
     },
     {
       "difficulty": "hard",
-      "clue": "Anti-tTG IgA positive"
+      "clue": "Oligoclonal bands"
     },
     {
       "difficulty": "hard",
-      "clue": "Villous atrophy"
+      "clue": "Relapsing-remitting"
     },
     {
       "difficulty": "hard",
-      "clue": "Gluten-dependent symptoms"
+      "clue": "Charcot's Neurologic triad"
     }
   ],
   "concepts": [
-    "Celiac Disease",
-    "Irritable Bowel Syndrome",
-    "Crohn\u2019s Disease",
-    "Ulcerative Colitis",
-    "Colon Cancer",
-    "Small Intestinal Bacterial Overgrowth",
-    "Giardiasis",
-    "Whipple Disease",
-    "Lactose Intolerance",
-    "Peptic Ulcer Disease",
-    "Gastritis",
-    "Gastroparesis",
-    "Chronic Pancreatitis",
-    "Zollinger-Ellison Syndrome",
-    "Hyperthyroidism",
-    "Addison's Disease",
-    "Malabsorption Syndrome",
-    "Diverticulosis",
-    "Hemorrhoids",
-    "Anal Fissure",
-    "Rectal Prolapse",
-    "Proctitis",
-    "Rectal Cancer",
-    "Anal Cancer",
-    "Perianal Abscess"
+    "Multiple Sclerosis",
+    "Migraine",
+    "Stroke",
+    "Lyme Disease",
+    "Guillain-Barr\u00e9 Syndrome",
+    "Parkinson's Disease",
+    "Amyotrophic Lateral Sclerosis",
+    "Huntington's Disease",
+    "Fibromyalgia",
+    "Systemic Lupus Erythematosus",
+    "Rheumatoid Arthritis",
+    "Myasthenia Gravis",
+    "Alzheimer's Disease",
+    "Optic Neuritis",
+    "Transverse Myelitis",
+    "Neuromyelitis Optica",
+    "Vitamin B12 Deficiency",
+    "Carpal Tunnel Syndrome",
+    "Chronic Fatigue Syndrome",
+    "Diabetic Neuropathy",
+    "Trigeminal Neuralgia",
+    "Vertigo",
+    "Pseudotumor Cerebri",
+    "Bell's Palsy",
+    "Chiari Malformation"
   ],
   "explanations": {
-    "tile_0": "Chronic diarrhea is a common symptom in celiac disease as the body's immune response to gluten damages the small intestine, impairing nutrient absorption. However, it's a nonspecific symptom that could suggest many conditions.",
-    "tile_1": "Weight loss can occur in celiac disease due to malabsorption of nutrients caused by intestinal damage. However, weight loss is a nonspecific symptom seen in many gastrointestinal conditions.",
-    "tile_2": "Iron-deficiency anemia can be a presenting symptom of celiac disease. The malabsorption in the duodenum and proximal jejunum, where iron is primarily absorbed, leads to this type of anemia.",
-    "tile_3": "Aphthous stomatitis, or recurrent mouth ulcers, can be associated with celiac disease. Although not specific, it's a clue towards a systemic cause for the patient's symptoms.",
-    "tile_4": "Dermatitis herpetiformis is a skin manifestation of celiac disease, characterized by intensely itchy vesicles and blisters. It's not common, but highly suggestive of celiac disease when present.",
-    "tile_5": "Celiac disease has a strong genetic component. Almost all patients with celiac disease express HLA-DQ2 or HLA-DQ8 haplotypes. However, these are also common in the general population.",
-    "tile_6": "Anti-tissue transglutaminase (tTG) IgA antibodies are highly sensitive and specific for celiac disease. This is a critical diagnostic test, but must be interpreted in the overall clinical context.",
-    "tile_7": "Villous atrophy on small bowel biopsy is the gold standard for diagnosing celiac disease. The immune reaction in celiac disease results in inflammation and damage to the intestinal villi, impairing nutrient absorption.",
-    "tile_8": "A key feature of celiac disease is that symptoms improve on a gluten-free diet. This is a critical diagnostic clue, especially in the setting of other supportive findings."
+    "tile_0": "Fatigue is one of the most common symptoms in MS, affecting about 80% of people. It can significantly interfere with a person's ability to function at home and work, and may be the most prominent symptom in a person who otherwise has minimal activity limitations.",
+    "tile_1": "Vision problems, such as optic neuritis causing pain and temporary vision loss, are often the first symptom of MS. They occur when MS affects the optic nerve.",
+    "tile_2": "Lhermitte's sign is a brief, stabbing, electric-shock-like sensation that runs from the back of the head down the spine, brought on by bending the neck forward. It's present in over a third of people with MS.",
+    "tile_3": "Spasticity, or stiffness and involuntary muscle spasms, is a common symptom of MS. It's often an early symptom, but can be overlooked as it gradually develops over time.",
+    "tile_4": "Bowel dysfunctions like constipation and loss of bowel control can occur in MS due to disrupted signals between the brain and the bowel.",
+    "tile_5": "MRI brain lesions are a key diagnostic tool for MS. These lesions are areas of inflammation in the brain where the myelin, the protective coating of nerve fibers, has been damaged by the disease.",
+    "tile_6": "Oligoclonal bands, or unique proteins, are found in the cerebrospinal fluid of about 85-90% of people with MS. They indicate inflammation and are a sign of immune system activity.",
+    "tile_7": "Relapsing-remitting MS, characterized by periods of new symptoms or relapses followed by periods of recovery, is the most common form of the disease.",
+    "tile_8": "Charcot's Neurologic triad of nystagmus, intention tremor, and telegraphic speech is classic in MS, but it's a late finding and many patients won't exhibit the full triad."
   },
   "selection_metadata": {
-    "discipline": "Gastroenterology",
+    "discipline": "Neurology",
     "category": "diagnosis",
-    "rationale": "Discipline 'Gastroenterology' selected via weighted random (weight: 0.07). Category 'diagnosis' selected via standard weighting (0.70).",
+    "rationale": "Discipline 'Neurology' selected via weighted random (weight: 0.06). Category 'diagnosis' selected via standard weighting (0.70).",
     "weights_used": {
-      "discipline_weight": 0.07,
+      "discipline_weight": 0.06,
       "category_weight": 0.7,
       "selection_method": "weighted_random_weighted_random"
     },
     "selection_record": {
-      "timestamp": "2025-07-27T09:29:51.994972",
-      "discipline": "Gastroenterology",
+      "timestamp": "2025-07-27T09:47:21.745964",
+      "discipline": "Neurology",
       "category": "diagnosis",
       "discipline_source": "weighted_random",
       "category_source": "weighted_random",
-      "discipline_weight": 0.07,
+      "discipline_weight": 0.06,
       "category_weight": 0.7
     }
   }
