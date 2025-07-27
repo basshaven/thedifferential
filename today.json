@@ -1,80 +1,107 @@
 {
-  "date": "2025-07-26",
-  "discipline": "Cardiology",
+  "date": "2025-07-27",
+  "discipline": "Gastroenterology",
   "category": "diagnosis",
-  "topic_rationale": "Chosen topic is 'Takotsubo Cardiomyopathy', a unique cardiac condition that presents like a heart attack but is usually triggered by severe stress. It is educational as it highlights the importance of considering emotional and mental health in the differential of cardiac diseases.",
-  "answer": "Takotsubo Cardiomyopathy",
+  "topic_rationale": "Celiac disease is a common, yet often misdiagnosed, condition. With a variety of presentations, diagnosis can be challenging and relies on expert interpretation of clinical and laboratory findings. This puzzle provides an opportunity to learn about these critical clues for diagnosis.",
+  "answer": "Celiac Disease",
   "acceptable_answers": [
-    "Takotsubo Cardiomyopathy",
-    "Takotsubo's Cardiomyopathy",
-    "Broken Heart Syndrome",
-    "Stress Cardiomyopathy",
-    "Apical Ballooning Syndrome"
+    "Celiac Disease",
+    "Celiac Sprue",
+    "Gluten Sensitive Enteropathy"
   ],
   "tiles": [
     {
       "difficulty": "easy",
-      "clue": "Apical Ballooning"
+      "clue": "Diarrhea chronic"
     },
     {
       "difficulty": "easy",
-      "clue": "Severe Stress Event"
+      "clue": "Weight loss"
     },
     {
       "difficulty": "medium",
-      "clue": "Transient LV Dysfunction"
+      "clue": "Anemia iron-def"
     },
     {
       "difficulty": "medium",
-      "clue": "Postmenopausal Woman"
+      "clue": "Aphthous stomatitis"
     },
     {
       "difficulty": "medium",
-      "clue": "Chest Pain, Dyspnea"
+      "clue": "Dermatitis herpetiformis"
     },
     {
       "difficulty": "hard",
-      "clue": "Normal Coronary Arteries"
+      "clue": "HLA-DQ2/DQ8 positive"
     },
     {
       "difficulty": "hard",
-      "clue": "Elevated Troponin"
+      "clue": "Anti-tTG IgA positive"
     },
     {
       "difficulty": "hard",
-      "clue": "ECG: ST Elevation"
+      "clue": "Villous atrophy"
     },
     {
       "difficulty": "hard",
-      "clue": "Recovery in Weeks"
+      "clue": "Gluten-dependent symptoms"
     }
   ],
   "concepts": [
-    "Takotsubo Cardiomyopathy",
-    "Acute Myocardial Infarction",
-    "Stress Induced Cardiomyopathy",
-    "Congestive Heart Failure",
-    "Cardiogenic Shock",
-    "Pericarditis",
-    "Aortic Dissection",
-    "Panic Disorder",
-    "Coronary Artery Spasm",
-    "Dilated Cardiomyopathy",
-    "Hypertrophic Cardiomyopathy",
-    "Arrhythmogenic Right Ventricular Cardiomyopathy",
-    "Mitral Valve Prolapse Syndrome",
-    "Acute Pericarditis",
-    "Pulmonary Embolism"
+    "Celiac Disease",
+    "Irritable Bowel Syndrome",
+    "Crohn\u2019s Disease",
+    "Ulcerative Colitis",
+    "Colon Cancer",
+    "Small Intestinal Bacterial Overgrowth",
+    "Giardiasis",
+    "Whipple Disease",
+    "Lactose Intolerance",
+    "Peptic Ulcer Disease",
+    "Gastritis",
+    "Gastroparesis",
+    "Chronic Pancreatitis",
+    "Zollinger-Ellison Syndrome",
+    "Hyperthyroidism",
+    "Addison's Disease",
+    "Malabsorption Syndrome",
+    "Diverticulosis",
+    "Hemorrhoids",
+    "Anal Fissure",
+    "Rectal Prolapse",
+    "Proctitis",
+    "Rectal Cancer",
+    "Anal Cancer",
+    "Perianal Abscess"
   ],
   "explanations": {
-    "tile_0": "Apical ballooning is a classic echocardiographic finding in Takotsubo cardiomyopathy, where the left ventricle takes a distinctive shape similar to a 'takotsubo', a Japanese octopus trap.",
-    "tile_1": "Takotsubo Cardiomyopathy is often precipitated by a severe stressor, either physical or emotional, hence the name 'stress cardiomyopathy'.",
-    "tile_2": "Takotsubo cardiomyopathy is characterized by transient left ventricular dysfunction, with recovery usually within weeks.",
-    "tile_3": "The condition is more common in postmenopausal women, though the reason for this is unclear.",
-    "tile_4": "Patients with Takotsubo cardiomyopathy often present with symptoms similar to a heart attack, including chest pain and shortness of breath.",
-    "tile_5": "Despite the similar presentation to a heart attack, coronary angiography in Takotsubo cardiomyopathy typically shows normal or near-normal coronary arteries.",
-    "tile_6": "Troponin levels are typically elevated in Takotsubo cardiomyopathy, further mimicking an acute myocardial infarction.",
-    "tile_7": "ECG changes in Takotsubo cardiomyopathy can mimic those seen in acute coronary syndrome, including ST segment elevation.",
-    "tile_8": "Unlike most forms of cardiomyopathy, the left ventricular dysfunction in Takotsubo cardiomyopathy is usually reversible, with complete recovery often occurring within weeks."
+    "tile_0": "Chronic diarrhea is a common symptom in celiac disease as the body's immune response to gluten damages the small intestine, impairing nutrient absorption. However, it's a nonspecific symptom that could suggest many conditions.",
+    "tile_1": "Weight loss can occur in celiac disease due to malabsorption of nutrients caused by intestinal damage. However, weight loss is a nonspecific symptom seen in many gastrointestinal conditions.",
+    "tile_2": "Iron-deficiency anemia can be a presenting symptom of celiac disease. The malabsorption in the duodenum and proximal jejunum, where iron is primarily absorbed, leads to this type of anemia.",
+    "tile_3": "Aphthous stomatitis, or recurrent mouth ulcers, can be associated with celiac disease. Although not specific, it's a clue towards a systemic cause for the patient's symptoms.",
+    "tile_4": "Dermatitis herpetiformis is a skin manifestation of celiac disease, characterized by intensely itchy vesicles and blisters. It's not common, but highly suggestive of celiac disease when present.",
+    "tile_5": "Celiac disease has a strong genetic component. Almost all patients with celiac disease express HLA-DQ2 or HLA-DQ8 haplotypes. However, these are also common in the general population.",
+    "tile_6": "Anti-tissue transglutaminase (tTG) IgA antibodies are highly sensitive and specific for celiac disease. This is a critical diagnostic test, but must be interpreted in the overall clinical context.",
+    "tile_7": "Villous atrophy on small bowel biopsy is the gold standard for diagnosing celiac disease. The immune reaction in celiac disease results in inflammation and damage to the intestinal villi, impairing nutrient absorption.",
+    "tile_8": "A key feature of celiac disease is that symptoms improve on a gluten-free diet. This is a critical diagnostic clue, especially in the setting of other supportive findings."
+  },
+  "selection_metadata": {
+    "discipline": "Gastroenterology",
+    "category": "diagnosis",
+    "rationale": "Discipline 'Gastroenterology' selected via weighted random (weight: 0.07). Category 'diagnosis' selected via standard weighting (0.70).",
+    "weights_used": {
+      "discipline_weight": 0.07,
+      "category_weight": 0.7,
+      "selection_method": "weighted_random_weighted_random"
+    },
+    "selection_record": {
+      "timestamp": "2025-07-27T09:29:51.994972",
+      "discipline": "Gastroenterology",
+      "category": "diagnosis",
+      "discipline_source": "weighted_random",
+      "category_source": "weighted_random",
+      "discipline_weight": 0.07,
+      "category_weight": 0.7
+    }
   }
 }
