@@ -151,7 +151,9 @@ class DifferentialGame {
                     tileElement.className = `tile difficulty-${tile.difficulty}`;
                     tileElement.dataset.index = tileIndex;
                     tileElement.innerHTML = `<div class="tile-content"></div>`;
-                    tileElement.addEventListener('click', () => this.flipTile(tileIndex));
+                    // Fix closure issue by capturing tileIndex value
+                    const currentIndex = tileIndex;
+                    tileElement.addEventListener('click', () => this.flipTile(currentIndex));
                     column.appendChild(tileElement);
                 }
                 tileIndex++;
@@ -166,6 +168,11 @@ class DifferentialGame {
         
         const tile = this.gameData.tiles[index];
         const tileElement = document.querySelector(`[data-index="${index}"]`);
+        
+        if (!tile || !tileElement) {
+            console.error(`Tile or element not found for index ${index}`);
+            return;
+        }
         
         this.flippedTiles.add(index);
         tileElement.classList.add('flipped');
