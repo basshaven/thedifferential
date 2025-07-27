@@ -112,9 +112,10 @@ Modify `DISCIPLINE_WEIGHTS` to change specialty distribution:
 - Pharmacy has 3x higher adverse event likelihood
 
 ### Game Constants (`script.js`)
-- `maxPossibleCost = 37` (9 tiles × 3 + 2 wrong guesses × 5)
-- `maxPossibleInfo = 27` (9 hard tiles × 3)
+- `maxPossibleCost = 52` (2×8 easy + 3×4 medium + 4×1 hard + 2×10 wrong guesses)
+- `maxPossibleInfo = 52` (2×2 easy + 3×4 medium + 4×9 hard tiles)
 - AUEC plot: 400×400px for 1:1 aspect ratio
+- **Expert efficiency ratios**: Hard=9.0, Medium=1.0, Easy=0.25 (rewards strategic thinking)
 
 ### Validation Rules (`config.py`)
 - Clue length: ≤20 characters

@@ -371,7 +371,11 @@ class DifferentialGame {
             } catch (error) {
                 console.error('AUEC calculation failed:', error);
             }
-            this.showExplanations();
+            
+            // Show explanations shortly after AUEC analysis
+            setTimeout(() => {
+                this.showExplanations();
+            }, 2000); // 2 seconds after AUEC analysis loads
         }, won ? 3000 : 2000);
     }
 

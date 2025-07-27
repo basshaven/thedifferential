@@ -10,6 +10,12 @@ from typing import Dict, Any
 from openai import OpenAI
 from .base_agent import BaseAgent
 import config
+import sys
+import os
+
+# Add parent directory to path for discipline_selector import
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from discipline_selector import DisciplineSelector
 
 class OpenAIPuzzleAgent(BaseAgent):
     """Agent that generates complete puzzles using OpenAI GPT models."""
@@ -20,17 +26,29 @@ class OpenAIPuzzleAgent(BaseAgent):
         self.model = config.OPENAI_MODEL
         self.temperature = config.OPENAI_TEMPERATURE
         self.max_tokens = config.OPENAI_MAX_TOKENS
+        self.discipline_selector = DisciplineSelector()
         
-    async def generate(self, forced_discipline: str = None, **kwargs) -> Dict[str, Any]:
-        """Generate a complete medical puzzle."""
-        self.logger.info("Starting puzzle generation...")
+    async def generate(self, forced_discipline: str = None, forced_category: str = None, **kwargs) -> Dict[str, Any]:
+        """Generate a complete medical puzzle using two-stage approach."""
+        self.logger.info("Starting two-stage puzzle generation...")
         
-        # Select discipline (forced or weighted random)
-        selected_discipline = self._select_discipline(forced_discipline)
-        self.logger.info(f"Selected discipline: {selected_discipline}")
+        # STAGE 1: Deterministic discipline and category selection
+        self.logger.info("Stage 1: Selecting discipline and category...")
+        selection_result = self.discipline_selector.select_discipline_and_category(
+            forced_discipline=forced_discipline,
+            forced_category=forced_category
+        )
         
-        # Load the comprehensive prompt with discipline
-        prompt = self._load_prompt(selected_discipline)
+        selected_discipline = selection_result["discipline"]
+        selected_category = selection_result["category"]
+        selection_rationale = selection_result["rationale"]
+        
+        self.logger.info(f"✅ Selected: {selected_discipline} / {selected_category}")
+        self.logger.info(f"📝 Rationale: {selection_rationale}")
+        
+        # STAGE 2: AI content generation for specific discipline/category
+        self.logger.info("Stage 2: Generating medical content...")
+        prompt = self._load_focused_prompt(selected_discipline, selected_category, selection_rationale)
         
         try:
             # Make API call
@@ -58,6 +76,9 @@ class OpenAIPuzzleAgent(BaseAgent):
             # Clean and parse JSON
             puzzle_data = self._parse_json_response(content)
             
+            # Add selection metadata to puzzle
+            puzzle_data["selection_metadata"] = selection_result
+            
             # Validate the puzzle
             if self.validate_puzzle(puzzle_data):
                 self.logger.info(f"✅ Generated puzzle: {puzzle_data.get('answer', 'Unknown')}")
@@ -69,79 +90,96 @@ class OpenAIPuzzleAgent(BaseAgent):
             self.logger.error(f"Failed to generate puzzle: {e}")
             raise
     
-    def _select_discipline(self, forced_discipline: str = None) -> str:
-        """Select a medical discipline, either forced or weighted random."""
-        if forced_discipline:
-            # Validate forced discipline exists in weights
-            if forced_discipline in config.DISCIPLINE_WEIGHTS:
-                return forced_discipline
-            else:
-                self.logger.warning(f"Unknown forced discipline '{forced_discipline}', using weighted selection")
-        
-        # Weighted random selection
-        disciplines = list(config.DISCIPLINE_WEIGHTS.keys())
-        weights = list(config.DISCIPLINE_WEIGHTS.values())
-        
-        return random.choices(disciplines, weights=weights)[0]
-    
-    def _load_prompt(self, selected_discipline: str) -> str:
-        """Load the comprehensive puzzle generation prompt."""
+    def _load_focused_prompt(self, discipline: str, category: str, rationale: str) -> str:
+        """Load the focused prompt with specific discipline and category."""
         try:
-            with open('AI_PUZZLE_PROMPT.md', 'r') as f:
+            with open('AI_FOCUSED_PROMPT.md', 'r') as f:
                 prompt_content = f.read()
             
-            # Extract the actual prompt instructions (everything after the overview)
-            prompt_start = prompt_content.find("## Step-by-Step Generation Process")
-            if prompt_start != -1:
-                core_prompt = prompt_content[prompt_start:]
-            else:
-                core_prompt = prompt_content
+            # Replace placeholders with actual values
+            prompt_content = prompt_content.replace("[DISCIPLINE_PLACEHOLDER]", discipline)
+            prompt_content = prompt_content.replace("[CATEGORY_PLACEHOLDER]", category)
             
-            # Add discipline instruction and current date
-            discipline_instruction = f"\\n\\n**REQUIRED: You must choose '{selected_discipline}' as your medical discipline.**"
-            date_instruction = f"\\n\\nGenerate a puzzle for date: {config.DEFAULT_DATE}"
+            # Add specific instructions based on category
+            specific_instructions = self._get_category_instructions(category, discipline)
+            prompt_content = prompt_content.replace("[SPECIFIC_INSTRUCTIONS_PLACEHOLDER]", specific_instructions)
             
-            return core_prompt + discipline_instruction + date_instruction
+            # Add date
+            date_instruction = f"\n\nGenerate puzzle for date: {config.DEFAULT_DATE}"
+            
+            return prompt_content + date_instruction
             
         except FileNotFoundError:
-            # Fallback prompt if file not found
-            return self._get_fallback_prompt(selected_discipline)
+            # Fallback to simple prompt if file not found
+            return self._get_focused_fallback_prompt(discipline, category)
     
-    def _get_fallback_prompt(self, selected_discipline: str) -> str:
-        """Fallback prompt if the main prompt file isn't found."""
+    def _get_category_instructions(self, category: str, discipline: str) -> str:
+        """Generate specific instructions based on category type."""
+        category_details = config.PUZZLE_CATEGORIES.get(category, {})
+        category_name = category_details.get("name", category)
+        category_desc = category_details.get("description", f"Create a {category} puzzle")
+        
+        instructions = f"Create a {category_name.lower()}: {category_desc}."
+        
+        if category == "diagnosis":
+            instructions += f" Choose a specific {discipline.lower()} condition that is educationally valuable and diagnostically challenging."
+        elif category == "lab_test":
+            instructions += f" Choose a specific diagnostic test relevant to {discipline.lower()} that requires clinical reasoning to identify."
+        elif category == "adverse_event":
+            instructions += f" Choose a specific drug-related adverse event within {discipline.lower()} that requires careful clinical assessment."
+        
+        return instructions
+    
+    def _get_focused_fallback_prompt(self, discipline: str, category: str) -> str:
+        """Fallback prompt if the focused prompt file isn't found."""
+        category_instructions = self._get_category_instructions(category, discipline)
+        
         return f"""
-        Generate a medical diagnostic puzzle for "The Differential" game.
+        Generate medical puzzle content for "The Differential" game.
+        
+        ASSIGNED PARAMETERS:
+        - Discipline: {discipline}
+        - Category: {category}
+        - Instructions: {category_instructions}
         
         Requirements:
-        - Use '{selected_discipline}' as your medical discipline
-        - Choose a specific condition within this discipline
         - Create exactly 9 clues: 2 easy, 3 medium, 4 hard
         - Each clue must be ≤20 characters
+        - Hard tiles should contain the most diagnostically valuable information (9.0 efficiency)
+        - Easy tiles should contain obvious but less specific findings (0.25 efficiency)
         - Include 20-25 differential diagnoses
         - Provide explanations for each clue
         
         Return valid JSON in this exact format:
         {{
           "date": "{config.DEFAULT_DATE}",
-          "discipline": "Medical Discipline",
+          "discipline": "{discipline}",
+          "category": "{category}",
           "topic_rationale": "Why this topic was chosen",
-          "answer": "Specific Diagnosis",
+          "answer": "Specific Answer",
+          "acceptable_answers": ["Primary Answer", "Abbreviation", "Alternative"],
           "tiles": [
-            {{"difficulty": "easy", "clue": "Short clue"}},
-            {{"difficulty": "easy", "clue": "Short clue"}},
-            {{"difficulty": "medium", "clue": "Med clue"}},
-            {{"difficulty": "medium", "clue": "Med clue"}},
-            {{"difficulty": "medium", "clue": "Med clue"}},
-            {{"difficulty": "hard", "clue": "Hard clue"}},
-            {{"difficulty": "hard", "clue": "Hard clue"}},
-            {{"difficulty": "hard", "clue": "Hard clue"}},
-            {{"difficulty": "hard", "clue": "Hard clue"}}
+            {{"difficulty": "easy", "clue": "General finding"}},
+            {{"difficulty": "easy", "clue": "Basic symptom"}},
+            {{"difficulty": "medium", "clue": "More specific"}},
+            {{"difficulty": "medium", "clue": "Supportive finding"}},
+            {{"difficulty": "medium", "clue": "Narrowing clue"}},
+            {{"difficulty": "hard", "clue": "Expert insight"}},
+            {{"difficulty": "hard", "clue": "Pathognomonic"}},
+            {{"difficulty": "hard", "clue": "Specialist knowledge"}},
+            {{"difficulty": "hard", "clue": "Definitive finding"}}
           ],
-          "concepts": ["Diagnosis1", "Diagnosis2", ...],
+          "concepts": ["Answer", "Alternative1", "Alternative2", ...],
           "explanations": {{
-            "tile_0": "How clue relates to diagnosis",
-            "tile_1": "How clue relates to diagnosis",
-            ...
+            "tile_0": "Educational explanation for clue...",
+            "tile_1": "Educational explanation for clue...",
+            "tile_2": "Educational explanation for clue...",
+            "tile_3": "Educational explanation for clue...",
+            "tile_4": "Educational explanation for clue...",
+            "tile_5": "Educational explanation for clue...",
+            "tile_6": "Educational explanation for clue...",
+            "tile_7": "Educational explanation for clue...",
+            "tile_8": "Educational explanation for clue..."
           }}
         }}
         """

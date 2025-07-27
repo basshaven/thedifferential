@@ -114,8 +114,10 @@ DifferentialGame.prototype.renderFullAUECPlot = function(auecData) {
     
     // Calculate theoretical maximum values (always use full limits)
     const config = auecData.config || this.getAUECConfig();
-    const maxPossibleCost = 9 * 3 + 2 * 5; // All tiles + 2 wrong guesses = 37
-    const maxPossibleInfo = 9 * 3; // All hard tiles = 27
+    // Max cost: 2×8(easy) + 3×4(medium) + 4×1(hard) + 2×10(wrong) = 52
+    const maxPossibleCost = 2 * config.costWeights.easy + 3 * config.costWeights.medium + 4 * config.costWeights.hard + 2 * config.costWeights.wrong;
+    // Max info: 2×2(easy) + 3×4(medium) + 4×9(hard) = 52
+    const maxPossibleInfo = 2 * config.infoWeights.easy + 3 * config.infoWeights.medium + 4 * config.infoWeights.hard;
     
     // Always use full axis limits for consistency
     const maxX = maxPossibleCost;
@@ -373,56 +375,51 @@ DifferentialGame.prototype.createConfetti = function() {
 };
 
 DifferentialGame.prototype.showExplanations = function() {
-    setTimeout(() => {
-        // Check if explanations section already exists
-        if (document.querySelector('.explanations-section')) {
-            return;
-        }
-        
-        const explanationsHTML = `
-            <div class="explanations-section">
-                <h3>Understanding the Clues</h3>
-                <div class="explanations-grid">
-                    ${this.gameData.tiles.map((tile, index) => {
-                        const isFlipped = this.flippedTiles.has(index);
-                        const explanation = this.gameData.explanations[`tile_${index}`];
-                        
-                        if (!isFlipped) {
-                            return ''; // Don't show explanations for unflipped tiles
-                        }
-                        
-                        return `
-                            <div class="explanation-item difficulty-${tile.difficulty}">
-                                <div class="explanation-header">
-                                    <div class="explanation-tile-preview difficulty-${tile.difficulty}">
-                                        ${tile.clue}
-                                    </div>
-                                    <div class="explanation-content">
-                                        <div class="explanation-label">${tile.difficulty.toUpperCase()} TILE</div>
-                                        <div class="explanation-text">${explanation}</div>
-                                    </div>
+    // Check if explanations section already exists
+    if (document.querySelector('.explanations-section')) {
+        return;
+    }
+    
+    const explanationsHTML = `
+        <div class="explanations-section">
+            <h3>Understanding the Clues</h3>
+            <div class="explanations-grid">
+                ${this.gameData.tiles.map((tile, index) => {
+                    const isFlipped = this.flippedTiles.has(index);
+                    const explanation = this.gameData.explanations[`tile_${index}`];
+                    
+                    // Show ALL tiles now, not just flipped ones
+                    return `
+                        <div class="explanation-item difficulty-${tile.difficulty}">
+                            <div class="explanation-header">
+                                <div class="explanation-tile-preview difficulty-${tile.difficulty}">
+                                    ${tile.clue}
+                                </div>
+                                <div class="explanation-content">
+                                    <div class="explanation-label">${tile.difficulty.toUpperCase()} TILE ${isFlipped ? '(Revealed)' : '(Not Revealed)'}</div>
+                                    <div class="explanation-text">${explanation}</div>
                                 </div>
                             </div>
-                        `;
-                    }).join('')}
-                </div>
+                        </div>
+                    `;
+                }).join('')}
             </div>
-        `;
-        
-        // Insert explanations after the AUEC section
-        const auecSection = document.querySelector('.auec-assessment');
-        if (auecSection) {
+        </div>
+    `;
+    
+    // Insert explanations after the AUEC section
+    const auecSection = document.querySelector('.auec-assessment');
+    if (auecSection) {
+        const explanationsDiv = document.createElement('div');
+        explanationsDiv.innerHTML = explanationsHTML;
+        auecSection.parentNode.insertBefore(explanationsDiv, auecSection.nextSibling);
+    } else {
+        // Fallback: insert after game message
+        const gameMessage = document.getElementById('gameMessage');
+        if (gameMessage) {
             const explanationsDiv = document.createElement('div');
             explanationsDiv.innerHTML = explanationsHTML;
-            auecSection.parentNode.insertBefore(explanationsDiv, auecSection.nextSibling);
-        } else {
-            // Fallback: insert after game message
-            const gameMessage = document.getElementById('gameMessage');
-            if (gameMessage) {
-                const explanationsDiv = document.createElement('div');
-                explanationsDiv.innerHTML = explanationsHTML;
-                gameMessage.parentNode.insertBefore(explanationsDiv, gameMessage.nextSibling);
-            }
+            gameMessage.parentNode.insertBefore(explanationsDiv, gameMessage.nextSibling);
         }
-    }, 6000); // Show explanations after AUEC analysis
+    }
 };

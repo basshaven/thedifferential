@@ -6,21 +6,22 @@
 // Extend DifferentialGame with AUEC methods
 DifferentialGame.prototype.getAUECConfig = function(scheme = 'intuitive') {
     const schemes = {
-        // Intuitive: Make hard tiles most valuable, easy tiles least efficient
-        intuitive: {
-            costWeights: { easy: 3, medium: 2, hard: 1, wrong: 5 },
-            infoWeights: { easy: 1, medium: 2, hard: 3, wrong: 0 },
-            description: "Hard tiles cheapest & most valuable (classic puzzle strategy)"
+        // Expert Diagnostician: Hard tiles give exponentially more info per cost
+        // Models how experts extract maximum insight from subtle findings
+        expert: {
+            costWeights: { easy: 8, medium: 4, hard: 1, wrong: 10 },
+            infoWeights: { easy: 2, medium: 4, hard: 9, wrong: 0 },
+            description: "Expert strategy: Hard tiles = 9.0 info/cost vs Easy = 0.25 info/cost"
         },
-        // Clinical: Hard tiles more expensive but much more informative  
-        clinical: {
-            costWeights: { easy: 1, medium: 2, hard: 3, wrong: 8 },
-            infoWeights: { easy: 1, medium: 4, hard: 9, wrong: 0 },
-            description: "Hard clues expensive but information-dense"
+        // Novice Diagnostician: Relies heavily on obvious, expensive tests
+        novice: {
+            costWeights: { easy: 3, medium: 2, hard: 1, wrong: 5 },
+            infoWeights: { easy: 6, medium: 3, hard: 1, wrong: 0 },
+            description: "Novice strategy: Easy tiles preferred but inefficient overall"
         }
     };
     
-    const config = schemes[scheme] || schemes.intuitive;
+    const config = schemes[scheme] || schemes.expert;
     
     // Add computed efficiency ratios (info per cost)
     config.efficiency = {
@@ -445,7 +446,7 @@ DifferentialGame.prototype.generateAUECInterpretation = function(empirical, rect
     // Generate explanation
     let explanation = `Your AUEC score (${empPercent}%) measures diagnostic efficiency: how much information you gained per unit cost. `;
     
-    explanation += `Hard tiles give 3x more info per cost than easy tiles, so they're the key to high scores. `;
+    explanation += `Hard tiles give ${config.efficiency.hard.toFixed(1)}x more info per cost than easy tiles (${config.efficiency.hard.toFixed(1)} vs ${config.efficiency.easy.toFixed(2)}), rewarding expert pattern recognition. `;
     
     if (empPercent >= 70) {
         explanation += "Excellent efficiency suggests you prioritized hard tiles and avoided unnecessary moves.";
@@ -466,14 +467,14 @@ DifferentialGame.prototype.generateAUECInterpretation = function(empirical, rect
     if (tilesFlipped > 6) {
         advice += "Try using fewer tiles by prioritizing the most informative (hard) ones. ";
     }
-    advice += "Remember: hard tiles cost 1 but give 3 info points (3.0 efficiency), while easy tiles cost 3 but give only 1 info point (0.33 efficiency).";
+    advice += `Remember: hard tiles cost ${config.costWeights.hard} but give ${config.infoWeights.hard} info points (${config.efficiency.hard.toFixed(1)} efficiency), while easy tiles cost ${config.costWeights.easy} but give ${config.infoWeights.easy} info points (${config.efficiency.easy.toFixed(2)} efficiency).`;
 
     return {
         headline: headline,
         explanation: explanation,
         advice: advice,
         tooltips: {
-            empirical: "Diagnostic efficiency score: 100% = perfect (only hard tiles), 0% = very inefficient. Hard tiles: 3.0 info/cost, Medium: 1.0, Easy: 0.33",
+            empirical: `Diagnostic efficiency score: 100% = perfect strategy. Hard tiles: ${config.efficiency.hard.toFixed(1)} info/cost, Medium: ${config.efficiency.medium.toFixed(1)}, Easy: ${config.efficiency.easy.toFixed(2)}`,
             rectangular: "Area under your efficiency curve compared to theoretical optimal path"
         }
     };
@@ -516,12 +517,9 @@ DifferentialGame.prototype.generateAUECCalculationBreakdown = function(auecData)
             totalInfo += info;
             weightedEfficiency += efficiency * cost;
             
-            const tileClue = this.gameData.tiles[action.tileIndex]?.clue || 'Unknown';
-            
             return {
                 step: index + 1,
                 difficulty: action.difficulty,
-                clue: tileClue,
                 cost,
                 info,
                 efficiency,
@@ -546,9 +544,8 @@ DifferentialGame.prototype.generateAUECCalculationBreakdown = function(auecData)
         tileBreakdown.forEach(step => {
             const efficiencyColor = step.efficiency >= 2 ? '#4caf50' : step.efficiency >= 1 ? '#ffeb3b' : '#ff9800';
             html += `<div style="margin: 5px 0; padding: 5px; background: rgba(0,0,0,0.3); border-radius: 4px;">`;
-            html += `<strong>Step ${step.step}:</strong> <span style="color: ${efficiencyColor}">${step.difficulty.toUpperCase()}</span> tile `;
-            html += `"<em>${step.clue}</em>" → Cost: ${step.cost}, Info: ${step.info} `;
-            html += `(${step.efficiency.toFixed(2)} ratio)`;
+            html += `<strong>Step ${step.step}:</strong> <span style="color: ${efficiencyColor}">${step.difficulty.toUpperCase()}</span> tile → `;
+            html += `Cost: ${step.cost}, Info: ${step.info} (${step.efficiency.toFixed(2)} ratio)`;
             html += `</div>`;
         });
         
@@ -606,7 +603,7 @@ DifferentialGame.prototype.generatePathStoryBreakdown = function(tileBreakdown, 
 DifferentialGame.prototype.generateStrategyExamples = function(finalInfo, config, userArea, perfectArea, worstArea) {
     let examples = '<h6 style="color: #ffeb3b; margin: 10px 0 5px 0;">💡 Strategy Comparison</h6>';
     examples += '<div style="font-size: 11px; line-height: 1.3;">';
-    examples += `<div>🏆 <strong>Perfect:</strong> All hard tiles → 3.0 efficiency</div>`;
+    examples += `<div>🏆 <strong>Perfect:</strong> All hard tiles → ${config.efficiency.hard.toFixed(1)} efficiency</div>`;
     examples += `<div>👤 <strong>You:</strong> ${(userArea / 10).toFixed(1)}% of perfect strategy</div>`;
     examples += `<div>📈 <strong>Tip:</strong> Hard tiles give ${config.efficiency.hard.toFixed(1)}x more info per cost than easy tiles</div>`;
     examples += '</div>';

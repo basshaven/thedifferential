@@ -64,18 +64,27 @@ class PuzzleGenerator:
         self.agents[agent_name] = agent
         return agent
     
-    async def generate_puzzle(self, agent_name: str = "openai_puzzle", forced_discipline: str = None) -> Dict[str, Any]:
+    async def generate_puzzle(self, agent_name: str = "openai_puzzle", forced_discipline: str = None, forced_category: str = None) -> Dict[str, Any]:
         """Generate a puzzle using the specified agent."""
         self.logger.info(f"🧠 Loading agent: {config.AVAILABLE_AGENTS[agent_name]['name']}")
         
         agent = self.load_agent(agent_name)
         
+        constraints = []
         if forced_discipline:
-            self.logger.info(f"🎯 Generating puzzle for forced discipline: {forced_discipline}")
-        else:
-            self.logger.info("🎯 Generating puzzle...")
+            constraints.append(f"discipline: {forced_discipline}")
+        if forced_category:
+            constraints.append(f"category: {forced_category}")
         
-        puzzle = await agent.generate(forced_discipline=forced_discipline)
+        if constraints:
+            self.logger.info(f"🎯 Generating puzzle with constraints: {', '.join(constraints)}")
+        else:
+            self.logger.info("🎯 Generating puzzle with probabilistic selection...")
+        
+        puzzle = await agent.generate(
+            forced_discipline=forced_discipline,
+            forced_category=forced_category
+        )
         
         # Create backup if enabled
         if config.CREATE_BACKUPS:
@@ -216,6 +225,11 @@ async def main():
         '--discipline',
         help='Force a specific medical discipline (e.g., "Hematology", "Cardiology")'
     )
+    parser.add_argument(
+        '--category',
+        choices=['diagnosis', 'lab_test', 'adverse_event'],
+        help='Force a specific puzzle category'
+    )
     
     args = parser.parse_args()
     
@@ -241,7 +255,7 @@ async def main():
         
         try:
             print(f"\\n🎲 Generation attempt {attempts}/{max_attempts}")
-            puzzle = await generator.generate_puzzle(args.agent, args.discipline)
+            puzzle = await generator.generate_puzzle(args.agent, args.discipline, getattr(args, 'category', None))
             
             if args.no_review:
                 # Auto-save without review
